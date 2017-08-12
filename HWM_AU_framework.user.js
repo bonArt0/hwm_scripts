@@ -11,8 +11,8 @@
 // @exclude
 // @require
 // @grant
-// @released        2006-04-17
-// @updated         2006-04-19
+// @released        2017-04-17
+// @updated         2017-04-19
 // @compatible      Greasemonkey
 // @icon
 // ==/UserScript==
@@ -32,7 +32,16 @@
  * http://creativecommons.org/licenses/by/2.5/
 */
 
-(function () {
+(function (window, undefined) {
+    var mainWindow = (typeof unsafeWindow !== typeof undefined) ? unsafeWindow : window; // for crossbros (ie, opera) - TODO: test
+
+    if (mainWindow.self !== mainWindow.top) {
+        return;
+    }
+
+    if (!TestInclude()) {
+        return;
+    }
 
     //object constructor
     function example() {
@@ -58,4 +67,4 @@
     var example = new example();
 
 
-})();
+})(window);
