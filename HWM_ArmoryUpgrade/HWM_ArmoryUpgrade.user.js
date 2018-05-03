@@ -35,21 +35,26 @@
 (function () {
 	var config = ";
 	var armoryExo = new ArmoryExosuite(config);
-	armoryExo.AppendFrameworkElements();
-	armoryExo.AppendAdditionalElements();
+	armoryExo.AssembleFramework();
+	armoryExo.AssembleModules();
+	
+	// ========================= //
 
-    //object constructor
+    // Constructor
 	function ArmoryExosuite(config) {
+		this.SetConfig(config);
+		
         // modify the stylesheet
         this.append_stylesheet('body,div { border: 1px solid red; }');
 
     };
 	
-    function AppendFrameworkElements() {
+    ArmoryExosuite.prototype.AssembleFramework = function() {
 		this.CreateSettingsElements();
     };
 	
-	function AppendFrameworkElements() {
+	ArmoryExosuite.prototype.AssembleModules = function() {
+		
 	}
 	
 	ArmoryExosuite.prototype.CreateSettingsElements = function() {
@@ -57,6 +62,7 @@
 		var stnBlock = $('div').classCss.classJs;
 		stnBlock.append(blockTemplate.append(modOptions));
 		
+		$(domElement).append(stnButton);
 		$(domElement).append(stnBlock);
 	}
 
