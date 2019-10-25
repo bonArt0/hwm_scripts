@@ -40,8 +40,8 @@
   armFrm.AssembleFramework();
   alert('done');
   return 0;
-  this.SetConfig(config);
-  armFrm.AssembleModules();
+//  this.SetConfig(config);
+//  armFrm.AssembleModules();
   
   // ========================= //
   
@@ -59,66 +59,115 @@
     ArmoryFramework.prototype.ConstructWrapper = function() {
       const body = $('body center table:last-child');
       const bodyContainer = body.find('td').first();
-      
       let tableCounter = 0;
       
-      // =======================================================================
+      let container1 = bodyContainer.find("table.wb tr:contains('Склад клана ')").addClass('js-block-summary1');
+      let container2 = bodyContainer.find("table.wb tr:contains('Районы доступа: ')").addClass('js-block-summary2');
+      let containerRepair1 = bodyContainer.find("table.wb tr:contains('Артефакты для ремонта.')").addClass('js-block-repair_label');
+      let containerRepair2 = containerRepair1.next().addClass('js-block-repair_label');
+      let containerRent1 = bodyContainer.find("table.wb tr:contains('Ваша аренда')").addClass('js-block-rent_label');
+      let containerRent2 = containerRent1.next().addClass('js-block-rent_label');
+      let container3 = bodyContainer.find("table.wb tr:contains('Инф-я').addClass('js-block-tabs')");
+      let container4 = bodyContainer.find("table.wb").last().addClass('js-block-content');
       
-      const commonParams = bodyContainer.children('table:eq(' + tableCounter++ + ')');
+      const classes = {
+        container1: {
+          clan: 'js-summary-clan',
+          capacity: 'js-summary-capacity',
+          log: 'js-summary-log',
+          gold_icon: 'js-summary-gold_icon',
+          gold_deposit: 'js-summary-gold_deposit',
+          gold_freezed: 'js-summary-gold_freezed',
+          online: 'js-summary-online',
+          edit: 'js-summary-edit'
+        },
+        container2: {
+          sectors: 'js-summary-sectors',
+          access_level: 'js-summary-access_level'
+        },
+        containerRepair1: {
+          label: 'js-repair-label'
+        },
+        containerRepair2: {
+          conditions: 'js-repair-conditions'
+        },
+        container3: {
+          info: 'js-tabs-tab_info',
+          weapon: 'js-tabs-tab_weapon',
+          armor: 'js-tabs-tab_armor',
+          jewelry: 'js-tabs-tab_jewelry',
+          backpack: 'js-tabs-tab_backpack',
+          sets: 'js-tabs-tab_sets',
+          on_lease: 'js-tabs-tab_on_lease',
+          unavailable: 'js-tabs-tab_unavailable'
+        },
+        container4: {
+          body: 'js-content-body'
+        },
+      };
+      
+      // =======================================================================
       
       let trCounter = 0;
       
       // -----------------------------------------------------------------------
       
-      const commonParamsContainer = commonParams.find('tr:eq(' + trCounter++ + ')');
-      
-      let container = commonParamsContainer.find('td:eq(0)');
-      const clan = $('<div>' + container.html().match(/(.+?)<br>/)[1] + '</span>').addClass('js-props-clan'); // TODO: replace to div?
-      const capacity = $('<span>' + container.html().match(/<br>(.+\.) \(/)[1] + '</span>').addClass('js-props-capacity');
-      const log = $('<span>' + container.html().match(/ \(.+\)/) + '</span>').addClass('js-props-log');
+      let container = container1.find('td:eq(0)');alert(container);
+      const clan = $('<span>').text(container.html().match(/(.+?)<br>/)[1]).addClass(classes.container1.clan); // TODO: replace to div?
+      const capacity = $('<span>' + container.html().match(/<br>(.+\.) \(/)[1] + '</span>').addClass(classes.container1.capacity);
+      const log = $('<span>' + container.html().match(/ \(.+\)/) + '</span>').addClass(classes.container1.log);
       container.empty().append(clan, capacity, log);
       
-      container = commonParamsContainer.find('td:eq(1)');
+      container = container1.find('td:eq(1)');
       let css = {
         'display': 'table-cell',
         'vertical-align': 'middle',
       };
-      const goldIcon = $('<span>' + container.find('td:first td:first').html() + '</span>').addClass('js-props-gold_icon').css(css); // TODO: to class css
-      const goldDepositValue = $('<span>' + container.find('td:first td:last').html() + '</span>').addClass('js-props-gold_deposit').css(css); // TODO: to class css
-      const goldFreezedValue = $('<span>' + container.find('td:last').html() + '</span>').addClass('js-props-gold_freezed').css(css); // TODO: to class css
+      const goldIcon = $('<span>' + container.find('td:first td:first').html() + '</span>').addClass(classes.container1.gold_icon).css(css); // TODO: to class css
+      const goldDepositValue = $('<span>' + container.find('td:first td:last').html() + '</span>').addClass(classes.container1.gold_deposit).css(css); // TODO: to class css
+      const goldFreezedValue = $('<span>' + container.find('td:last').html() + '</span>').addClass(classes.container1.gold_freezed).css(css); // TODO: to class css
       container.empty().append(goldIcon, goldDepositValue, goldFreezedValue);
       
-      const enableSwitch = commonParamsContainer.find('td:eq(2) a').wrap('<span class="js-settings-online">');
-      const editSwitch = commonParamsContainer.find('td:eq(3) a').wrap('<span class="js-settings-edit">');
+      const enableSwitch = container1.find('td:eq(2) a').wrap('<span class="js-summary-online">');
+      const editSwitch = container1.find('td:eq(3) a').wrap('<span class="js-summary-edit">');
       
       // -----------------------------------------------------------------------
       
-      const sectorParamsContainer = commonParams.find('tr:eq(' + trCounter++ + ') td');
-      const sectors = $('<div>' + sectorParamsContainer.html().match(/(.+?)<br>/)[1] + '</span>').addClass('js-props-sectors'); // TODO: replace to div?
-      const access = $('<div>' + sectorParamsContainer.html().match(/<br>(.+)/)[1] + '</span>').addClass('js-props-access_level');
+      const sectorParamsContainer = container2.find('td:eq(0)');
+      const sectors = $('<div>' + sectorParamsContainer.html().match(/(.+?)<br>/)[1] + '</span>').addClass(classes.container2.sectors); // TODO: replace to div?
+      const access = $('<div>' + sectorParamsContainer.html().match(/<br>(.+)/)[1] + '</span>').addClass(classes.container2.access_level);
       sectorParamsContainer.empty().append(sectors, access);
       
       // -----------------------------------------------------------------------
       
-      const repairConditionsContainer = commonParams.find('tr:eq(' + trCounter++ + ') td');
-      const repairArtsContainer = commonParams.find('tr:eq(' + trCounter + ') td table tbody tr');
-      if (repairArtsContainer.find('div.arts_info').length > 0) {
-        const repairLabel = '<b class="armory__repair-conditions repair-conditions__label">' + repairConditionsContainer.find('b').first().html().replace(/<b>\d+%<\/b>/, '') + '</b>';
-        const repairValue = '<b class="armory__repair-conditions repair-conditions__value">' + repairConditionsContainer.find('b').last().html() + '</b>';
-        repairConditionsContainer.empty().append(repairLabel, repairValue);
-        
-        const repairArts = repairArtsContainer.children();
+      if (containerRepair1) {
+        const repairConditionsContainer = containerRepair2.find(
+            'tr:eq(' + trCounter++ + ') td');
+        const repairArtsContainer = containerRepair2.find(
+            'tr:eq(' + trCounter + ') td table tbody tr');
+        if (repairArtsContainer.find('div.arts_info').length > 0) {
+          const repairLabel = $('<b>').addClass(classes.containerRepair1.label).append(
+              repairConditionsContainer.find('b').
+                  first().
+                  html().
+                  replace(/<b>\d+%<\/b>/, ''));
+          const repairValue = $('<b>').addClass(classes.containerRepair1.label).append(
+              repairConditionsContainer.find('b').last().html());
+          repairConditionsContainer.empty().append(repairLabel, repairValue);
+          
+          const repairArts = repairArtsContainer.children();
+        }
       }
       
       // =======================================================================
       
-      const tabs = bodyContainer.children('table:eq(' + tableCounter + ')');
+      const tabs = container3;
       css = {
         'display': 'grid',
         'grid-template-columns': '0.073fr 0.132fr 0.133fr 0.132fr 0.133fr 0.132fr 0.133fr 0.132fr',
         
       };
-      const div = $('<div class="armory__tabs">').css('text-align', 'center').css(css);
+      const div = $('<div>').addClass('armory__tabs').css('text-align', 'center').css(css);
       tabs.find('a').each(function() {
         const tabClasses = {
           'Инф-я': {class: 'armory-tab__info wbwhite', 'border-left-width': '1px'},
@@ -145,10 +194,10 @@
       
       // =======================================================================
       
-      const content = bodyContainer.children('table:last');
+      const content = container4;
       if (content.find('div.arts_info').length === 0) { // info page // TODO: to separate class
-        content.find('td').wrapInner('<div class="armory__desc wbwhite" style="border-top:none;padding:4px;">'); // TODO: styles out of here
-        content.replaceWith(content.find('.armory__desc'));
+        content.find('td').wrapInner('<div class="js-content-body wbwhite" style="border-top:none;padding:4px;">'); // TODO: styles out of here
+        content.replaceWith(content.find('.js-content-body'));
       } else {
       
       }
