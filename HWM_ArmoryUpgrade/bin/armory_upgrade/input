@@ -3,4 +3,5 @@ HWM_ArmoryUpgrade/framework/src/Blocks/Base/CommonElement.js
 HWM_ArmoryUpgrade/framework/src/Blocks/Base/BlockElement.js
 HWM_ArmoryUpgrade/framework/src/Blocks/Base/InlineElement.js
 HWM_ArmoryUpgrade/framework/src/Blocks/SummaryBlock.js
+HWM_ArmoryUpgrade/framework/src/Blocks/SectorsBlock.js
 HWM_ArmoryUpgrade/framework/src/UserScriptFooter.js
