@@ -5,7 +5,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
-      <library name="PHP" type="php">
+      <library name="PHP">
         <CLASSES>
           <root url="file://E:/OpenServer/domains/repo/test/vendor/composer" />
           <root url="file://E:/OpenServer/domains/repo/test/vendor/doctrine/instantiator" />
@@ -90,5 +90,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="@types/jquery" level="application" />
   </component>
 </module>
