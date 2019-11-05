@@ -6,4 +6,5 @@ HWM_ArmoryUpgrade/framework/src/Blocks/SummaryBlock.js
 HWM_ArmoryUpgrade/framework/src/Blocks/SectorsBlock.js
 HWM_ArmoryUpgrade/framework/src/Blocks/ControlsBlock.js
 HWM_ArmoryUpgrade/framework/src/Blocks/RepairBlock.js
+HWM_ArmoryUpgrade/framework/src/Blocks/LeaseBlock.js
 HWM_ArmoryUpgrade/framework/src/UserScriptFooter.js
