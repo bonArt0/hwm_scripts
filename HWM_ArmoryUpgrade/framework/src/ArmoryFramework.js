@@ -5,7 +5,7 @@ import { SectorsBlock } from './Blocks/SectorsBlock'
 import { ControlsBlock } from './Blocks/ControlsBlock'
 import { RepairBlock } from './Blocks/RepairBlock'
 import { LeaseBlock } from './Blocks/LeaseBlock'
-// import { TabsBlock } from './Blocks/TabsBlock'
+import { TabsBlock } from './Blocks/TabsBlock'
 // import { BodyBlock } from './Blocks/BodyBlock'
 
 export class ArmoryFramework {
@@ -28,7 +28,7 @@ export class ArmoryFramework {
     this._controlsBlock = new ControlsBlock(this._baseContainer)
     this._repairBlock = new RepairBlock(this._baseContainer)
     this._leaseBlock = new LeaseBlock(this._baseContainer)
-    // this._tabsBlock = new TabsBlock(this._baseContainer)
+    this._tabsBlock = new TabsBlock(this._baseContainer)
     // this._bodyBlock = new BodyBlock(this._baseContainer)
   }
 
@@ -38,5 +38,6 @@ export class ArmoryFramework {
     this._controlsBlock.build()
     this._repairBlock.build()
     this._leaseBlock.build()
+    this._tabsBlock.build()
   }
 }

@@ -18,7 +18,24 @@ export class CommonElement {
       return
     }
 
-    this._classes.push(cls)
+    for (let c of cls.split(' ')) {
+      this._classes.push(c)
+    }
+
+    return this
+  }
+
+  removeClass(cls) {
+    if (typeof cls !== 'string' || cls === '') {
+      return
+    }
+
+    for (let i = 0; i < this._classes.length; i++) {
+      if (this._classes[i] === cls) {
+        this._classes.splice(i, 1)
+        i--
+      }
+    }
 
     return this
   }
