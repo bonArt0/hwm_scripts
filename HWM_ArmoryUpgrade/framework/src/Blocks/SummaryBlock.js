@@ -10,16 +10,16 @@ export class SummaryBlock extends BlockElement {
         clan: (new BlockElement()).addClass('js-summary-clan'),
         capacity: (new InlineElement()).addClass('js-summary-capacity'),
         log: (new InlineElement()).addClass('js-summary-log'),
-      })).addClass('wblight armory__summary__overview'),
+      })).addClass('armory__summary__overview'),
       gold: (new BlockElement({
         gold_icon: (new InlineElement()).addClass('js-summary-gold_icon'),
         gold_deposit: (new InlineElement()).addClass('js-summary-gold_deposit'),
         gold_freezed: (new InlineElement()).addClass('js-summary-gold_freezed'),
-      })).addClass('wblight armory__summary__gold'),
+      })).addClass('armory__summary__gold'),
       online: (new BlockElement()).addClass(
-        'wblight armory__summary__online js-summary-online'),
+        'armory__summary__online js-summary-online'),
       control: (new BlockElement()).addClass(
-        'wblight armory__summary__control js-summary-control'),
+        'armory__summary__control js-summary-control'),
     }
   }
 
@@ -67,7 +67,7 @@ export class SummaryBlock extends BlockElement {
     this.populate(this._rawData)
 
     const summary = $('<div>')
-    summary.addClass('armory__summary').append(super.build())
+    summary.addClass('wblight armory__summary').append(super.build())
 
     this._rawData.base.replaceWith(summary)
 

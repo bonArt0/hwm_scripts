@@ -5,6 +5,7 @@ export class CommonElement {
     this._type = ''
     this._children = {}
     this._classes = []
+    this._wrapper = '%v'
     this._data = undefined
 
     if (typeof children === 'object') {
@@ -14,12 +15,22 @@ export class CommonElement {
 
   addClass (cls) {
     if (typeof cls !== 'string' || cls === '') {
-      return;
+      return
     }
 
     this._classes.push(cls)
 
-    return this;
+    return this
+  }
+
+  addWrapper(wrp) {
+    if (typeof wrp !== 'string' || wrp === '') {
+      return
+    }
+
+    this._wrapper = wrp
+
+    return this
   }
 
   populate(data) {

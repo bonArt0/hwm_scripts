@@ -33,6 +33,6 @@ export class SectorsBlock extends BlockElement {
 
     const node = super.build()
 
-    node.addClass('armory__sectors wbwhite').insertAfter(previous)
+    node.addClass('wbwhite armory__sectors').insertAfter(previous)
   }
 }

@@ -10,6 +10,8 @@ export class InlineElement extends CommonElement {
   }
 
   build () {
+    this._data = this._wrapper.replace('%v', this._data)
+
     const node = super.build()
 
     for (let child in this._children) {
