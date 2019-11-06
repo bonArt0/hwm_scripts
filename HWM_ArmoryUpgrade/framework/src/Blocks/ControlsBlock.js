@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 import { InlineElement } from './Base/InlineElement'
 import { BlockElement } from './Base/BlockElement'

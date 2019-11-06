@@ -35,6 +35,6 @@
  * http://creativecommons.org/licenses/by/2.5/
 */
 
-'use strict';
+'use strict'
 
 $('head').append('<link rel="stylesheet" type="text/css" href="http://localhost:3000/armory.css">')

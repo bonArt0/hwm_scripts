@@ -10,16 +10,16 @@ export class SummaryBlock extends BlockElement {
         clan: (new BlockElement()).addClass('js-summary-clan'),
         capacity: (new InlineElement()).addClass('js-summary-capacity'),
         log: (new InlineElement()).addClass('js-summary-log'),
-      })).addClass('armory__summary__overview'),
+      })).addClass('wblight armory__summary__overview'),
       gold: (new BlockElement({
         gold_icon: (new InlineElement()).addClass('js-summary-gold_icon'),
         gold_deposit: (new InlineElement()).addClass('js-summary-gold_deposit'),
         gold_freezed: (new InlineElement()).addClass('js-summary-gold_freezed'),
-      })).addClass('armory__summary__gold'),
+      })).addClass('wblight armory__summary__gold'),
       online: (new BlockElement()).addClass(
-        'armory__summary__online js-summary-online'),
+        'wblight armory__summary__online js-summary-online'),
       control: (new BlockElement()).addClass(
-        'armory__summary__control js-summary-control'),
+        'wblight armory__summary__control js-summary-control'),
     }
   }
 
@@ -58,8 +58,6 @@ export class SummaryBlock extends BlockElement {
         match(/sklad_rc_on=[01]/)[1])
     }
 
-    console.log('SummaryBlock editing', this._editing)
-
     return this._editing
   }
 
@@ -67,7 +65,7 @@ export class SummaryBlock extends BlockElement {
     this.populate(this._rawData)
 
     const summary = $('<div>')
-    summary.addClass('wblight armory__summary').append(super.build())
+    summary.addClass('armory__summary').append(super.build())
 
     this._rawData.base.replaceWith(summary)
 

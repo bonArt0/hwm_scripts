@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 import { CommonElement } from './CommonElement'
 
@@ -17,5 +17,13 @@ export class InlineElement extends CommonElement {
     }
 
     return node
+  }
+
+  // оборачивает узел
+  wrap(node) {
+    if (this._wrapper[0] !== '' && this._wrapper[1] !== '') {
+      node.before(this._wrapper[0])
+      node.after(this._wrapper[1])
+    }
   }
 }

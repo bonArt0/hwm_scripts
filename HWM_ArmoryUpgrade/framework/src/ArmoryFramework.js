@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 import { SummaryBlock } from './Blocks/SummaryBlock'
 import { SectorsBlock } from './Blocks/SectorsBlock'
