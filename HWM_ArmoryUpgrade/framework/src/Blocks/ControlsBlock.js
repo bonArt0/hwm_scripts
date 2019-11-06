@@ -9,8 +9,7 @@ export class ControlsBlock extends BlockElement {
       header: (new BlockElement({
         input: (new BlockElement()).addClass('wblight armory__controls_header__input js-controls_header-input'),
         balance: (new BlockElement({
-          label: new InlineElement(),
-          value: new InlineElement().addClass('js-controls_header-balance-value').addWrapper('(клан: %v)'),
+          value: new InlineElement().addClass('js-controls_header-balance-value'),
         })).addClass('wblight armory__controls_header__balance js-controls_header-balance'),
         max_battles: (new BlockElement()).addClass('wblight armory__controls_header__max-battles js-controls_header-max_battles'),
         smith_percent: (new BlockElement()).addClass('wblight armory__controls_header__smith-percent js-controls_header-smith_percent'),
@@ -27,10 +26,6 @@ export class ControlsBlock extends BlockElement {
   }
 
   constructor (baseContainer) {
-    const structure = ControlsBlock._getStructure()
-
-    super(structure)
-
     const headerContainer = baseContainer.find('table.wb tr:contains(\'Поместить артефакт\')').first()
     const bodyContainer = headerContainer.next()
 
@@ -47,12 +42,16 @@ export class ControlsBlock extends BlockElement {
       body[elements[id]] = bodyContainer.children().eq(id).html()
     }
 
+    const structure = ControlsBlock._getStructure()
+    structure.header.getChild('balance').getChild('value').addWrapper(header.balance.replace(/[\d,]+/, '|').split('|'))
+
+    super(structure)
+
     this._rawData = {
       base: headerContainer.closest('table'),
       header: {
         input: header.input,
         balance: {
-          label: header.balance.match(/<b>Баланс<\/b> /),
           value: header.balance.match(/[\d,]+/),
         },
         max_battles: header.max_battles,

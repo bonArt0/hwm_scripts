@@ -13,7 +13,11 @@ export class BlockElement extends CommonElement {
     const node = super.build()
 
     for (let child in this._children) {
-      node.append(this._children[child].build())
+      const childNode = this._children[child].build()
+      const wrapper = this._children[child].getWrapper()
+      node.append(childNode)
+      childNode.before(wrapper[0])
+      childNode.after(wrapper[1])
     }
 
     return node

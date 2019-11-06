@@ -10,12 +10,12 @@ export class LeaseBlock extends BlockElement {
     }
   }
 
-  constructor (container) {
+  constructor (baseContainer) {
     const structure = LeaseBlock._getStructure()
 
     super(structure)
 
-    const headerContainer = container.find('table.wb tr:contains(\'Ваша аренда\')').first()
+    const headerContainer = baseContainer.find('table.wb tr:contains(\'Ваша аренда\')').first()
     const bodyContainer = headerContainer.next()
 
     this._rawData = {
