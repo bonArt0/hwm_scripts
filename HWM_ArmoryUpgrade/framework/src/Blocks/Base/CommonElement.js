@@ -13,6 +13,10 @@ export class CommonElement {
     }
   }
 
+  getChild(name) {
+    return this._children[name]
+  }
+
   addClass (cls) {
     if (typeof cls !== 'string' || cls === '') {
       return
