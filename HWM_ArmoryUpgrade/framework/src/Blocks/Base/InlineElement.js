@@ -20,7 +20,7 @@ export class InlineElement extends CommonElement {
   }
 
   // оборачивает узел
-  wrap(node) {
+  wrap (node) {
     if (this._wrapper[0] !== '' && this._wrapper[1] !== '') {
       node.before(this._wrapper[0])
       node.after(this._wrapper[1])

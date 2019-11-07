@@ -11,12 +11,13 @@ export class RepairBlock extends BlockElement {
   }
 
   constructor (baseContainer) {
-    const structure = RepairBlock._getStructure()
 
-    super(structure)
-
-    const headerContainer = baseContainer.find('table.wb tr:contains(\'Артефакты для ремонта.\')').first()
+    const headerContainer = baseContainer.find(
+      'table.wb tr:contains(\'Артефакты для ремонта.\')').first()
     const bodyContainer = headerContainer.next()
+
+    const structure = RepairBlock._getStructure()
+    super(structure)
 
     this._rawData = {
       base: headerContainer.closest('table'),

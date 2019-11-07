@@ -7,26 +7,38 @@ export class ControlsBlock extends BlockElement {
   static _getStructure () {
     return {
       header: (new BlockElement({
-        input: (new BlockElement()).addClass('wblight armory__controls_header__input js-controls_header-input'),
+        input: (new BlockElement()).addClass(
+          'wblight armory__controls_header__input js-controls_header-input'),
         balance: (new BlockElement({
-          value: new InlineElement().addClass('js-controls_header-balance-value'),
-        })).addClass('wblight armory__controls_header__balance js-controls_header-balance'),
-        max_battles: (new BlockElement()).addClass('wblight armory__controls_header__max-battles js-controls_header-max_battles'),
-        smith_percent: (new BlockElement()).addClass('wblight armory__controls_header__smith-percent js-controls_header-smith_percent'),
-        capacity: (new BlockElement()).addClass('wblight armory__controls_header__capacity js-controls_header-capacity'),
+          value: new InlineElement().addClass(
+            'js-controls_header-balance-value'),
+        })).addClass(
+          'wblight armory__controls_header__balance js-controls_header-balance'),
+        max_battles: (new BlockElement()).addClass(
+          'wblight armory__controls_header__max-battles js-controls_header-max_battles'),
+        smith_percent: (new BlockElement()).addClass(
+          'wblight armory__controls_header__smith-percent js-controls_header-smith_percent'),
+        capacity: (new BlockElement()).addClass(
+          'wblight armory__controls_header__capacity js-controls_header-capacity'),
       })).addClass('armory__controls__header'),
       body: (new BlockElement({
-        input: (new BlockElement()).addClass('armory__controls_header__input js-controls_body-input'),
-        balance: (new BlockElement()).addClass('armory__controls_header__balance js-controls_body-balance'),
-        max_battles: (new BlockElement()).addClass('armory__controls_header__max-battles js-controls_body-max_battles'),
-        smith_percent: (new BlockElement()).addClass('armory__controls_header__smith-percent js-controls_body-smith_percent'),
-        capacity: (new BlockElement()).addClass('armory__controls_header__capacity js-controls_body-capacity'),
+        input: (new BlockElement()).addClass(
+          'armory__controls_header__input js-controls_body-input'),
+        balance: (new BlockElement()).addClass(
+          'armory__controls_header__balance js-controls_body-balance'),
+        max_battles: (new BlockElement()).addClass(
+          'armory__controls_header__max-battles js-controls_body-max_battles'),
+        smith_percent: (new BlockElement()).addClass(
+          'armory__controls_header__smith-percent js-controls_body-smith_percent'),
+        capacity: (new BlockElement()).addClass(
+          'armory__controls_header__capacity js-controls_body-capacity'),
       })).addClass('wbwhite armory__controls__body'),
     }
   }
 
   constructor (baseContainer) {
-    const headerContainer = baseContainer.find('table.wb tr:contains(\'Поместить артефакт\')').first()
+    const headerContainer = baseContainer.find(
+      'table.wb tr:contains(\'Поместить артефакт\')').first()
     const bodyContainer = headerContainer.next()
 
     const header = {}, body = {}, elements = {
@@ -43,8 +55,9 @@ export class ControlsBlock extends BlockElement {
     }
 
     const structure = ControlsBlock._getStructure()
-    structure.header.getChild('balance').getChild('value').addWrapper(header.balance.replace(/[\d,]+/, '|').split('|'))
-
+    structure.header.getChild('balance').
+      getChild('value').
+      addWrapper(header.balance.replace(/[\d,]+/, '|').split('|'))
     super(structure)
 
     this._rawData = {

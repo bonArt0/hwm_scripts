@@ -13,7 +13,7 @@ export class CommonElement {
     }
   }
 
-  getChild(name) {
+  getChild (name) {
     return this._children[name]
   }
 
@@ -29,7 +29,7 @@ export class CommonElement {
     return this
   }
 
-  removeClass(cls) {
+  removeClass (cls) {
     if (typeof cls !== 'string' || cls === '') {
       return
     }
@@ -44,7 +44,7 @@ export class CommonElement {
     return this
   }
 
-  addWrapper(wrp) {
+  addWrapper (wrp) {
     if (!Array.isArray(wrp) || wrp.length !== 2) {
       return
     }
@@ -54,14 +54,14 @@ export class CommonElement {
     return this
   }
 
-  getWrapper() {
+  getWrapper () {
     return this._wrapper
   }
 
-  populate(data) {
+  populate (data) {
     if (Object.keys(this._children).length > 0) {
       for (let elem in this._children) {
-          this._children[elem].populate(data[elem])
+        this._children[elem].populate(data[elem])
       }
     } else {
       this._data = data

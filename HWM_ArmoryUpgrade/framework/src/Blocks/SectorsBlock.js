@@ -13,12 +13,12 @@ export class SectorsBlock extends BlockElement {
   }
 
   constructor (baseContainer) {
-    super(SectorsBlock._getStructure())
-
     const container = baseContainer.find(
       'table.wb tr:contains(\'Районы доступа: \') td').first()
-
     const control = container.html().match(/<form(.|\n)+<\/form><br>/);
+
+    const structure = SectorsBlock._getStructure()
+    super(structure)
 
     this._rawData = {
       base: container.closest('table'),

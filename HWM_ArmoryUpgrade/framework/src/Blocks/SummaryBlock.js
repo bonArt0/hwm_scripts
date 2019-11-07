@@ -24,15 +24,15 @@ export class SummaryBlock extends BlockElement {
   }
 
   constructor (baseContainer) {
-    super(SummaryBlock._getStructure())
-
     const container = baseContainer.find(
       'table.wb tr:contains(\'Склад клана \')').first()
-
     const overviewContainer = container.children('td').first()
     const goldContainer = overviewContainer.next()
     const onlineContainer = goldContainer.next()
     const controlContainer = onlineContainer.next()
+
+    const structure = SummaryBlock._getStructure()
+    super(structure)
 
     this._rawData = {
       base: container.closest('table'),

@@ -19,8 +19,6 @@ export class TabsBlock extends BlockElement {
   }
 
   constructor (baseContainer) {
-    super(TabsBlock._getStructure())
-
     const container = baseContainer.find('table.wb tr:contains(\'Инф-я\')').first()
 
     const tabs = {}, elements = {
@@ -34,14 +32,17 @@ export class TabsBlock extends BlockElement {
       7: 'unavailable',
     }
 
-    this._rawData = {
-      base: container.closest('table'),
-      tabs: {},
-    }
-
     for (let id in elements) {
       // children.length === structure.header.length
-      this._rawData.tabs[elements[id]] = container.children().eq(id).html()
+      tabs[elements[id]] = container.children().eq(id).html()
+    }
+
+    const structure = TabsBlock._getStructure()
+    super(structure)
+
+    this._rawData = {
+      base: container.closest('table'),
+      tabs: tabs,
     }
   }
 

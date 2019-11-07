@@ -23,7 +23,6 @@ export class BodyBlock extends BlockElement {
     structure.controls.
       addWrapper($('<div>').append(controlsContainer).html().
         replace(/<table([\r\n]|.)+<\/form>/, '|</form>').split('|'))
-
     super(structure)
 
     this._rawData = {
