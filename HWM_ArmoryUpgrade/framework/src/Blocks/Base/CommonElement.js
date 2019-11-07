@@ -1,8 +1,14 @@
 'use strict'
 
 export class CommonElement {
+  _node
+  _children
+  _classes
+  _wrapper
+  _data
+
   constructor (children) {
-    this._type = ''
+    this._node = ''
     this._children = {}
     this._classes = []
     this._wrapper = ['', '']
@@ -13,29 +19,37 @@ export class CommonElement {
     }
   }
 
+  setNode (node) {
+    this._node = node
+  }
+
+  getChildren () {
+    return this._children
+  }
+
   getChild (name) {
     return this._children[name]
   }
 
-  addClass (cls) {
-    if (typeof cls !== 'string' || cls === '') {
+  addClass (className) {
+    if (typeof className !== 'string' || className === '') {
       return
     }
 
-    for (let c of cls.split(' ')) {
+    for (let c of className.split(' ')) {
       this._classes.push(c)
     }
 
     return this
   }
 
-  removeClass (cls) {
-    if (typeof cls !== 'string' || cls === '') {
+  removeClass (className) {
+    if (typeof className !== 'string' || className === '') {
       return
     }
 
     for (let i = 0; i < this._classes.length; i++) {
-      if (this._classes[i] === cls) {
+      if (this._classes[i] === className) {
         this._classes.splice(i, 1)
         i--
       }
@@ -44,17 +58,17 @@ export class CommonElement {
     return this
   }
 
-  addWrapper (wrp) {
-    if (!Array.isArray(wrp) || wrp.length !== 2) {
+  addWrapper (wrapper) {
+    if (!Array.isArray(wrapper) || wrapper.length !== 2) {
       return
     }
 
-    this._wrapper = wrp
+    this._wrapper = wrapper
 
     return this
   }
 
-  getWrapper () {
+  getWrapper() {
     return this._wrapper
   }
 
@@ -69,14 +83,14 @@ export class CommonElement {
   }
 
   build () {
-    if (this._type === '') {
+    if (this._node === '') {
       throw new Error('incorrect element type')
     }
 
-    const node = $(this._type).html(this._data)
+    const node = $(this._node).html(this._data)
 
-    for (let cls of this._classes) {
-      node.addClass(cls)
+    for (let className of this._classes) {
+      node.addClass(className)
     }
 
     return node

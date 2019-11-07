@@ -6,14 +6,16 @@ export class InlineElement extends CommonElement {
   constructor (children) {
     super(children)
 
-    this._type = '<span>'
+    this.setNode('<span>')
   }
 
   build () {
     const node = super.build()
+    const children = this.getChildren()
 
-    for (let child in this._children) {
-      node.text(this._children[child].build())
+    for (let childName in children) {
+      const childNode = children[childName].build()
+      node.text(childNode)
     }
 
     return node
@@ -21,9 +23,10 @@ export class InlineElement extends CommonElement {
 
   // оборачивает узел
   wrap (node) {
-    if (this._wrapper[0] !== '' && this._wrapper[1] !== '') {
-      node.before(this._wrapper[0])
-      node.after(this._wrapper[1])
+    const wrapper = this.getWrapper()
+    if (wrapper[0] !== '' && wrapper[1] !== '') {
+      node.before(wrapper[0])
+      node.after(wrapper[1])
     }
   }
 }
