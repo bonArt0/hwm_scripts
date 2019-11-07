@@ -68,7 +68,7 @@ export class CommonElement {
     return this
   }
 
-  getWrapper() {
+  getWrapper () {
     return this._wrapper
   }
 
