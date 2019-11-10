@@ -37,8 +37,15 @@ export class ControlsBlock extends BlockElement {
   }
 
   constructor (baseContainer) {
+    const structure = ControlsBlock._getStructure()
+
     const headerContainer = baseContainer.find(
       'table.wb tr:contains(\'Поместить артефакт\')').first()
+    if (headerContainer.length === 0) { // regular user mode
+      super(structure)
+      return;
+    }
+
     const bodyContainer = headerContainer.next()
 
     const header = {}, body = {}, elements = {
@@ -54,7 +61,6 @@ export class ControlsBlock extends BlockElement {
       body[elements[id]] = bodyContainer.children().eq(id).html()
     }
 
-    const structure = ControlsBlock._getStructure()
     structure.header.getChild('balance').
       getChild('value').
       addWrapper(header.balance.replace(/[\d,]+/, '|').split('|'))
@@ -82,6 +88,10 @@ export class ControlsBlock extends BlockElement {
   }
 
   build () {
+    if (this._rawData === undefined) { // regular user mode
+      return;
+    }
+
     this.populate(this._rawData)
 
     const node = super.build()
