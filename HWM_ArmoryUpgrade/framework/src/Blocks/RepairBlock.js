@@ -26,13 +26,17 @@ export class RepairBlock extends BlockElement {
     }
   }
 
-  build () {
+  build (previous) {
     this.populate(this._rawData)
 
     const node = super.build()
     node.addClass('armory__repair')
 
-    this._rawData.base.replaceWith(node)
+    if (previous !== undefined) {
+      node.insertAfter(previous)
+    } else {
+      this._rawData.base.replaceWith(node)
+    }
 
     return node
   }

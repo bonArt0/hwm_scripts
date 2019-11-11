@@ -34,5 +34,7 @@ export class SectorsBlock extends BlockElement {
     const node = super.build()
 
     node.addClass('wbwhite armory__sectors').insertAfter(previous)
+
+    return node
   }
 }

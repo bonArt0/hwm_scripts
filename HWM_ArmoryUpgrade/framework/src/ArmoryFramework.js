@@ -33,11 +33,17 @@ export class ArmoryFramework {
   }
 
   _rebuildElements () {
-    const summary = this._summaryBlock.build()
-    this._sectorsBlock.build(summary)
-    this._controlsBlock.build()
-    this._repairBlock.build()
-    this._leaseBlock.build()
+    let previous = this._summaryBlock.build()
+    previous = this._sectorsBlock.build(previous)
+    const control = this._controlsBlock.build()
+    if (control === undefined) {
+      previous = this._repairBlock.build(previous)
+    } else {
+      previous = this._repairBlock.build()
+    }
+
+    this._leaseBlock.build(previous)
+
     this._tabsBlock.build()
     this._bodyBlock.build()
   }

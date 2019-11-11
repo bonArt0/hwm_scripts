@@ -16,22 +16,45 @@ export class LeaseBlock extends BlockElement {
     const bodyContainer = headerContainer.next()
 
     const structure = LeaseBlock._getStructure()
+
+    const artBlocks = {}
+    const blocks = bodyContainer.children('td').first().
+      children('table').first().
+      children('tbody').first().
+      children('tr').first().
+      children('td')
+    blocks.each(function (index) {
+      const container = $(this).
+        children('table').first().
+        children('tbody').first().
+        children('tr')
+      const artContainer = container.first().children('td').first().html()
+      const label = container.last().children('td').first().html()
+
+      structure.body._children[index] = new BlockElement()
+      artBlocks[index] = artContainer + label
+    })
+
     super(structure)
 
     this._rawData = {
       base: headerContainer.closest('table'),
       header: headerContainer.children().eq(0).html(),
-      body: bodyContainer.children().eq(0).html(),
+      body: artBlocks,// bodyContainer.children().eq(0).html(),
     }
   }
 
-  build () {
+  build (previous) {
     this.populate(this._rawData)
 
     const node = super.build()
     node.addClass('armory__lease')
 
-    this._rawData.base.replaceWith(node)
+    if (previous !== undefined) {
+      node.insertAfter(previous)
+    } else {
+      this._rawData.base.replaceWith(node)
+    }
 
     return node
   }

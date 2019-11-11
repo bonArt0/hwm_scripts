@@ -1,12 +1,6 @@
 'use strict'
 
 export class CommonElement {
-  _node
-  _children
-  _classes
-  _wrapper
-  _data
-
   constructor (children) {
     this._node = ''
     this._children = {}
