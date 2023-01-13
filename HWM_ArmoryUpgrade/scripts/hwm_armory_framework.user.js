@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          HWM Armory Framework
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.0
+// @version       1.0.1
 // @description   Хелпер для других скриптов склада
 // @author        bonArt
 // @license       GPL-3.0-only
@@ -27,18 +27,18 @@ function isControlOn() {
  * @returns {HTMLTableRowElement[]|undefined}
  */
 function initFramework() {
-    const sda = findArtsListBlock();
-    if (sda === undefined) {
+    const artsList = findArtsListBlock();
+    if (artsList === undefined) {
         console.debug('something wrong');
-        return sda;
+        return artsList;
     }
 
-    sda.map((value) => {
+    artsList.map((value) => {
         const id = value.getElementsByTagName('input').namedItem('inv_id').value;
-        value.classList.add(formatArtBlockClassName(id));
+        value.classList.add('art_block', formatArtBlockClassName(id));
     });
 
-    return sda;
+    return artsList;
 }
 
 /**
