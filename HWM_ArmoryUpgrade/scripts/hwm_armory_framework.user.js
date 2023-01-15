@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          HWM Armory Framework
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.1.0
+// @version       1.2.3
 // @description   Хелпер для других скриптов склада
 // @author        bonArt
 // @license       GPL-3.0-only
@@ -19,162 +19,216 @@ const FrameworkClassNames = {
     ARMORY_INFO: 'afw_armory_info',
 };
 
-if (isControlOn() && initFramework()) {
-}
+let _ArmoryFrameworkInstance;
 
-/**
- * @returns {boolean}
- */
-function isControlOn() {
-    return document.body.innerHTML.search('sklad_rc_on=0') > -1;
-}
+class ArmoryFramework
+{
+    /**
+     * @type {boolean}
+     * @private
+     */
+    _initialized = false
 
-/**
- * @returns {boolean}
- */
-function initFramework() {
-    return initArtPlaceBox() && initArmoryInfoBox();
-}
+    /**
+     * @type {boolean}
+     * @private
+     */
+    _isControlOn;
 
-/* <editor-fold desc="armory info box"> */
+    static init() {
+        if (!_ArmoryFrameworkInstance) {
+            _ArmoryFrameworkInstance = new ArmoryFramework();
+        }
 
-/**
- * @returns {boolean}
- */
-function initArmoryInfoBox() {
-    const box = getArtPlaceForm()
-        ?.parentElement // td
-        ?.parentElement // tr
-        ?.parentElement // tbody
-        ?.parentElement // table#1
-        ?.previousSibling // table#0
-        ?.firstChild // tbody
-        ?.firstChild // tr
-        ?.firstChild; // td
+        return _ArmoryFrameworkInstance;
+    }
 
-    if (!box || box.tagName !== 'TD') {
+    /**
+     * @private use ArmoryFramework.init()
+     */
+    constructor() {
+        this._initFramework();
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isControlOn() {
+        if (this._isControlOn === undefined) {
+            this._isControlOn = document.body.innerHTML.search('sklad_rc_on=0') > -1;
+        }
+
+        return this._isControlOn;
+    }
+
+    /**
+     * @throws {Error} on init failure
+     * @private
+     */
+    _initFramework() {
+        if (!this._initialized && this.isControlOn()) {
+            let initialized = this._initArtPlaceBox();
+            if (!initialized) {
+                this._throwError('ArtPlaceBox');
+            }
+
+            initialized = this._initArmoryInfoBox();
+            if (!initialized) {
+                this._throwError('ArmoryInfoBox');
+            }
+
+            this._initialized = true;
+
+            console.info('Armory Framework initialized');
+        }
+    }
+
+    /**
+     * @throws {Error} on init failure
+     * @private
+     */
+    _throwError(component) {
         console.error('Something happen with game layout');
-        return false;
+        throw new Error(component);
     }
 
-    box.classList.add(FrameworkClassNames.ARMORY_INFO);
+    /* <editor-fold desc="arts place box"> */
 
-    return true;
-}
+    /**
+     * @returns {boolean}
+     */
+    _initArtPlaceBox() {
+        const artsPlaceForm = document.getElementsByName('p_art_id')
+            ?.item(0) // select
+            ?.parentElement // td
+            ?.parentElement // tr
+            ?.parentElement // tbody
+            ?.parentElement // table
+            ?.parentElement;
 
-/**
- * @returns {HTMLTableCellElement|null}
- */
-function getArmoryInfoBox() {
-    const box = document.getElementsByClassName(FrameworkClassNames.ARMORY_INFO)?.item(0);
-    if (!box || box.tagName !== 'td') {
-        initArmoryInfoBox();
-        return document.getElementsByClassName(FrameworkClassNames.ARMORY_INFO)?.item(0) ?? null;
-    }
-    return box;
-}
+        if (!artsPlaceForm || artsPlaceForm.tagName !== 'FORM') {
+            return false;
+        }
 
-/**
- * @returns {number}
- */
-function getArmoryId() {
-    return +getArtPlaceForm()?.children?.item(0)?.value;
-}
+        artsPlaceForm.classList.add(FrameworkClassNames.ARTS_PLACE_FORM);
 
-/**
- * @returns {string}
- */
-function getArtsPlaceSign() {
-    return getArtPlaceForm()?.children?.item(1)?.value + '';
-}
+        const artsPlaceHeader = artsPlaceForm
+            ?.parentElement // td
+            ?.parentElement // tr#1
+            ?.parentElement // tbody
+            ?.children.item(0) // tr#0
+            ?.children.item(0) // td#0
+            ?.children.item(0); // b
 
-/**
- * @returns {string}
- */
-function getCurrentCapacity() {
-    return  getArmoryInfoBox()?.innerHTML.match(/<b>(\d+)<\/b> из \d+/)[1];
-}
+        if (!artsPlaceHeader || artsPlaceHeader.tagName !== 'B') {
+            artsPlaceForm.classList.remove(FrameworkClassNames.ARTS_PLACE_FORM);
+            return false;
+        }
 
-/**
- * @returns {string}
- */
-function getTotalCapacity() {
-    return  getArmoryInfoBox()?.innerHTML.match(/<b>\d+<\/b> из (\d+)/)[1];
-}
+        artsPlaceHeader?.classList.add(FrameworkClassNames.ARTS_PLACE_HEADER);
 
-/* </editor-fold> */
-
-/* <editor-fold desc="arts place box"> */
-
-/**
- * @returns {boolean}
- */
-function initArtPlaceBox() {
-    const artsPlaceForm = document.getElementsByName('p_art_id')
-        ?.item(0) // select
-        ?.parentElement // td
-        ?.parentElement // tr
-        ?.parentElement // tbody
-        ?.parentElement // table
-        ?.parentElement;
-
-    if (!artsPlaceForm || artsPlaceForm.tagName !== 'FORM') {
-        console.error('Something happen with game layout');
-        return false;
+        return true;
     }
 
-    artsPlaceForm.classList.add(FrameworkClassNames.ARTS_PLACE_FORM);
-
-    const artsPlaceHeader = artsPlaceForm
-        ?.parentElement // td
-        ?.parentElement // tr#1
-        ?.parentElement // tbody
-        ?.children.item(0) // tr#0
-        ?.children.item(0) // td#0
-        ?.children.item(0); // b
-
-    if (!artsPlaceHeader || artsPlaceHeader.tagName !== 'B') {
-        artsPlaceForm.classList.remove(FrameworkClassNames.ARTS_PLACE_FORM);
-        console.error('Something happen with game layout');
-        return false;
+    /**
+     * @returns {HTMLFormElement|null}
+     * @throws {Error} on invalid framework usage
+     */
+    getArtPlaceForm() {
+        const form = document.getElementsByClassName(FrameworkClassNames.ARTS_PLACE_FORM)?.item(0);
+        if (!form || form.tagName !== 'FORM') {
+            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
+        }
+        return form;
     }
 
-    artsPlaceHeader?.classList.add(FrameworkClassNames.ARTS_PLACE_HEADER);
+    /* </editor-fold> */
 
-    return true;
-}
+    /* <editor-fold desc="armory info box"> */
 
-/**
- * @returns {HTMLFormElement|null}
- */
-function getArtPlaceForm() {
-    const form = document.getElementsByClassName(FrameworkClassNames.ARTS_PLACE_FORM)?.item(0);
-    if (!form || form.tagName !== 'FORM') {
-        initArtPlaceBox();
-        return document.getElementsByClassName(FrameworkClassNames.ARTS_PLACE_FORM)?.item(0) ?? null;
+    /**
+     * @returns {boolean}
+     */
+    _initArmoryInfoBox() {
+        const box = this.getArtPlaceForm()
+            ?.parentElement // td
+            ?.parentElement // tr
+            ?.parentElement // tbody
+            ?.parentElement // table#1
+            ?.previousSibling // table#0
+            ?.firstChild // tbody
+            ?.firstChild // tr
+            ?.firstChild; // td
+
+        if (!box || box.tagName !== 'TD') {
+            return false;
+        }
+
+        box.classList.add(FrameworkClassNames.ARMORY_INFO);
+
+        return true;
     }
-    return form;
+
+    /**
+     * @returns {HTMLTableCellElement|null}
+     * @throws {Error} on invalid framework usage
+     */
+    getArmoryInfoBox() {
+        const box = document.getElementsByClassName(FrameworkClassNames.ARMORY_INFO)?.item(0);
+        if (!box || box.tagName !== 'TD') {
+            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
+        }
+        return box;
+    }
+
+    /**
+     * @returns {number}
+     */
+    getArmoryId() {
+        return +this.getArtPlaceForm()?.children?.item(0)?.value;
+    }
+
+    /**
+     * @returns {string}
+     */
+    getArtsPlaceSign() {
+        return this.getArtPlaceForm()?.children?.item(1)?.value + '';
+    }
+
+    /**
+     * @returns {number}
+     */
+    getCurrentCapacity() {
+    return +this.getArmoryInfoBox()?.innerHTML.match(/<b>(\d+)<\/b> из \d+/)[1];
 }
 
-/* </editor-fold> */
-
-/*  <editor-fold desc="common"> */
-
-/**
- * @param {string} name
- * @param {string} innerHTML
- * @returns {HTMLLabelElement}
- */
-function buildCheckboxLabel(name, innerHTML) {
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.name = name;
-
-    const label = document.createElement('label');
-    label.append(checkbox);
-    label.append(innerHTML);
-
-    return label;
+    /**
+     * @returns {number}
+     */
+    getTotalCapacity() {
+    return +this.getArmoryInfoBox()?.innerHTML.match(/<b>\d+<\/b> из (\d+)/)[1];
 }
 
-/* </editor-fold> */
+    /* </editor-fold> */
+
+    /*  <editor-fold desc="common"> */
+
+    /**
+     * @param {string} name
+     * @param {string} innerHTML
+     * @returns {HTMLLabelElement}
+     */
+    buildCheckboxLabel(name, innerHTML) {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = name;
+
+        const label = document.createElement('label');
+        label.append(checkbox);
+        label.append(innerHTML);
+
+        return label;
+    }
+
+    /* </editor-fold> */
+}
