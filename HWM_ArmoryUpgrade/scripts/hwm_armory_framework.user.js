@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name          HWM Armory Framework
+// @name          hwm_armory_framework
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.2.3
+// @version       1.3.0
 // @description   Хелпер для других скриптов склада
 // @author        bonArt
 // @license       GPL-3.0-only
@@ -34,6 +34,24 @@ class ArmoryFramework
      * @private
      */
     _isControlOn;
+
+    /**
+     * @type {HTMLTableCellElement}
+     * @private
+     */
+    _armoryInfoBox;
+
+    /**
+     * @type {HTMLElement}
+     * @private
+     */
+    _artsPlaceHeader;
+
+    /**
+     * @type {HTMLFormElement}
+     * @private
+     */
+    _artsPlaceForm;
 
     static init() {
         if (!_ArmoryFrameworkInstance) {
@@ -111,6 +129,7 @@ class ArmoryFramework
         }
 
         artsPlaceForm.classList.add(FrameworkClassNames.ARTS_PLACE_FORM);
+        this._artsPlaceForm = artsPlaceForm;
 
         const artsPlaceHeader = artsPlaceForm
             ?.parentElement // td
@@ -121,25 +140,50 @@ class ArmoryFramework
             ?.children.item(0); // b
 
         if (!artsPlaceHeader || artsPlaceHeader.tagName !== 'B') {
-            artsPlaceForm.classList.remove(FrameworkClassNames.ARTS_PLACE_FORM);
+            this._artsPlaceForm.classList.remove(FrameworkClassNames.ARTS_PLACE_FORM);
             return false;
         }
 
-        artsPlaceHeader?.classList.add(FrameworkClassNames.ARTS_PLACE_HEADER);
+        this._artsPlaceHeader = artsPlaceHeader;
+        this._artsPlaceHeader.classList.add(FrameworkClassNames.ARTS_PLACE_HEADER);
 
         return true;
     }
 
     /**
-     * @returns {HTMLFormElement|null}
+     * @returns {HTMLFormElement}
      * @throws {Error} on invalid framework usage
      */
     getArtPlaceForm() {
-        const form = document.getElementsByClassName(FrameworkClassNames.ARTS_PLACE_FORM)?.item(0);
-        if (!form || form.tagName !== 'FORM') {
+        if (!this._artsPlaceForm || this._artsPlaceForm.tagName !== 'FORM') {
             this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
         }
-        return form;
+        return this._artsPlaceForm;
+    }
+
+    /**
+     * @returns {HTMLElement}
+     * @throws {Error} on invalid framework usage
+     */
+    getArtPlaceHeader() {
+        if (!this._artsPlaceHeader || this._artsPlaceHeader.tagName !== 'B') {
+            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
+        }
+        return this._artsPlaceHeader;
+    }
+
+    /**
+     * @returns {number}
+     */
+    getArmoryId() {
+        return +this.getArtPlaceForm().children.item(0)?.value;
+    }
+
+    /**
+     * @returns {string}
+     */
+    getArtsPlaceSign() {
+        return this.getArtPlaceForm().children.item(1)?.value + '';
     }
 
     /* </editor-fold> */
@@ -150,7 +194,7 @@ class ArmoryFramework
      * @returns {boolean}
      */
     _initArmoryInfoBox() {
-        const box = this.getArtPlaceForm()
+        const armoryInfoBox = this.getArtPlaceForm()
             ?.parentElement // td
             ?.parentElement // tr
             ?.parentElement // tbody
@@ -160,53 +204,39 @@ class ArmoryFramework
             ?.firstChild // tr
             ?.firstChild; // td
 
-        if (!box || box.tagName !== 'TD') {
+        if (!armoryInfoBox || armoryInfoBox.tagName !== 'TD') {
             return false;
         }
 
-        box.classList.add(FrameworkClassNames.ARMORY_INFO);
+        armoryInfoBox.classList.add(FrameworkClassNames.ARMORY_INFO);
+        this._armoryInfoBox = armoryInfoBox;
 
         return true;
     }
 
     /**
-     * @returns {HTMLTableCellElement|null}
+     * @returns {HTMLTableCellElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryInfoBox() {
-        const box = document.getElementsByClassName(FrameworkClassNames.ARMORY_INFO)?.item(0);
-        if (!box || box.tagName !== 'TD') {
+        if (!this._armoryInfoBox || this._armoryInfoBox.tagName !== 'TD') {
             this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
         }
-        return box;
-    }
-
-    /**
-     * @returns {number}
-     */
-    getArmoryId() {
-        return +this.getArtPlaceForm()?.children?.item(0)?.value;
-    }
-
-    /**
-     * @returns {string}
-     */
-    getArtsPlaceSign() {
-        return this.getArtPlaceForm()?.children?.item(1)?.value + '';
+        return this._armoryInfoBox;
     }
 
     /**
      * @returns {number}
      */
     getCurrentCapacity() {
-    return +this.getArmoryInfoBox()?.innerHTML.match(/<b>(\d+)<\/b> из \d+/)[1];
+    return +this.getArmoryInfoBox().innerHTML.match(/<b>(\d+)<\/b> из \d+/)?.at(1);
 }
 
     /**
      * @returns {number}
      */
     getTotalCapacity() {
-    return +this.getArmoryInfoBox()?.innerHTML.match(/<b>\d+<\/b> из (\d+)/)[1];
+    return +this.getArmoryInfoBox().innerHTML.match(/<b>\d+<\/b> из (\d+)/).at(1);
 }
 
     /* </editor-fold> */
