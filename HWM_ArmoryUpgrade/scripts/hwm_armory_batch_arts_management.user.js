@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          HWM Armory Batch Arts Management
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.1.1
+// @version       1.1.2
 // @description   Движение артов пачкой
 // @author        bonArt
 // @license       GPL-3.0-only
@@ -10,7 +10,7 @@
 // @match         https://178.248.235.15/sklad_info.php?*
 // @match         https://www.lordswm.com/sklad_info.php?*
 // @match         https://my.lordswm.com/sklad_info.php?*
-// @require       https://greasyfork.org/scripts/457946-hwm-armory-framework/code/hwm_armory_framework.js?version=1138820
+// @require       https://greasyfork.org/scripts/457946-hwm-armory-framework/code/hwm_armory_framework.js?version=1138856
 // @supportURL    https://www.heroeswm.ru/sms-create.php?mailto_id=117282
 // ==/UserScript==
 
@@ -43,7 +43,7 @@ function initArtsPlaceBox() {
     const artsToPlace = getArtsToPlace(artsPlaceForm.elements[2].options);
     artsPlaceForm.parentElement.append(buildNewPlaceBox(artsToPlace));
 
-    const artsPlaceHeader = document.getElementsByClassName(FrameworkClassNames.ARTS_PLACE_HEADER).item(0);
+    const artsPlaceHeader = framework.getArtPlaceHeader();
     artsPlaceHeader.innerHTML = artsPlaceHeader.innerHTML.replace('артефакт', 'артефакты');
     artsPlaceHeader.parentElement.append(buildArtsPlaceSubmitButton());
     artsPlaceHeader.parentElement.prepend(buildArtsPlaceCounterLabel(artsToPlace.length));
