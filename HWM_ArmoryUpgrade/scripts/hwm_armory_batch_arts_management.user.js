@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          HWM Armory Batch Arts Management
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.1.0
+// @version       1.1.1
 // @description   Движение артов пачкой
 // @author        bonArt
 // @license       GPL-3.0-only
@@ -10,7 +10,7 @@
 // @match         https://178.248.235.15/sklad_info.php?*
 // @match         https://www.lordswm.com/sklad_info.php?*
 // @match         https://my.lordswm.com/sklad_info.php?*
-// @require       https://greasyfork.org/scripts/457946-hwm-armory-framework/code/HWM%20Armory%20Framework.js?version=1138244
+// @require       https://greasyfork.org/scripts/457946-hwm-armory-framework/code/hwm_armory_framework.js?version=1138820
 // @supportURL    https://www.heroeswm.ru/sms-create.php?mailto_id=117282
 // ==/UserScript==
 
@@ -19,10 +19,10 @@ const LocalClassNames = {
     ARTS_PLACE_COUNTER: 'abam_arts_place_counter',
 };
 
-if (isControlOn()) {
-    if (getArtPlaceForm()) { // framework
-        initControls();
+const framework = ArmoryFramework.init()
 
+if (framework.isControlOn()) {
+    if (initControls()) { // framework
         console.info('HWM Armory Batch Arts Management initiated');
     } else {
         console.warn('HWM Armory Batch Arts Management failed');
@@ -31,12 +31,13 @@ if (isControlOn()) {
 
 function initControls() {
     initArtsPlaceBox();
-    initArmoryInfoBox();
     //initArtsCheckboxes();
+
+    return true;
 }
 
 function initArtsPlaceBox() {
-    const artsPlaceForm = getArtPlaceForm();
+    const artsPlaceForm = framework.getArtPlaceForm();
     artsPlaceForm.style.display = 'none';
 
     const artsToPlace = getArtsToPlace(artsPlaceForm.elements[2].options);
@@ -96,13 +97,13 @@ function getArtsPlaceCounterLabel() {
 }
 
 async function handleArtsPlaceSubmit() {
-    const infoBox = getArmoryInfoBox();
-    const armory_id = getArmoryId();
-    let sign = getArtsPlaceSign();
+    const infoBox = framework.getArmoryInfoBox();
+    const armory_id = framework.getArmoryId();
+    let sign = framework.getArtsPlaceSign();
 
     for (const artBox of getArtsPlaceBoxes() ?? []) {
-        const currentCapacity = getCurrentCapacity();
-        const TotalCapacity = getTotalCapacity();
+        const currentCapacity = framework.getCurrentCapacity();
+        const TotalCapacity = framework.getTotalCapacity();
         if (currentCapacity === TotalCapacity) {
             break;
         }
@@ -174,7 +175,7 @@ function buildNewPlaceBox(artsList) {
 
     let art_id, art_name;
     for ([art_id, art_name] of artsList) {
-        const box = buildCheckboxLabel(art_id, art_name);
+        const box = framework.buildCheckboxLabel(art_id, art_name);
         box.children.item(0).onchange = (ev) => handleArtsPlaceCheckboxChange(ev.target.checked);
         newPlaceBox.append(box);
     }
