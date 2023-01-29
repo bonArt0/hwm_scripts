@@ -54,7 +54,7 @@ class ArmoryFramework
     _isControlOn;
 
     /**
-     * @type {HTMLTableCellElement}
+     * @type {ArmoryBox}
      * @private
      */
     _armoryBox;
@@ -213,7 +213,7 @@ class ArmoryFramework
         if (!this._initialized && this.isControlOn()) {
             const initialAnchor = this._findInitialAnchor();
 
-            this._initArmoryBox(initialAnchor);
+            this._armoryBox = new ArmoryBox(initialAnchor);
 
             this._initArmoryOverviewBox();
             this._initArmoryInfoBox();
@@ -315,7 +315,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryOverviewBox() {
-        const armoryOverviewBox = this.getArmoryBox()
+        const armoryOverviewBox = this._armoryBox.getBox()
             ?.children.item(0) // table#0 armory overview
             ?.children.item(0); // tbody#0 armory overview
 
@@ -521,7 +521,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryControlsBox() {
-        const armoryControlsBox = this.getArmoryBox()
+        const armoryControlsBox = this._armoryBox.getBox()
             ?.children.item(1) // table#1 armory controls
             ?.children.item(0); // tbody#0 armory controls
 
@@ -553,7 +553,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryRepairsBox() {
-        const armoryRepairsBox = this.getArmoryBox()
+        const armoryRepairsBox = this._armoryBox.getBox()
             ?.children.item(2); // table#2 armory repairs
 
         if (armoryRepairsBox && armoryRepairsBox.tagName === 'TABLE') {
@@ -584,7 +584,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryTabsBox() {
-        const armoryTabsBox = this.getArmoryBox()
+        const armoryTabsBox = this._armoryBox.getBox()
             ?.children.item(3) // table#3 armory tabs
             ?.children.item(0) // tbody#0 armory tabs
             ?.children.item(0); // tr#0 armory tabs
@@ -617,7 +617,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryArtsBox() {
-        const armoryArtsBox = this.getArmoryBox()
+        const armoryArtsBox = this._armoryBox.getBox()
             ?.children.item(4) // table#4 armory arts
             ?.children.item(0) // tbody#0 armory arts
             ?.children.item(0) // tr#0 armory arts
@@ -743,4 +743,113 @@ class ArmoryFramework
     }
 
     /* </editor-fold> */
+}
+
+/**
+ * @abstract
+ */
+class Box {
+    /**
+     * @type {HTMLElement}
+     * @private
+     */
+    _box;
+
+    constructor(ancestor) {
+        this._initBox(ancestor);
+    }
+
+    /**
+     * @returns {HTMLElement}
+     * @throws {Error} on invalid framework usage
+     */
+    getBox() {
+        if (!this._box || this._box.tagName !== this._getBoxTag()) {
+            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
+        }
+        return this._box;
+    }
+
+    /**
+     * @throws {Error} on init failure
+     */
+    _initBox(ancestor) {
+        const box = this._findBox(ancestor);
+
+        if (box && box.tagName === this._getBoxTag()) {
+            box.classList.add(this._getBoxClassName());
+            this._box = box;
+            return;
+        }
+
+        this._throwError('ArmoryOverviewBox');
+    }
+
+    /**
+     * @return {HTMLElement}
+     * @abstract
+     * @protected
+     */
+    _findBox(ancestor) {}
+
+    /**
+     * @return {string}
+     * @abstract
+     * @protected
+     */
+    _getBoxTag() {}
+
+    /**
+     * @return {string}
+     * @abstract
+     * @protected
+     */
+    _getBoxClassName() {}
+
+    /**
+     * @throws {Error} on init failure
+     * @private
+     */
+    _throwError(component) {
+        console.error('Something happen with game layout');
+        throw new Error(component);
+    }
+}
+
+class ArmoryBox extends Box {
+    /**
+     * @return {HTMLTableElement}
+     */
+    getBox() {
+        return super.getBox();
+    }
+
+    /**
+     * @param {HTMLTableCellElement} ancestor
+     * @return {HTMLTableElement|undefined}
+     */
+    _findBox(ancestor) {
+        return ancestor
+            ?.parentElement // td#0, armory account clear part
+            ?.parentElement // tr#0, armory account clear part
+            ?.parentElement // tbody, armory account clear part
+            ?.parentElement // table, armory account clear part
+            ?.parentElement // td#0, armory account
+            ?.parentElement // tr#0, armory account
+            ?.parentElement // tbody, armory account
+            ?.parentElement // table, armory account
+            ?.parentElement // td#1, armory overview
+            ?.parentElement // tr#0, armory overview
+            ?.parentElement // tbody#0, armory overview
+            ?.parentElement // table#0, armory overview
+            ?.parentElement; // td#0, armory box
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TD';
+    }
 }
