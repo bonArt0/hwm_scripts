@@ -315,7 +315,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryOverviewBox() {
-        const armoryOverviewBox = this._armoryBox.getOuterBox()
+        const armoryOverviewBox = this._armoryBox.getInnerBox()
             ?.children.item(0) // table#0 armory overview
             ?.children.item(0); // tbody#0 armory overview
 
@@ -521,7 +521,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryControlsBox() {
-        const armoryControlsBox = this._armoryBox.getOuterBox()
+        const armoryControlsBox = this._armoryBox.getInnerBox()
             ?.children.item(1) // table#1 armory controls
             ?.children.item(0); // tbody#0 armory controls
 
@@ -553,7 +553,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryRepairsBox() {
-        const armoryRepairsBox = this._armoryBox.getOuterBox()
+        const armoryRepairsBox = this._armoryBox.getInnerBox()
             ?.children.item(2); // table#2 armory repairs
 
         if (armoryRepairsBox && armoryRepairsBox.tagName === 'TABLE') {
@@ -584,7 +584,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryTabsBox() {
-        const armoryTabsBox = this._armoryBox.getOuterBox()
+        const armoryTabsBox = this._armoryBox.getInnerBox()
             ?.children.item(3) // table#3 armory tabs
             ?.children.item(0) // tbody#0 armory tabs
             ?.children.item(0); // tr#0 armory tabs
@@ -617,7 +617,7 @@ class ArmoryFramework
      * @throws {Error} on init failure
      */
     _initArmoryArtsBox() {
-        const armoryArtsBox = this._armoryBox.getOuterBox()
+        const armoryArtsBox = this._armoryBox.getInnerBox()
             ?.children.item(4) // table#4 armory arts
             ?.children.item(0) // tbody#0 armory arts
             ?.children.item(0) // tr#0 armory arts
@@ -772,6 +772,13 @@ class Box {
     }
 
     /**
+     * @returns {HTMLElement}
+     * @abstract
+     * @public
+     */
+    getInnerBox() {}
+
+    /**
      * @throws {Error} on init failure
      */
     _initBox(anchor) {
@@ -826,6 +833,16 @@ class ArmoryBox extends Box {
     }
 
     /**
+     * @return {HTMLTableCellElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox()
+            .children.item(0) // tbody
+            .children.item(0) // tr
+            .children.item(0); // td
+    }
+
+    /**
      * @param {HTMLTableCellElement} anchor
      * @return {HTMLTableElement|undefined}
      */
@@ -843,7 +860,10 @@ class ArmoryBox extends Box {
             ?.parentElement // tr#0, armory overview
             ?.parentElement // tbody#0, armory overview
             ?.parentElement // table#0, armory overview
-            ?.parentElement; // td#0, armory box
+            ?.parentElement // td#0, armory box
+            ?.parentElement // tr#0, armory box
+            ?.parentElement // tbody#0, armory box
+            ?.parentElement // table, page content
     }
 
     _getBoxClassName() {
@@ -851,6 +871,6 @@ class ArmoryBox extends Box {
     }
 
     _getBoxTag() {
-        return 'TD';
+        return 'TABLE';
     }
 }
