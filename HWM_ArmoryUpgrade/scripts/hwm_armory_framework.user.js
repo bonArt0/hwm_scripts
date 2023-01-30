@@ -60,12 +60,6 @@ class ArmoryFramework
     _armoryBox;
 
     /**
-     * @type {HTMLTableSectionElement}
-     * @private
-     */
-    _armoryOverviewBox;
-
-    /**
      * @type {HTMLTableCellElement}
      * @private
      */
@@ -215,7 +209,6 @@ class ArmoryFramework
 
             this._armoryBox = new ArmoryBox(initialAnchor);
 
-            this._initArmoryOverviewBox();
             this._initArmoryInfoBox();
             this._initArmoryAccountBox();
             this._initArmoryOnlineSwitchBox();
@@ -312,31 +305,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory overview box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmoryOverviewBox() {
-        const armoryOverviewBox = this._armoryBox.getInnerBox()
-            ?.children.item(0) // table#0 armory overview
-            ?.children.item(0); // tbody#0 armory overview
-
-        if (armoryOverviewBox && armoryOverviewBox.tagName === 'TBODY') {
-            armoryOverviewBox.classList.add(FrameworkClassNames.ARMORY_OVERVIEW_BOX);
-            this._armoryOverviewBox = armoryOverviewBox;
-            return;
-        }
-
-        this._throwError('ArmoryOverviewBox');
-    }
-
-    /**
      * @returns {HTMLTableSectionElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryOverviewBox() {
-        if (!this._armoryOverviewBox || this._armoryOverviewBox.tagName !== 'TBODY') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryOverviewBox;
+        return this._armoryBox.overviewBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -826,6 +799,19 @@ class Box {
 
 class ArmoryBox extends Box {
     /**
+     * @type {OverviewBox}
+     * @public
+     * @readonly
+     */
+    overviewBox;
+
+    constructor(anchor) {
+        super(anchor);
+
+        this.overviewBox = new OverviewBox(this.getInnerBox());
+    }
+
+    /**
      * @return {HTMLTableElement}
      */
     getOuterBox() {
@@ -868,6 +854,40 @@ class ArmoryBox extends Box {
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TABLE';
+    }
+}
+
+class OverviewBox extends Box {
+    /**
+     * @return {HTMLTableElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableSectionElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox()
+            .children.item(0); // tbody
+    }
+
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @return {HTMLTableElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(0); // table#0 armory overview
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_OVERVIEW_BOX;
     }
 
     _getBoxTag() {
