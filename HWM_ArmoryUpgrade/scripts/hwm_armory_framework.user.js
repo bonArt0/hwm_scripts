@@ -63,18 +63,6 @@ class ArmoryFramework
      * @type {HTMLTableCellElement}
      * @private
      */
-    _armoryOnlineSwitchBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
-    _armoryControlSwitchBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
     _armorySectorsBox;
 
     /**
@@ -197,8 +185,6 @@ class ArmoryFramework
 
             this._armoryBox = new ArmoryBox(initialAnchor);
 
-            this._initArmoryOnlineSwitchBox();
-            this._initArmoryControlSwitchBox();
             this._initArmorySectorsBox();
 
             this._initArmoryControlsBox();
@@ -294,31 +280,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory online switch box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmoryOnlineSwitchBox() {
-        const armoryOnlineSwitchBox = this.getArmoryOverviewBox()
-            ?.children.item(0) // tr#0 armory overview
-            ?.children.item(2); // td#2 armory overview
-
-        if (armoryOnlineSwitchBox && armoryOnlineSwitchBox.tagName === 'TD') {
-            armoryOnlineSwitchBox.classList.add(FrameworkClassNames.ARMORY_ONLINE_SWITCH_BOX);
-            this._armoryOnlineSwitchBox = armoryOnlineSwitchBox;
-            return;
-        }
-
-        this._throwError('ArmoryOnlineSwitchBox');
-    }
-
-    /**
      * @returns {HTMLTableCellElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryOnlineBox() {
-        if (!this._armoryOnlineSwitchBox || this._armoryOnlineSwitchBox.tagName !== 'TD') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryOnlineSwitchBox;
+        return this._armoryBox.overviewBox.onlineSwitchBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -326,31 +292,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory control switch box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmoryControlSwitchBox() {
-        const armoryControlSwitchBox = this.getArmoryOverviewBox()
-            ?.children.item(0) // tr#0 armory overview
-            ?.children.item(3); // td#3 armory overview
-
-        if (armoryControlSwitchBox && armoryControlSwitchBox.tagName === 'TD') {
-            armoryControlSwitchBox.classList.add(FrameworkClassNames.ARMORY_CONTROL_SWITCH_BOX);
-            this._armoryControlSwitchBox = armoryControlSwitchBox;
-            return;
-        }
-
-        this._throwError('ArmoryControlSwitchBox');
-    }
-
-    /**
      * @returns {HTMLTableCellElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryControlSwitchBox() {
-        if (!this._armoryControlSwitchBox || this._armoryControlSwitchBox.tagName !== 'TD') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryControlSwitchBox;
+        return this._armoryBox.overviewBox.controlSwitchBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -775,11 +721,27 @@ class OverviewBox extends Box {
      */
     accountBox;
 
+    /**
+     * @type {OverviewOnlineSwitchBox}
+     * @public
+     * @readonly
+     */
+    onlineSwitchBox;
+
+    /**
+     * @type {OverviewControlSwitchBox}
+     * @public
+     * @readonly
+     */
+    controlSwitchBox;
+
     constructor(anchor) {
         super(anchor);
 
         this.infoBox = new OverviewInfoBox(this.getInnerBox());
         this.accountBox = new OverviewAccountBox(this.getInnerBox());
+        this.onlineSwitchBox = new OverviewOnlineSwitchBox(this.getInnerBox());
+        this.controlSwitchBox = new OverviewControlSwitchBox(this.getInnerBox());
     }
 
     /**
@@ -846,7 +808,7 @@ class OverviewInfoBox extends Box {
 
     /**
      * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableElement|undefined}
+     * @return {HTMLTableCellElement|undefined}
      */
     _findBox(anchor) {
         return anchor
@@ -897,5 +859,73 @@ class OverviewAccountBox extends Box {
 
     _getBoxTag() {
         return 'TABLE';
+    }
+}
+
+class OverviewOnlineSwitchBox extends Box {
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox();
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableCellElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(0) // tr#0 armory overview
+            ?.children.item(2); // td#2 armory overview
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_ONLINE_SWITCH_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TD';
+    }
+}
+
+class OverviewControlSwitchBox extends Box {
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox();
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableCellElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(0) // tr#0 armory overview
+            ?.children.item(3); // td#3 armory overview
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROL_SWITCH_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TD';
     }
 }
