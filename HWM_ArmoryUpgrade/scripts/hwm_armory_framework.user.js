@@ -925,8 +925,25 @@ class OverviewSectorsBox extends Box {
 }
 
 class ControlsBox extends Box {
+    /**
+     * @type {ControlsHeaderBox}
+     * @public
+     * @readonly
+     */
+    headerBox;
+
+    /**
+     * @type {ControlsBodyBox}
+     * @public
+     * @readonly
+     */
+    bodyBox;
+
     constructor(anchor) {
         super(anchor);
+
+        this.headerBox = new ControlsHeaderBox(this.getInnerBox());
+        this.bodyBox = new ControlsBodyBox(this.getInnerBox());
     }
 
     /**
@@ -959,5 +976,79 @@ class ControlsBox extends Box {
 
     _getBoxTag() {
         return 'TABLE';
+    }
+}
+
+class ControlsHeaderBox extends Box {
+    constructor(anchor) {
+        super(anchor);
+    }
+
+    /**
+     * @return {HTMLTableRowElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableRowElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox(); // tr
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableRowElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(0); // tr#0 armory controls
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TR';
+    }
+}
+
+class ControlsBodyBox extends Box {
+    constructor(anchor) {
+        super(anchor);
+    }
+
+    /**
+     * @return {HTMLTableRowElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableRowElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox(); // tr
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableRowElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(1); // tr#1 armory controls
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_BODY_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TR';
     }
 }
