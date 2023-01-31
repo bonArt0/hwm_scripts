@@ -60,30 +60,6 @@ class ArmoryFramework
     _armoryBox;
 
     /**
-     * @type {HTMLTableRowElement}
-     * @private
-     */
-    _armoryControlsBodyBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
-    _armoryControlsBodyPutBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
-    _armoryControlsBodyBattlesBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
-    _armoryControlsBodySmithsBox;
-
-    /**
      * @type {HTMLTableElement}
      * @private
      */
@@ -100,18 +76,6 @@ class ArmoryFramework
      * @private
      */
     _artsBox;
-
-    /**
-     * @type {HTMLElement}
-     * @private
-     */
-    _artsPlaceHeader;
-
-    /**
-     * @type {HTMLFormElement}
-     * @private
-     */
-    _artsPlaceForm;
 
     static init() {
         if (!_ArmoryFrameworkInstance) {
@@ -154,11 +118,6 @@ class ArmoryFramework
             this._initArmoryTabsBox();
 
             this._initArmoryArtsBox();
-
-            let initialized = this._initArtPlaceBox();
-            if (!initialized) {
-                this._throwError('ArtPlaceBox');
-            }
 
             this._initialized = true;
 
@@ -386,52 +345,11 @@ class ArmoryFramework
     /* <editor-fold desc="arts place box"> */
 
     /**
-     * @returns {boolean}
-     */
-    _initArtPlaceBox() {
-        const artsPlaceForm = document.getElementsByName('p_art_id')
-            ?.item(0) // select
-            ?.parentElement // td
-            ?.parentElement // tr
-            ?.parentElement // tbody
-            ?.parentElement // table
-            ?.parentElement;
-
-        if (!artsPlaceForm || artsPlaceForm.tagName !== 'FORM') {
-            return false;
-        }
-
-        artsPlaceForm.classList.add(FrameworkClassNames.ARTS_PLACE_FORM);
-        this._artsPlaceForm = artsPlaceForm;
-
-        const artsPlaceHeader = artsPlaceForm
-            ?.parentElement // td
-            ?.parentElement // tr#1
-            ?.parentElement // tbody
-            ?.children.item(0) // tr#0
-            ?.children.item(0) // td#0
-            ?.children.item(0); // b
-
-        if (!artsPlaceHeader || artsPlaceHeader.tagName !== 'B') {
-            this._artsPlaceForm.classList.remove(FrameworkClassNames.ARTS_PLACE_FORM);
-            return false;
-        }
-
-        this._artsPlaceHeader = artsPlaceHeader;
-        this._artsPlaceHeader.classList.add(FrameworkClassNames.ARTS_PLACE_HEADER);
-
-        return true;
-    }
-
-    /**
      * @returns {HTMLFormElement}
      * @throws {Error} on invalid framework usage
      */
     getArtPlaceForm() {
-        if (!this._artsPlaceForm || this._artsPlaceForm.tagName !== 'FORM') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._artsPlaceForm;
+        return this._armoryBox.controlsBox.bodyBox.putBox.getInnerBox();
     }
 
     /**
@@ -439,10 +357,7 @@ class ArmoryFramework
      * @throws {Error} on invalid framework usage
      */
     getArtPlaceHeader() {
-        if (!this._artsPlaceHeader || this._artsPlaceHeader.tagName !== 'B') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._artsPlaceHeader;
+        return this._armoryBox.controlsBox.headerBox.putBox.getInnerBox();
     }
 
     /**
@@ -1004,43 +919,6 @@ class ControlsHeaderBox extends Box {
     }
 }
 
-class ControlsBodyBox extends Box {
-    constructor(anchor) {
-        super(anchor);
-    }
-
-    /**
-     * @return {HTMLTableRowElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableRowElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox(); // tr
-    }
-
-    /**
-     * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableRowElement|undefined}
-     */
-    _findBox(anchor) {
-        return anchor
-            ?.children.item(1); // tr#1 armory controls
-    }
-
-    _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_BODY_BOX;
-    }
-
-    _getBoxTag() {
-        return 'TR';
-    }
-}
-
 /**
  * @abstract
  */
@@ -1100,5 +978,129 @@ class ControlsHeaderSmithsBox extends ControlsHeaderCell {
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_CONTROLS_HEADER_SMITHS_BOX;
+    }
+}
+
+class ControlsBodyBox extends Box {
+    /**
+     * @type {ControlsBodyPutBox}
+     * @public
+     * @readonly
+     */
+    putBox;
+
+    /**
+     * @type {ControlsBodyBattlesBox}
+     * @public
+     * @readonly
+     */
+    battlesBox;
+
+    /**
+     * @type {ControlsBodySmithsBox}
+     * @public
+     * @readonly
+     */
+    smithsBox;
+
+    constructor(anchor) {
+        super(anchor);
+
+        this.putBox = new ControlsBodyPutBox(this.getInnerBox());
+        this.battlesBox = new ControlsBodyBattlesBox(this.getInnerBox());
+        this.smithsBox = new ControlsBodySmithsBox(this.getInnerBox());
+    }
+
+    /**
+     * @return {HTMLTableRowElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableRowElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox(); // tr
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableRowElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(1); // tr#1 armory controls
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_BODY_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TR';
+    }
+}
+
+/**
+ * @abstract
+ */
+class ControlsBodyCell extends Box {
+    /**
+     * @return {HTMLFormElement}
+     */
+    getInnerBox() {
+        return super.getInnerBox()
+            .children.item(0); // form
+    }
+
+    _getBoxTag() {
+        return 'TD';
+    }
+}
+
+class ControlsBodyPutBox extends ControlsBodyCell {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor.children.item(0);
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_BODY_PUT_BOX;
+    }
+}
+
+class ControlsBodyBattlesBox extends ControlsBodyCell {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor.children.item(1);
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_BODY_BATTLES_BOX;
+    }
+}
+
+class ControlsBodySmithsBox extends ControlsBodyCell {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor.children.item(2);
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_BODY_SMITHS_BOX;
     }
 }
