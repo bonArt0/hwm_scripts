@@ -63,30 +63,6 @@ class ArmoryFramework
      * @type {HTMLTableRowElement}
      * @private
      */
-    _armoryControlsHeaderBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
-    _armoryControlsHeaderPutBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
-    _armoryControlsHeaderBattlesBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
-    _armoryControlsHeaderSmithsBox;
-
-    /**
-     * @type {HTMLTableRowElement}
-     * @private
-     */
     _armoryControlsBodyBox;
 
     /**
@@ -535,10 +511,11 @@ class Box {
 
     /**
      * @returns {HTMLElement}
-     * @abstract
      * @public
      */
-    getInnerBox() {}
+    getInnerBox() {
+        return this.getOuterBox();
+    }
 
     /**
      * @throws {Error} on init failure
@@ -980,22 +957,33 @@ class ControlsBox extends Box {
 }
 
 class ControlsHeaderBox extends Box {
+    /**
+     * @type {ControlsHeaderPutBox}
+     * @public
+     * @readonly
+     */
+    putBox;
+
+    /**
+     * @type {ControlsHeaderBattlesBox}
+     * @public
+     * @readonly
+     */
+    battlesBox;
+
+    /**
+     * @type {ControlsHeaderSmithsBox}
+     * @public
+     * @readonly
+     */
+    smithsBox;
+
     constructor(anchor) {
         super(anchor);
-    }
 
-    /**
-     * @return {HTMLTableRowElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableRowElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox(); // tr
+        this.putBox = new ControlsHeaderPutBox(this.getInnerBox());
+        this.battlesBox = new ControlsHeaderBattlesBox(this.getInnerBox());
+        this.smithsBox = new ControlsHeaderSmithsBox(this.getInnerBox());
     }
 
     /**
@@ -1050,5 +1038,67 @@ class ControlsBodyBox extends Box {
 
     _getBoxTag() {
         return 'TR';
+    }
+}
+
+/**
+ * @abstract
+ */
+class ControlsHeaderCell extends Box {
+    /**
+     * @return {HTMLElement}
+     */
+    getInnerBox() {
+        return super.getInnerBox()
+            .children.item(0); // b
+    }
+
+    _getBoxTag() {
+        return 'TD';
+    }
+}
+
+class ControlsHeaderPutBox extends ControlsHeaderCell {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor.children.item(0);
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_PUT_BOX;
+    }
+}
+
+class ControlsHeaderBattlesBox extends ControlsHeaderCell {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor.children.item(1);
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_BATTLES_BOX;
+    }
+}
+
+class ControlsHeaderSmithsBox extends ControlsHeaderCell {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor.children.item(2);
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_SMITHS_BOX;
     }
 }
