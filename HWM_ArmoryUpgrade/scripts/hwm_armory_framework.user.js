@@ -30,7 +30,7 @@ const FrameworkClassNames = {
     ARMORY_CONTROLS_BODY_PUTS_BOX: 'afw_armory_controls_body_puts_box',
     ARMORY_CONTROLS_BODY_BATTLES_BOX: 'afw_armory_controls_body_battles_box',
     ARMORY_CONTROLS_BODY_SMITHS_BOX: 'afw_armory_controls_body_smiths_box',
-    ARMORY_REPAIRS_BOX: 'afw_armory_repairs_box',
+    ARMORY_TAKES_BOX: 'afw_armory_takes_box',
     ARMORY_TABS_BOX: 'afw_armory_tabs_box',
     ARMORY_ARTS_BOX: 'afw_armory_arts_box',
     ARTS_PLACE_FORM: 'afw_arts_place_form',
@@ -112,8 +112,6 @@ class ArmoryFramework
             const initialAnchor = this._findInitialAnchor();
 
             this._armoryBox = new ArmoryBox(initialAnchor);
-
-            this._initArmoryRepairsBox();
 
             this._initArmoryTabsBox();
 
@@ -247,30 +245,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory repairs box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmoryRepairsBox() {
-        const armoryRepairsBox = this._armoryBox.getInnerBox()
-            ?.children.item(2); // table#2 armory repairs
-
-        if (armoryRepairsBox && armoryRepairsBox.tagName === 'TABLE') {
-            armoryRepairsBox.classList.add(FrameworkClassNames.ARMORY_REPAIRS_BOX);
-            this._armoryRepairsBox = armoryRepairsBox;
-            return;
-        }
-
-        this._throwError('ArmoryRepairsBox');
-    }
-
-    /**
-     * @returns {HTMLTableElement}
+     * @returns {HTMLTableSectionElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryRepairs() {
-        if (!this._armoryRepairsBox || this._armoryRepairsBox.tagName !== 'TABLE') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryRepairsBox;
+        return this._armoryBox.takesBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -493,11 +472,19 @@ class ArmoryBox extends Box {
      */
     controlsBox;
 
+    /**
+     * @type {TakesBox}
+     * @public
+     * @readonly
+     */
+    takesBox;
+
     constructor(anchor) {
         super(anchor);
 
         this.overviewBox = new OverviewBox(this.getInnerBox());
         this.controlsBox = new ControlsBox(this.getInnerBox());
+        this.takesBox = new TakesBox(this.getInnerBox());
     }
 
     /**
@@ -1112,3 +1099,30 @@ class ControlsBodySmithsBox extends ControlsBodyCell {
 }
 
 /* </editor-fold> */
+
+class TakesBox extends Box {
+    /**
+     * @return {HTMLTableSectionElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox()
+            .children.item(0); // tbody
+    }
+
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @return {HTMLTableElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(2); // table#0 armory overview
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_TAKES_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TABLE';
+    }
+}
