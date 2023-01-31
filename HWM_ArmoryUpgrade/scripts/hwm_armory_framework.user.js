@@ -550,6 +550,8 @@ class ArmoryBox extends Box {
     }
 }
 
+/* <editor-fold desc="armory overview"> */
+
 class OverviewBox extends Box {
     /**
      * @type {OverviewInfoBox}
@@ -815,6 +817,10 @@ class OverviewSectorsBox extends Box {
         return 'TD';
     }
 }
+
+/* </editor-fold> */
+
+/* <editor-fold desc="armory controls"> */
 
 class ControlsBox extends Box {
     /**
@@ -1104,3 +1110,5 @@ class ControlsBodySmithsBox extends ControlsBodyCell {
         return FrameworkClassNames.ARMORY_CONTROLS_BODY_SMITHS_BOX;
     }
 }
+
+/* </editor-fold> */
