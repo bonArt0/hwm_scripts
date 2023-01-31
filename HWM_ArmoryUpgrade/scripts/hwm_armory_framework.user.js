@@ -60,12 +60,6 @@ class ArmoryFramework
     _armoryBox;
 
     /**
-     * @type {HTMLTableSectionElement}
-     * @private
-     */
-    _armoryControlsBox;
-
-    /**
      * @type {HTMLTableRowElement}
      * @private
      */
@@ -178,8 +172,6 @@ class ArmoryFramework
             const initialAnchor = this._findInitialAnchor();
 
             this._armoryBox = new ArmoryBox(initialAnchor);
-
-            this._initArmoryControlsBox();
 
             this._initArmoryRepairsBox();
 
@@ -308,31 +300,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory controls box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmoryControlsBox() {
-        const armoryControlsBox = this._armoryBox.getInnerBox()
-            ?.children.item(1) // table#1 armory controls
-            ?.children.item(0); // tbody#0 armory controls
-
-        if (armoryControlsBox && armoryControlsBox.tagName === 'TBODY') {
-            armoryControlsBox.classList.add(FrameworkClassNames.ARMORY_CONTROLS_BOX);
-            this._armoryControlsBox = armoryControlsBox;
-            return;
-        }
-
-        this._throwError('ArmoryControlsBox');
-    }
-
-    /**
      * @returns {HTMLTableSectionElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryControlsBox() {
-        if (!this._armoryControlsBox || this._armoryControlsBox.tagName !== 'TBODY') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryControlsBox;
+        return this._armoryBox.controlsBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -622,10 +594,18 @@ class ArmoryBox extends Box {
      */
     overviewBox;
 
+    /**
+     * @type {ControlsBox}
+     * @public
+     * @readonly
+     */
+    controlsBox;
+
     constructor(anchor) {
         super(anchor);
 
         this.overviewBox = new OverviewBox(this.getInnerBox());
+        this.controlsBox = new ControlsBox(this.getInnerBox());
     }
 
     /**
@@ -941,5 +921,43 @@ class OverviewSectorsBox extends Box {
 
     _getBoxTag() {
         return 'TD';
+    }
+}
+
+class ControlsBox extends Box {
+    constructor(anchor) {
+        super(anchor);
+    }
+
+    /**
+     * @return {HTMLTableElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableSectionElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox()
+            .children.item(0); // tbody
+    }
+
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @return {HTMLTableElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(1); // table#1 armory controls
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_CONTROLS_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TABLE';
     }
 }
