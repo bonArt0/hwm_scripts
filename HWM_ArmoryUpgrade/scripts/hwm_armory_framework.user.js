@@ -60,12 +60,6 @@ class ArmoryFramework
     _armoryBox;
 
     /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
-    _armorySectorsBox;
-
-    /**
      * @type {HTMLTableSectionElement}
      * @private
      */
@@ -185,8 +179,6 @@ class ArmoryFramework
 
             this._armoryBox = new ArmoryBox(initialAnchor);
 
-            this._initArmorySectorsBox();
-
             this._initArmoryControlsBox();
 
             this._initArmoryRepairsBox();
@@ -304,31 +296,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory sectors box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmorySectorsBox() {
-        const armorySectorsBox = this.getArmoryOverviewBox()
-            ?.children.item(1) // tr#1 armory overview
-            ?.children.item(0); // td#0 armory overview
-
-        if (armorySectorsBox && armorySectorsBox.tagName === 'TD') {
-            armorySectorsBox.classList.add(FrameworkClassNames.ARMORY_SECTORS_BOX);
-            this._armorySectorsBox = armorySectorsBox;
-            return;
-        }
-
-        this._throwError('ArmorySectorsBox');
-    }
-
-    /**
      * @returns {HTMLTableCellElement}
      * @throws {Error} on invalid framework usage
      */
     getArmorySectorsBox() {
-        if (!this._armorySectorsBox || this._armorySectorsBox.tagName !== 'TD') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armorySectorsBox;
+        return this._armoryBox.overviewBox.sectorsBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -735,6 +707,13 @@ class OverviewBox extends Box {
      */
     controlSwitchBox;
 
+    /**
+     * @type {OverviewSectorsBox}
+     * @public
+     * @readonly
+     */
+    sectorsBox;
+
     constructor(anchor) {
         super(anchor);
 
@@ -742,6 +721,7 @@ class OverviewBox extends Box {
         this.accountBox = new OverviewAccountBox(this.getInnerBox());
         this.onlineSwitchBox = new OverviewOnlineSwitchBox(this.getInnerBox());
         this.controlSwitchBox = new OverviewControlSwitchBox(this.getInnerBox());
+        this.sectorsBox = new OverviewSectorsBox(this.getInnerBox());
     }
 
     /**
@@ -923,6 +903,40 @@ class OverviewControlSwitchBox extends Box {
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_CONTROL_SWITCH_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TD';
+    }
+}
+
+class OverviewSectorsBox extends Box {
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox();
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableCellElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(1) // tr#1 armory overview
+            ?.children.item(0); // td#0 armory overview
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_SECTORS_BOX;
     }
 
     _getBoxTag() {
