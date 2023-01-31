@@ -63,18 +63,6 @@ class ArmoryFramework
      * @type {HTMLTableCellElement}
      * @private
      */
-    _armoryInfoBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
-    _armoryAccountBox;
-
-    /**
-     * @type {HTMLTableCellElement}
-     * @private
-     */
     _armoryOnlineSwitchBox;
 
     /**
@@ -209,8 +197,6 @@ class ArmoryFramework
 
             this._armoryBox = new ArmoryBox(initialAnchor);
 
-            this._initArmoryInfoBox();
-            this._initArmoryAccountBox();
             this._initArmoryOnlineSwitchBox();
             this._initArmoryControlSwitchBox();
             this._initArmorySectorsBox();
@@ -260,44 +246,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory box"> */
 
     /**
-     * @param {HTMLImageElement} initialAnchor
-     * @throws {Error} on init failure
-     * @private
-     */
-    _initArmoryBox(initialAnchor) {
-        const armoryBox = initialAnchor
-            ?.parentElement // td#0, armory account clear part
-            ?.parentElement // tr#0, armory account clear part
-            ?.parentElement // tbody, armory account clear part
-            ?.parentElement // table, armory account clear part
-            ?.parentElement // td#0, armory account
-            ?.parentElement // tr#0, armory account
-            ?.parentElement // tbody, armory account
-            ?.parentElement // table, armory account
-            ?.parentElement // td#1, armory overview
-            ?.parentElement // tr#0, armory overview
-            ?.parentElement // tbody#0, armory overview
-            ?.parentElement // table#0, armory overview
-            ?.parentElement; // td#0, armory box
-
-        if (armoryBox && armoryBox.tagName === 'TD') {
-            armoryBox.classList.add(FrameworkClassNames.ARMORY_BOX);
-            this._armoryBox = armoryBox;
-            return;
-        }
-
-        this._throwError('ArmoryBox');
-    }
-
-    /**
      * @returns {HTMLTableCellElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryBox() {
-        if (!this._armoryBox || this._armoryBox.tagName !== 'TD') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryBox;
+        return this._armoryBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -317,45 +270,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory info box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmoryInfoBox() {
-        const armoryInfoBox = this.getArmoryOverviewBox()
-            ?.children.item(0) // tr#0 armory overview
-            ?.children.item(0); // td#0 armory overview
-
-        if (armoryInfoBox && armoryInfoBox.tagName === 'TD') {
-            armoryInfoBox.classList.add(FrameworkClassNames.ARMORY_INFO_BOX);
-            this._armoryInfoBox = armoryInfoBox;
-            return;
-        }
-
-        this._throwError('ArmoryInfoBox');
-    }
-
-    /**
      * @returns {HTMLTableCellElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryInfoBox() {
-        if (!this._armoryInfoBox || this._armoryInfoBox.tagName !== 'TD') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryInfoBox;
-    }
-
-    /**
-     * @returns {number}
-     */
-    getCurrentCapacity() {
-        return +this.getArmoryInfoBox().innerHTML.match(/<b>(\d+)<\/b> из \d+/)?.at(1);
-    }
-
-    /**
-     * @returns {number}
-     */
-    getTotalCapacity() {
-        return +this.getArmoryInfoBox().innerHTML.match(/<b>\d+<\/b> из (\d+)/).at(1);
+        return this._armoryBox.overviewBox.infoBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -363,31 +282,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory account box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmoryAccountBox() {
-        const armoryAccountBox = this.getArmoryOverviewBox()
-            ?.children.item(0) // tr#0 armory overview
-            ?.children.item(1); // td#1 armory overview
-
-        if (armoryAccountBox && armoryAccountBox.tagName === 'TD') {
-            armoryAccountBox.classList.add(FrameworkClassNames.ARMORY_ACCOUNT_BOX);
-            this._armoryAccountBox = armoryAccountBox;
-            return;
-        }
-
-        this._throwError('ArmoryAccountBox');
-    }
-
-    /**
-     * @returns {HTMLTableCellElement}
+     * @returns {HTMLTableRowElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryAccountBox() {
-        if (!this._armoryAccountBox || this._armoryAccountBox.tagName !== 'TD') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryAccountBox;
+        return this._armoryBox.overviewBox.accountBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -863,6 +762,27 @@ class ArmoryBox extends Box {
 
 class OverviewBox extends Box {
     /**
+     * @type {OverviewInfoBox}
+     * @public
+     * @readonly
+     */
+    infoBox;
+
+    /**
+     * @type {OverviewAccountBox}
+     * @public
+     * @readonly
+     */
+    accountBox;
+
+    constructor(anchor) {
+        super(anchor);
+
+        this.infoBox = new OverviewInfoBox(this.getInnerBox());
+        this.accountBox = new OverviewAccountBox(this.getInnerBox());
+    }
+
+    /**
      * @return {HTMLTableElement}
      */
     getOuterBox() {
@@ -888,6 +808,91 @@ class OverviewBox extends Box {
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_OVERVIEW_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TABLE';
+    }
+}
+
+class OverviewInfoBox extends Box {
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox();
+    }
+
+    /**
+     * @returns {number}
+     */
+    getCurrentCapacity() {
+        return +this.getInnerBox().innerHTML.match(/<b>(\d+)<\/b> из \d+/)?.at(1);
+    }
+
+    /**
+     * @returns {number}
+     */
+    getTotalCapacity() {
+        return +this.getInnerBox().innerHTML.match(/<b>\d+<\/b> из (\d+)/).at(1);
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(0) // tr#0 armory overview
+            ?.children.item(0); // td#0 armory overview
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_INFO_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TD';
+    }
+}
+
+class OverviewAccountBox extends Box {
+    /**
+     * @return {HTMLTableElement}
+     */
+    getOuterBox() {
+        return super.getOuterBox();
+    }
+
+    /**
+     * @return {HTMLTableRowElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox()
+            .children.item(0) // tbody#0 armory account
+            .children.item(0); // tr#0 armory account
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(0) // tr#0 armory overview
+            ?.children.item(1) // td#1 armory overview
+            ?.children.item(0); // table#0 armory account
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_ACCOUNT_BOX;
     }
 
     _getBoxTag() {
