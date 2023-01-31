@@ -23,11 +23,11 @@ const FrameworkClassNames = {
     ARMORY_SECTORS_BOX: 'afw_armory_sectors_box',
     ARMORY_CONTROLS_BOX: 'afw_armory_controls_box',
     ARMORY_CONTROLS_HEADER_BOX: 'afw_armory_controls_header_box',
-    ARMORY_CONTROLS_HEADER_PUT_BOX: 'afw_armory_controls_header_put_box',
+    ARMORY_CONTROLS_HEADER_PUTS_BOX: 'afw_armory_controls_header_puts_box',
     ARMORY_CONTROLS_HEADER_BATTLES_BOX: 'afw_armory_controls_header_battles_box',
     ARMORY_CONTROLS_HEADER_SMITHS_BOX: 'afw_armory_controls_header_smiths_box',
     ARMORY_CONTROLS_BODY_BOX: 'afw_armory_controls_body_box',
-    ARMORY_CONTROLS_BODY_PUT_BOX: 'afw_armory_controls_body_put_box',
+    ARMORY_CONTROLS_BODY_PUTS_BOX: 'afw_armory_controls_body_puts_box',
     ARMORY_CONTROLS_BODY_BATTLES_BOX: 'afw_armory_controls_body_battles_box',
     ARMORY_CONTROLS_BODY_SMITHS_BOX: 'afw_armory_controls_body_smiths_box',
     ARMORY_REPAIRS_BOX: 'afw_armory_repairs_box',
@@ -349,7 +349,7 @@ class ArmoryFramework
      * @throws {Error} on invalid framework usage
      */
     getArtPlaceForm() {
-        return this._armoryBox.controlsBox.bodyBox.putBox.getInnerBox();
+        return this._armoryBox.controlsBox.bodyBox.putsBox.getInnerBox();
     }
 
     /**
@@ -357,7 +357,7 @@ class ArmoryFramework
      * @throws {Error} on invalid framework usage
      */
     getArtPlaceHeader() {
-        return this._armoryBox.controlsBox.headerBox.putBox.getInnerBox();
+        return this._armoryBox.controlsBox.headerBox.putsBox.getInnerBox();
     }
 
     /**
@@ -879,11 +879,11 @@ class ControlsBox extends Box {
 
 class ControlsHeaderBox extends Box {
     /**
-     * @type {ControlsHeaderPutBox}
+     * @type {ControlsHeaderPutsBox}
      * @public
      * @readonly
      */
-    putBox;
+    putsBox;
 
     /**
      * @type {ControlsHeaderBattlesBox}
@@ -902,7 +902,7 @@ class ControlsHeaderBox extends Box {
     constructor(anchor) {
         super(anchor);
 
-        this.putBox = new ControlsHeaderPutBox(this.getInnerBox());
+        this.putsBox = new ControlsHeaderPutsBox(this.getInnerBox());
         this.battlesBox = new ControlsHeaderBattlesBox(this.getInnerBox());
         this.smithsBox = new ControlsHeaderSmithsBox(this.getInnerBox());
     }
@@ -942,7 +942,7 @@ class ControlsHeaderCell extends Box {
     }
 }
 
-class ControlsHeaderPutBox extends ControlsHeaderCell {
+class ControlsHeaderPutsBox extends ControlsHeaderCell {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -953,7 +953,7 @@ class ControlsHeaderPutBox extends ControlsHeaderCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_PUT_BOX;
+        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_PUTS_BOX;
     }
 }
 
@@ -989,11 +989,11 @@ class ControlsHeaderSmithsBox extends ControlsHeaderCell {
 
 class ControlsBodyBox extends Box {
     /**
-     * @type {ControlsBodyPutBox}
+     * @type {ControlsBodyPutsBox}
      * @public
      * @readonly
      */
-    putBox;
+    putsBox;
 
     /**
      * @type {ControlsBodyBattlesBox}
@@ -1012,7 +1012,7 @@ class ControlsBodyBox extends Box {
     constructor(anchor) {
         super(anchor);
 
-        this.putBox = new ControlsBodyPutBox(this.getInnerBox());
+        this.putsBox = new ControlsBodyPutsBox(this.getInnerBox());
         this.battlesBox = new ControlsBodyBattlesBox(this.getInnerBox());
         this.smithsBox = new ControlsBodySmithsBox(this.getInnerBox());
     }
@@ -1066,7 +1066,7 @@ class ControlsBodyCell extends Box {
     }
 }
 
-class ControlsBodyPutBox extends ControlsBodyCell {
+class ControlsBodyPutsBox extends ControlsBodyCell {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -1077,7 +1077,7 @@ class ControlsBodyPutBox extends ControlsBodyCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_BODY_PUT_BOX;
+        return FrameworkClassNames.ARMORY_CONTROLS_BODY_PUTS_BOX;
     }
 }
 
