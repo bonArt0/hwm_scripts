@@ -113,10 +113,6 @@ class ArmoryFramework
 
             this._armoryBox = new ArmoryBox(initialAnchor);
 
-            this._initArmoryTabsBox();
-
-            this._initArmoryArtsBox();
-
             this._initialized = true;
 
             console.info('Armory Framework initialized');
@@ -257,32 +253,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory tabs box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmoryTabsBox() {
-        const armoryTabsBox = this._armoryBox.getInnerBox()
-            ?.children.item(3) // table#3 armory tabs
-            ?.children.item(0) // tbody#0 armory tabs
-            ?.children.item(0); // tr#0 armory tabs
-
-        if (armoryTabsBox && armoryTabsBox.tagName === 'TR') {
-            armoryTabsBox.classList.add(FrameworkClassNames.ARMORY_TABS_BOX);
-            this._armoryTabsBox = armoryTabsBox;
-            return;
-        }
-
-        this._throwError('ArmoryTabsBox');
-    }
-
-    /**
      * @returns {HTMLTableRowElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryTabsBox() {
-        if (!this._armoryTabsBox || this._armoryTabsBox.tagName !== 'TR') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryTabsBox;
+        return this._armoryBox.tabsBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -290,33 +265,11 @@ class ArmoryFramework
     /* <editor-fold desc="armory arts box"> */
 
     /**
-     * @throws {Error} on init failure
-     */
-    _initArmoryArtsBox() {
-        const armoryArtsBox = this._armoryBox.getInnerBox()
-            ?.children.item(4) // table#4 armory arts
-            ?.children.item(0) // tbody#0 armory arts
-            ?.children.item(0) // tr#0 armory arts
-            ?.children.item(0); // td#0 armory arts
-
-        if (armoryArtsBox && armoryArtsBox.tagName === 'TD') {
-            armoryArtsBox.classList.add(FrameworkClassNames.ARMORY_ARTS_BOX);
-            this._armoryArtsBox = armoryArtsBox;
-            return;
-        }
-
-        this._throwError('ArmoryArtsBox');
-    }
-
-    /**
      * @returns {HTMLTableCellElement}
      * @throws {Error} on invalid framework usage
      */
     getArmoryArtsBox() {
-        if (!this._armoryArtsBox || this._armoryArtsBox.tagName !== 'TD') {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
-        }
-        return this._armoryArtsBox;
+        return this._armoryBox.artsBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -479,12 +432,28 @@ class ArmoryBox extends Box {
      */
     takesBox;
 
+    /**
+     * @type {TabsBox}
+     * @public
+     * @readonly
+     */
+    tabsBox;
+
+    /**
+     * @type {ArtsBox}
+     * @public
+     * @readonly
+     */
+    artsBox;
+
     constructor(anchor) {
         super(anchor);
 
         this.overviewBox = new OverviewBox(this.getInnerBox());
         this.controlsBox = new ControlsBox(this.getInnerBox());
         this.takesBox = new TakesBox(this.getInnerBox());
+        this.tabsBox = new TabsBox(this.getInnerBox());
+        this.artsBox = new ArtsBox(this.getInnerBox());
     }
 
     /**
@@ -1100,6 +1069,8 @@ class ControlsBodySmithsBox extends ControlsBodyCell {
 
 /* </editor-fold> */
 
+/* <editor-fold desc="armory takes"> */
+
 class TakesBox extends Box {
     /**
      * @return {HTMLTableSectionElement}
@@ -1126,3 +1097,70 @@ class TakesBox extends Box {
         return 'TABLE';
     }
 }
+
+/* </editor-fold> */
+
+/* <editor-fold desc="armory tabs"> */
+
+class TabsBox extends Box {
+    /**
+     * @return {HTMLTableRowElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox()
+            .children.item(0) // tbody
+            .children.item(0); // tr
+    }
+
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @return {HTMLTableElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(2); // table#0 armory tabs
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_TABS_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TABLE';
+    }
+}
+
+/* </editor-fold> */
+
+/* <editor-fold desc="armory arts"> */
+
+class ArtsBox extends Box {
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox()
+            .children.item(0) // tbody
+            .children.item(0) // tr
+            .children.item(0); // td
+    }
+
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @return {HTMLTableElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(3); // table#0 armory arts
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_ARTS_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TABLE';
+    }
+}
+
+/* </editor-fold> */
