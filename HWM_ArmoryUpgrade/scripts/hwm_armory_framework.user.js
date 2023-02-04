@@ -51,31 +51,13 @@ class ArmoryFramework
      * @type {boolean}
      * @private
      */
-    _isControlOn;
+    _isManagementMode;
 
     /**
      * @type {ArmoryBox}
      * @private
      */
     _armoryBox;
-
-    /**
-     * @type {HTMLTableElement}
-     * @private
-     */
-    _armoryRepairsBox;
-
-    /**
-     * @type {HTMLTableRowElement}
-     * @private
-     */
-    _armoryTabsBox;
-
-    /**
-     * @type {ArtsBox}
-     * @private
-     */
-    _artsBox;
 
     static init() {
         if (!_ArmoryFrameworkInstance) {
@@ -94,13 +76,21 @@ class ArmoryFramework
 
     /**
      * @returns {boolean}
+     * @deprecated
      */
     isControlOn() {
-        if (this._isControlOn === undefined) {
-            this._isControlOn = document.body.innerHTML.search('sklad_rc_on=0') > -1;
+        return this.isManagementMode();
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isManagementMode() {
+        if (this._isManagementMode === undefined) {
+            this._isManagementMode = document.body.innerHTML.search('sklad_rc_on=0') > -1;
         }
 
-        return this._isControlOn;
+        return this._isManagementMode;
     }
 
     /**
@@ -108,7 +98,11 @@ class ArmoryFramework
      * @private
      */
     _initFramework() {
-        if (!this._initialized && this.isControlOn()) {
+        if (!this.isManagementMode()) {
+            throw new Error('Framework doesn\'t support non-management mode yet')
+        }
+
+        if (!this._initialized) {
             const initialAnchor = this._findInitialAnchor();
 
             this._armoryBox = new ArmoryBox(initialAnchor);
