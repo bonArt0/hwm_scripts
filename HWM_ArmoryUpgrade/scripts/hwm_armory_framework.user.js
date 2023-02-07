@@ -54,6 +54,7 @@ const ArmoryTab = {
 };
 
 /**
+ * @type {ArmoryFramework} _ArmoryFrameworkInstance
  * @private
  */
 let _ArmoryFrameworkInstance;
@@ -78,9 +79,21 @@ class ArmoryFramework
      */
     _armoryBox;
 
+    /**
+     * @return {ArmoryFramework}
+     */
     static init() {
         if (!_ArmoryFrameworkInstance || !_ArmoryFrameworkInstance?.initialized) {
-            _ArmoryFrameworkInstance = new ArmoryFramework();
+            console.info('Armory Framework initialization started');
+
+            try {
+                _ArmoryFrameworkInstance = new ArmoryFramework();
+            } catch (e) {
+                console.error('Something happen while framework initializing');
+                throw e;
+            }
+
+            console.info('Armory Framework initialized');
         }
 
         return _ArmoryFrameworkInstance;
@@ -99,7 +112,7 @@ class ArmoryFramework
      */
     _initFramework() {
         if (!this.isManagementMode()) {
-            throw new Error('Framework doesn\'t support non-management mode yet')
+            throw new Error('Framework doesn\'t support non-management mode yet');
         }
 
         if (this.initialized) {
@@ -108,8 +121,6 @@ class ArmoryFramework
 
         this._armoryBox = new ArmoryBox(this._findInitialAnchor(), this._findActiveTab());
         this.initialized = true;
-
-        console.info('Armory Framework initialized');
     }
 
     /**
@@ -129,6 +140,20 @@ class ArmoryFramework
         }
 
         return this._isManagementMode;
+    }
+
+    /**
+     * @returns {HTMLImageElement}
+     * @throws {Error} on init failure
+     * @private
+     */
+    _findInitialAnchor() {
+        const initialAnchor = document.getElementsByClassName('rs').item(0);
+        if (initialAnchor && initialAnchor.tagName === 'IMG') {
+            return initialAnchor;
+        }
+
+        throw new Error('Something happen with game layout (initial anchor not found)');
     }
 
     /**
@@ -163,21 +188,6 @@ class ArmoryFramework
             default:
                 return ArmoryTab.TAB_BACKPACK;
         }
-    }
-
-    /**
-     * @returns {HTMLImageElement}
-     * @throws {Error} on init failure
-     * @private
-     */
-    _findInitialAnchor() {
-        const initialAnchor = document.getElementsByClassName('rs').item(0);
-        if (initialAnchor && initialAnchor.tagName === 'IMG') {
-            return initialAnchor;
-        }
-
-        console.error('Something happen with game layout');
-        throw new Error('Initial anchor not found');
     }
 
     /* <editor-fold desc="armory box"> */
@@ -378,6 +388,10 @@ class Box {
      */
     _box;
 
+    /**
+     * @param {HTMLElement} anchor
+     * @throws {Error} on init failure
+     */
     constructor(anchor) {
         this._initBox(anchor);
     }
@@ -443,8 +457,7 @@ class Box {
      * @private
      */
     _throwError(component) {
-        console.error('Something happen with game layout');
-        throw new Error(component);
+        throw new Error(`Something happen with game layout (${component})`);
     }
 }
 
@@ -501,6 +514,7 @@ class ArmoryBox extends Box {
     /**
      * @param {HTMLElement} anchor
      * @param {ArmoryTab} activeTab
+     * @throws {Error} on init failure
      */
     constructor(anchor, activeTab) {
         super(anchor);
