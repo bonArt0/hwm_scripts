@@ -45,7 +45,7 @@ class ArmoryFramework
      * @type {boolean}
      * @private
      */
-    _initialized = false
+    initialized = false
 
     /**
      * @type {boolean}
@@ -60,7 +60,7 @@ class ArmoryFramework
     _armoryBox;
 
     static init() {
-        if (!_ArmoryFrameworkInstance) {
+        if (!_ArmoryFrameworkInstance || !_ArmoryFrameworkInstance?.initialized) {
             _ArmoryFrameworkInstance = new ArmoryFramework();
         }
 
@@ -72,6 +72,28 @@ class ArmoryFramework
      */
     constructor() {
         this._initFramework();
+    }
+
+    /**
+     * @throws {Error} on any init failure
+     * @private
+     */
+    _initFramework() {
+        if (!this.isManagementMode()) {
+            throw new Error('Framework doesn\'t support non-management mode yet')
+        }
+
+        if (this.initialized) {
+            throw new Error('Framework already initialized')
+        }
+
+        const initialAnchor = this._findInitialAnchor();
+
+        this._armoryBox = new ArmoryBox(initialAnchor);
+
+        this.initialized = true;
+
+        console.info('Armory Framework initialized');
     }
 
     /**
@@ -94,35 +116,6 @@ class ArmoryFramework
     }
 
     /**
-     * @throws {Error} on any init failure
-     * @private
-     */
-    _initFramework() {
-        if (!this.isManagementMode()) {
-            throw new Error('Framework doesn\'t support non-management mode yet')
-        }
-
-        if (!this._initialized) {
-            const initialAnchor = this._findInitialAnchor();
-
-            this._armoryBox = new ArmoryBox(initialAnchor);
-
-            this._initialized = true;
-
-            console.info('Armory Framework initialized');
-        }
-    }
-
-    /**
-     * @throws {Error} on init failure
-     * @private
-     */
-    _throwError(component) {
-        console.error('Something happen with game layout');
-        throw new Error(component);
-    }
-
-    /**
      * @returns {HTMLImageElement}
      * @throws {Error} on init failure
      * @private
@@ -133,7 +126,8 @@ class ArmoryFramework
             return initialAnchor;
         }
 
-        this._throwError('InitialAnchor');
+        console.error('Something happen with game layout');
+        throw new Error('Initial anchor not found');
     }
 
     /* <editor-fold desc="armory box"> */
