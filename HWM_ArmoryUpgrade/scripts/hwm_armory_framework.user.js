@@ -73,12 +73,6 @@ class ArmoryFramework
     _isManagementMode;
 
     /**
-     * @type {ArmoryTab}
-     * @private
-     */
-    _activeTab;
-
-    /**
      * @type {ArmoryBox}
      * @private
      */
@@ -112,8 +106,7 @@ class ArmoryFramework
             throw new Error('Framework already initialized')
         }
 
-        this._activeTab = this._findActiveTab();
-        this._armoryBox = new ArmoryBox(this._findInitialAnchor(), this._activeTab);
+        this._armoryBox = new ArmoryBox(this._findInitialAnchor(), this._findActiveTab());
         this.initialized = true;
 
         console.info('Armory Framework initialized');
@@ -146,7 +139,7 @@ class ArmoryFramework
         const params = new URLSearchParams(window.location.search);
 
         if (!params.has('cat') || +params.get('cat') < 0) {
-            return ArmoryTab.TAB_INFO;
+            return ArmoryTab.TAB_DESCRIPTION;
         }
 
         if (Number.isNaN(params.get('cat'))) {
