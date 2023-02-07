@@ -32,6 +32,8 @@ const FrameworkClassNames = {
     ARMORY_CONTROLS_BODY_SMITHS_BOX: 'afw_armory_controls_body_smiths_box',
     ARMORY_TAKES_BOX: 'afw_armory_takes_box',
     ARMORY_TABS_BOX: 'afw_armory_tabs_box',
+    ARMORY_DESCRIPTION_BOX: 'afw_armory_description_box',
+    ARMORY_DESCRIPTION_FORM_BOX: 'afw_armory_description_FORM',
     ARMORY_ARTS_BOX: 'afw_armory_arts_box',
     ARTS_PLACE_FORM: 'afw_arts_place_form',
     ARTS_PLACE_HEADER: 'afw_arts_place_header',
@@ -41,7 +43,7 @@ const FrameworkClassNames = {
  * @enum
  */
 const ArmoryTab = {
-    TAB_INFO: 0,
+    TAB_DESCRIPTION: 0,
     TAB_WEAPON: 1,
     TAB_ARMOR: 2,
     TAB_JEWELRY: 3,
@@ -111,7 +113,7 @@ class ArmoryFramework
         }
 
         this._activeTab = this._findActiveTab();
-        this._armoryBox = new ArmoryBox(this._findInitialAnchor());
+        this._armoryBox = new ArmoryBox(this._findInitialAnchor(), this._activeTab);
         this.initialized = true;
 
         console.info('Armory Framework initialized');
@@ -483,20 +485,51 @@ class ArmoryBox extends Box {
     tabsBox;
 
     /**
+     * @type {DescriptionBox}
+     * @public
+     * @readonly
+     */
+    descriptionBox;
+
+    /**
+     * @type {DescriptionFormBox}
+     * @public
+     * @readonly
+     */
+    descriptionFormBox;
+
+    /**
      * @type {ArtsBox}
      * @public
      * @readonly
      */
     artsBox;
 
-    constructor(anchor) {
+    /**
+     * @param {HTMLElement} anchor
+     * @param {ArmoryTab} activeTab
+     */
+    constructor(anchor, activeTab) {
         super(anchor);
 
         this.overviewBox = new OverviewBox(this.getInnerBox());
         this.controlsBox = new ControlsBox(this.getInnerBox());
         this.takesBox = new TakesBox(this.getInnerBox());
         this.tabsBox = new TabsBox(this.getInnerBox());
-        this.artsBox = new ArtsBox(this.getInnerBox());
+        switch (activeTab) {
+            case ArmoryTab.TAB_DESCRIPTION:
+                this.descriptionBox = new DescriptionBox(this.getInnerBox());
+                this.descriptionFormBox = new DescriptionFormBox(this.getInnerBox());
+                break;
+            case ArmoryTab.TAB_ON_LEASE:
+            case ArmoryTab.TAB_WEAPON:
+            case ArmoryTab.TAB_ARMOR:
+            case ArmoryTab.TAB_JEWELRY:
+            case ArmoryTab.TAB_BACKPACK:
+            case ArmoryTab.TAB_SETS:
+            case ArmoryTab.TAB_UNAVAILABLE:
+                this.artsBox = new ArtsBox(this.getInnerBox());
+        }
     }
 
     /**
@@ -1170,6 +1203,71 @@ class TabsBox extends Box {
 
     _getBoxTag() {
         return 'TABLE';
+    }
+}
+
+/* </editor-fold> */
+
+/* <editor-fold desc="armory description"> */
+
+class DescriptionBox extends Box {
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox()
+            .children.item(0) // tbody
+            .children.item(0) // tr
+            .children.item(0); // td
+    }
+
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @return {HTMLTableElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(4); // table
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_DESCRIPTION_BOX;
+    }
+
+    _getBoxTag() {
+        return 'TABLE';
+    }
+}
+
+/* </editor-fold> */
+
+/* <editor-fold desc="armory description form"> */
+
+class DescriptionFormBox extends Box {
+    /**
+     * @return {HTMLTableSectionElement}
+     */
+    getInnerBox() {
+        return this.getOuterBox()
+            .children.item(0) // table
+            .children.item(0); // tbody
+    }
+
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @return {HTMLFormElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(5); // form
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_DESCRIPTION_FORM_BOX;
+    }
+
+    _getBoxTag() {
+        return 'FORM';
     }
 }
 
