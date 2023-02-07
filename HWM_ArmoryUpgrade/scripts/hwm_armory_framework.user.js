@@ -37,6 +37,23 @@ const FrameworkClassNames = {
     ARTS_PLACE_HEADER: 'afw_arts_place_header',
 };
 
+/**
+ * @enum
+ */
+const ArmoryTab = {
+    TAB_INFO: 0,
+    TAB_WEAPON: 1,
+    TAB_ARMOR: 2,
+    TAB_JEWELRY: 3,
+    TAB_BACKPACK: 4,
+    TAB_SETS: 5,
+    TAB_ON_LEASE: 6,
+    TAB_UNAVAILABLE: 7,
+};
+
+/**
+ * @private
+ */
 let _ArmoryFrameworkInstance;
 
 class ArmoryFramework
@@ -52,6 +69,12 @@ class ArmoryFramework
      * @private
      */
     _isManagementMode;
+
+    /**
+     * @type {ArmoryTab}
+     * @private
+     */
+    _activeTab;
 
     /**
      * @type {ArmoryBox}
@@ -87,6 +110,8 @@ class ArmoryFramework
             throw new Error('Framework already initialized')
         }
 
+        this._activeTab = this._findActiveTab();
+
         const initialAnchor = this._findInitialAnchor();
 
         this._armoryBox = new ArmoryBox(initialAnchor);
@@ -113,6 +138,40 @@ class ArmoryFramework
         }
 
         return this._isManagementMode;
+    }
+
+    /**
+     * @returns {ArmoryTab}
+     * @private
+     */
+    _findActiveTab() {
+        const params = new URLSearchParams(window.location.search);
+
+        if (!params.has('cat') || +params.get('cat') < 0) {
+            return ArmoryTab.TAB_INFO;
+        }
+
+        if (Number.isNaN(params.get('cat'))) {
+            return ArmoryTab.TAB_WEAPON;
+        }
+
+        switch (+params.get('cat')) {
+            case 0:
+                return ArmoryTab.TAB_WEAPON;
+            case 1:
+                return ArmoryTab.TAB_ARMOR;
+            case 2:
+                return ArmoryTab.TAB_JEWELRY;
+            case 3:
+                return ArmoryTab.TAB_SETS;
+            case 4:
+                return ArmoryTab.TAB_ON_LEASE;
+            case 5:
+                return ArmoryTab.TAB_UNAVAILABLE;
+            case 6:
+            default:
+                return ArmoryTab.TAB_BACKPACK;
+        }
     }
 
     /**
