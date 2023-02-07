@@ -111,11 +111,7 @@ class ArmoryFramework
         }
 
         this._activeTab = this._findActiveTab();
-
-        const initialAnchor = this._findInitialAnchor();
-
-        this._armoryBox = new ArmoryBox(initialAnchor);
-
+        this._armoryBox = new ArmoryBox(this._findInitialAnchor());
         this.initialized = true;
 
         console.info('Armory Framework initialized');
