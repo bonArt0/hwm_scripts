@@ -1117,27 +1117,48 @@ class ControlsBodySmithsBox extends ControlsBodyCell {
 
 /* <editor-fold desc="armory takes"> */
 
-class TakesBox extends Box {
+class TakesBox extends TableSectionBox {
     /**
-     * @type {TakesHeaderBox}
+     * @type {TakesRepairsHeaderBox}
      * @public
      * @readonly
      */
     repairHeaderBox;
 
     /**
-     * @type {ControlsBodyPutsBox}
+     * @type {TakesRepairsBodyBox}
      * @public
      * @readonly
      */
     repairBodyBox;
 
     /**
-     * @return {HTMLTableSectionElement}
+     * @type {TakesLeasesHeaderBox}
+     * @public
+     * @readonly
      */
-    getInnerBox() {
-        return this.getOuterBox()
-            .children.item(0); // tbody
+    leasesHeaderBox;
+
+    /**
+     * @type {TakesLeasesBodyBox}
+     * @public
+     * @readonly
+     */
+    leasesBodyBox;
+
+    /**
+     * @param {HTMLElement} anchor
+     * @throws {Error} on init failure
+     */
+    constructor(anchor) {
+        super(anchor);
+
+        const innerBox = this.getInnerBox();
+
+        this.repairHeaderBox = new TakesRepairsHeaderBox(innerBox);
+        this.repairBodyBox = new TakesRepairsBodyBox(innerBox);
+        this.leasesHeaderBox = new TakesLeasesHeaderBox(innerBox);
+        this.leasesBodyBox = new TakesLeasesBodyBox(innerBox);
     }
 
     /**
@@ -1145,29 +1166,23 @@ class TakesBox extends Box {
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
-        return anchor
-            ?.children.item(2); // table#0 armory overview
+        return anchor.children.item(2); // table
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_TAKES_BOX;
-    }
-
-    _getBoxTag() {
-        return 'TABLE';
     }
 }
 
 /**
  * @abstract
  */
-class TakesRowBox extends Box {
+class TakesRowBox extends TableCellBasedBox {
     /**
-     * @return {HTMLTableCellElement}
+     * @type {number}
+     * @protected
      */
-    getInnerBox() {
-        return super.getInnerBox().children.item(0); // td
-    }
+    _trId = -1;
 
     /**
      * @param {HTMLTableSectionElement} anchor
@@ -1175,17 +1190,35 @@ class TakesRowBox extends Box {
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(0); // tr
+            .children.item(this._getTableRowId()) // tr
+            .children.item(0); // td
     }
 
-    _getBoxTag() {
-        return 'TR';
-    }
+    /**
+     * @return {number}
+     * @abstract
+     * @protected
+     */
+    _getTableRowId() {}
 }
 
 class TakesRepairsHeaderBox extends TakesRowBox {
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_TAKES_REPAIRS_HEADER_BOX;
+    }
+
+    _getTableRowId() {
+        return 0;
+    }
+}
+
+class TakesRepairsBodyBox extends TakesRowBox {
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_TAKES_REPAIRS_BODY_BOX;
+    }
+
+    _getTableRowId() {
+        return 1;
     }
 }
 
@@ -1193,43 +1226,19 @@ class TakesLeasesHeaderBox extends TakesRowBox {
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_TAKES_LEASES_HEADER_BOX;
     }
-}
 
-/**
- * @abstract
- */
-class TakesBodyBox extends Box {
-    /**
-     * @return {HTMLTableRowElement}
-     */
-    getInnerBox() {
-        return super.getInnerBox()
-            .children.item(0) // td
-    }
-
-    /**
-     * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableRowElement|undefined}
-     */
-    _findBox(anchor) {
-        return anchor
-            ?.children.item(0); // tr
-    }
-
-    _getBoxTag() {
-        return 'TR';
+    _getTableRowId() {
+        return 2;
     }
 }
 
-class TakesRepairsBodyBox extends TakesBodyBox {
+class TakesLeasesBodyBox extends TakesRowBox {
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_TAKES_REPAIRS_HEADER_BOX;
+        return FrameworkClassNames.ARMORY_TAKES_LEASES_BODY_BOX;
     }
-}
 
-class TakesLeasesBodyBox extends TakesBodyBox {
-    _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_TAKES_LEASES_HEADER_BOX;
+    _getTableRowId() {
+        return 3;
     }
 }
 
