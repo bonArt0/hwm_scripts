@@ -37,7 +37,7 @@ const FrameworkClassNames = {
     ARMORY_TAKES_LEASES_BODY_BOX: 'afw_armory_takes_leases_body_box',
     ARMORY_TABS_BOX: 'afw_armory_tabs_box',
     ARMORY_DESCRIPTION_BOX: 'afw_armory_description_box',
-    ARMORY_DESCRIPTION_FORM_BOX: 'afw_armory_description_FORM',
+    ARMORY_DESCRIPTION_FORM_BOX: 'afw_armory_description_form',
     ARMORY_ARTS_BOX: 'afw_armory_arts_box',
     ARTS_PLACE_FORM: 'afw_arts_place_form',
     ARTS_PLACE_HEADER: 'afw_arts_place_header',
@@ -1264,32 +1264,17 @@ class TabsBox extends TableRowBox {
 
 /* <editor-fold desc="armory description"> */
 
-class DescriptionBox extends Box {
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox()
-            .children.item(0) // tbody
-            .children.item(0) // tr
-            .children.item(0); // td
-    }
-
+class DescriptionBox extends TableCellBox {
     /**
      * @param {HTMLTableCellElement} anchor
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
-        return anchor
-            ?.children.item(4); // table
+        return anchor.children.item(4); // table
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_DESCRIPTION_BOX;
-    }
-
-    _getBoxTag() {
-        return 'TABLE';
     }
 }
 
@@ -1297,6 +1282,9 @@ class DescriptionBox extends Box {
 
 /* <editor-fold desc="armory description form"> */
 
+/**
+ * @todo move to DescriptionBox?
+ */
 class DescriptionFormBox extends Box {
     /**
      * @return {HTMLTableSectionElement}
@@ -1323,38 +1311,27 @@ class DescriptionFormBox extends Box {
     _getBoxTag() {
         return 'FORM';
     }
+
+    _getInnerBoxTag() {
+        return 'TBODY';
+    }
 }
 
 /* </editor-fold> */
 
 /* <editor-fold desc="armory arts"> */
 
-class ArtsBox extends Box {
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox()
-            .children.item(0) // tbody
-            .children.item(0) // tr
-            .children.item(0); // td
-    }
-
+class ArtsBox extends TableCellBox {
     /**
      * @param {HTMLTableCellElement} anchor
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
-        return anchor
-            ?.children.item(3); // table#0 armory arts
+        return anchor.children.item(4); // table
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_ARTS_BOX;
-    }
-
-    _getBoxTag() {
-        return 'TABLE';
     }
 }
 
