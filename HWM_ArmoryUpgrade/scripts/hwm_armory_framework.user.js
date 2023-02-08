@@ -579,6 +579,19 @@ class TableCellBox extends TableRowBox {
 /**
  * @abstract
  */
+class TableRowBasedBox extends Box {
+    _getBoxTag() {
+        return 'TR';
+    }
+
+    _getInnerBoxTag() {
+        return 'TR';
+    }
+}
+
+/**
+ * @abstract
+ */
 class TableCellBasedBox extends Box {
     _getBoxTag() {
         return 'TD';
@@ -861,7 +874,7 @@ class OverviewSectorsBox extends TableCellBasedBox {
 
 /* <editor-fold desc="armory controls"> */
 
-class ControlsBox extends Box {
+class ControlsBox extends TableSectionBox {
     /**
      * @type {ControlsHeaderBox}
      * @public
@@ -879,23 +892,10 @@ class ControlsBox extends Box {
     constructor(anchor) {
         super(anchor);
 
-        this.headerBox = new ControlsHeaderBox(this.getInnerBox());
-        this.bodyBox = new ControlsBodyBox(this.getInnerBox());
-    }
+        const innerBox = this.getInnerBox();
 
-    /**
-     * @return {HTMLTableElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableSectionElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox()
-            .children.item(0); // tbody
+        this.headerBox = new ControlsHeaderBox(innerBox);
+        this.bodyBox = new ControlsBodyBox(innerBox);
     }
 
     /**
@@ -903,20 +903,15 @@ class ControlsBox extends Box {
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
-        return anchor
-            ?.children.item(1); // table#1 armory controls
+        return anchor.children.item(1); // table
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_CONTROLS_BOX;
     }
-
-    _getBoxTag() {
-        return 'TABLE';
-    }
 }
 
-class ControlsHeaderBox extends Box {
+class ControlsHeaderBox extends TableRowBasedBox {
     /**
      * @type {ControlsHeaderPutsBox}
      * @public
@@ -952,32 +947,24 @@ class ControlsHeaderBox extends Box {
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(0); // tr#0 armory controls
+            ?.children.item(0); // tr
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_CONTROLS_HEADER_BOX;
-    }
-
-    _getBoxTag() {
-        return 'TR';
     }
 }
 
 /**
  * @abstract
  */
-class ControlsHeaderCell extends Box {
+class ControlsHeaderCell extends TableCellBasedBox {
     /**
      * @return {HTMLElement}
      */
     getInnerBox() {
         return super.getInnerBox()
             .children.item(0); // b
-    }
-
-    _getBoxTag() {
-        return 'TD';
     }
 }
 
@@ -988,7 +975,7 @@ class ControlsHeaderPutsBox extends ControlsHeaderCell {
      * @private
      */
     _findBox(anchor) {
-        return anchor.children.item(0);
+        return anchor.children.item(0); // td
     }
 
     _getBoxClassName() {
@@ -1003,7 +990,7 @@ class ControlsHeaderBattlesBox extends ControlsHeaderCell {
      * @private
      */
     _findBox(anchor) {
-        return anchor.children.item(1);
+        return anchor.children.item(1); // td
     }
 
     _getBoxClassName() {
@@ -1018,7 +1005,7 @@ class ControlsHeaderSmithsBox extends ControlsHeaderCell {
      * @private
      */
     _findBox(anchor) {
-        return anchor.children.item(2);
+        return anchor.children.item(2); // td
     }
 
     _getBoxClassName() {
@@ -1026,7 +1013,7 @@ class ControlsHeaderSmithsBox extends ControlsHeaderCell {
     }
 }
 
-class ControlsBodyBox extends Box {
+class ControlsBodyBox extends TableRowBasedBox {
     /**
      * @type {ControlsBodyPutsBox}
      * @public
@@ -1057,51 +1044,27 @@ class ControlsBodyBox extends Box {
     }
 
     /**
-     * @return {HTMLTableRowElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableRowElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox(); // tr
-    }
-
-    /**
      * @param {HTMLTableSectionElement} anchor
      * @return {HTMLTableRowElement|undefined}
      */
     _findBox(anchor) {
-        return anchor
-            ?.children.item(1); // tr#1 armory controls
+        return anchor.children.item(1); // tr
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_CONTROLS_BODY_BOX;
-    }
-
-    _getBoxTag() {
-        return 'TR';
     }
 }
 
 /**
  * @abstract
  */
-class ControlsBodyCell extends Box {
+class ControlsBodyCell extends TableCellBasedBox {
     /**
      * @return {HTMLFormElement}
      */
     getInnerBox() {
-        return super.getInnerBox()
-            .children.item(0); // form
-    }
-
-    _getBoxTag() {
-        return 'TD';
+        return super.getInnerBox().children.item(0); // form
     }
 }
 
