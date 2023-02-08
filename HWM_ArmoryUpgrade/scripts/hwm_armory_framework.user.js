@@ -31,6 +31,10 @@ const FrameworkClassNames = {
     ARMORY_CONTROLS_BODY_BATTLES_BOX: 'afw_armory_controls_body_battles_box',
     ARMORY_CONTROLS_BODY_SMITHS_BOX: 'afw_armory_controls_body_smiths_box',
     ARMORY_TAKES_BOX: 'afw_armory_takes_box',
+    ARMORY_TAKES_REPAIRS_HEADER_BOX: 'afw_armory_takes_repairs_header_box',
+    ARMORY_TAKES_REPAIRS_BODY_BOX: 'afw_armory_takes_repairs_body_box',
+    ARMORY_TAKES_LEASES_HEADER_BOX: 'afw_armory_takes_leases_header_box',
+    ARMORY_TAKES_LEASES_BODY_BOX: 'afw_armory_takes_leases_body_box',
     ARMORY_TABS_BOX: 'afw_armory_tabs_box',
     ARMORY_DESCRIPTION_BOX: 'afw_armory_description_box',
     ARMORY_DESCRIPTION_FORM_BOX: 'afw_armory_description_FORM',
@@ -403,7 +407,7 @@ class Box {
      */
     getOuterBox() {
         if (!this._box || this._box.tagName !== this._getBoxTag()) {
-            this._throwError('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
+            throw new Error('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
         }
         return this._box;
     }
@@ -418,6 +422,7 @@ class Box {
 
     /**
      * @throws {Error} on init failure
+     * @protected
      */
     _initBox(anchor) {
         const box = this._findBox(anchor);
@@ -428,7 +433,7 @@ class Box {
             return;
         }
 
-        this._throwError('ArmoryOverviewBox');
+        throw new Error(`Something happen with game layout (${typeof this})`);
     }
 
     /**
@@ -451,14 +456,6 @@ class Box {
      * @protected
      */
     _getBoxClassName() {}
-
-    /**
-     * @throws {Error} on init failure
-     * @private
-     */
-    _throwError(component) {
-        throw new Error(`Something happen with game layout (${component})`);
-    }
 }
 
 class ArmoryBox extends Box {
@@ -1156,6 +1153,20 @@ class ControlsBodySmithsBox extends ControlsBodyCell {
 
 class TakesBox extends Box {
     /**
+     * @type {TakesHeaderBox}
+     * @public
+     * @readonly
+     */
+    repairHeaderBox;
+
+    /**
+     * @type {ControlsBodyPutsBox}
+     * @public
+     * @readonly
+     */
+    repairBodyBox;
+
+    /**
      * @return {HTMLTableSectionElement}
      */
     getInnerBox() {
@@ -1178,6 +1189,81 @@ class TakesBox extends Box {
 
     _getBoxTag() {
         return 'TABLE';
+    }
+}
+
+/**
+ * @abstract
+ */
+class TakesRowBox extends Box {
+    /**
+     * @return {HTMLTableCellElement}
+     */
+    getInnerBox() {
+        return super.getInnerBox().children.item(0); // td
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableRowElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(0); // tr
+    }
+
+    _getBoxTag() {
+        return 'TR';
+    }
+}
+
+class TakesRepairsHeaderBox extends TakesRowBox {
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_TAKES_REPAIRS_HEADER_BOX;
+    }
+}
+
+class TakesLeasesHeaderBox extends TakesRowBox {
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_TAKES_LEASES_HEADER_BOX;
+    }
+}
+
+/**
+ * @abstract
+ */
+class TakesBodyBox extends Box {
+    /**
+     * @return {HTMLTableRowElement}
+     */
+    getInnerBox() {
+        return super.getInnerBox()
+            .children.item(0) // td
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} anchor
+     * @return {HTMLTableRowElement|undefined}
+     */
+    _findBox(anchor) {
+        return anchor
+            ?.children.item(0); // tr
+    }
+
+    _getBoxTag() {
+        return 'TR';
+    }
+}
+
+class TakesRepairsBodyBox extends TakesBodyBox {
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_TAKES_REPAIRS_HEADER_BOX;
+    }
+}
+
+class TakesLeasesBodyBox extends TakesBodyBox {
+    _getBoxClassName() {
+        return FrameworkClassNames.ARMORY_TAKES_LEASES_HEADER_BOX;
     }
 }
 
