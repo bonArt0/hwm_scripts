@@ -406,18 +406,25 @@ class Box {
      * @public
      */
     getOuterBox() {
-        if (!this._box || this._box.tagName !== this._getBoxTag()) {
-            throw new Error('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
+        if (this._box?.tagName === this._getBoxTag()) {
+            return this._box;
         }
-        return this._box;
+
+        throw new Error('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
     }
 
     /**
-     * @returns {HTMLElement}
+     * @return {HTMLElement}
+     * @throws {Error} on invalid framework usage
      * @public
      */
     getInnerBox() {
-        return this.getOuterBox();
+        const box = this._getInnerBox();
+        if (box?.tagName === this._getInnerBoxTag()) {
+            return box;
+        }
+
+        throw new Error(`Invalid ArmoryFramework usage, use ArmoryFramework.init() first`);
     }
 
     /**
@@ -444,6 +451,7 @@ class Box {
     _findBox(anchor) {}
 
     /**
+     * @todo replace name
      * @return {string}
      * @abstract
      * @protected
@@ -455,7 +463,100 @@ class Box {
      * @abstract
      * @protected
      */
+    _getInnerBoxTag() {}
+
+    /**
+     * @return {string}
+     * @abstract
+     * @protected
+     */
     _getBoxClassName() {}
+
+    /**
+     * @return {HTMLElement}
+     * @private
+     */
+    _getInnerBox() {
+        return this.getOuterBox();
+    }
+}
+
+/**
+ * @abstract
+ */
+class TableBasedBox extends Box {
+    _getBoxTag() {
+        return 'TABLE';
+    }
+}
+
+/**
+ * @abstract
+ */
+class TableSectionBox extends TableBasedBox {
+    /**
+     * @type {number}
+     * @protected
+     */
+    _tbodyId = 0;
+
+    _getInnerBoxTag() {
+        return 'TBODY';
+    }
+
+    /**
+     * @return {HTMLTableSectionElement}
+     * @protected
+     */
+    _getInnerBox() {
+        return this._getInnerBox().children.item(this._tbodyId);
+    }
+}
+
+/**
+ * @abstract
+ */
+class TableRowBox extends TableSectionBox {
+    /**
+     * @type {number}
+     * @protected
+     */
+    _trId = 0;
+
+    _getInnerBoxTag() {
+        return 'TR';
+    }
+
+    /**
+     * @return {HTMLTableRowElement}
+     * @protected
+     */
+    _getInnerBox() {
+        return super._getInnerBox().children.item(this._trId);
+    }
+}
+
+/**
+ * @abstract
+ */
+class TableCellBox extends TableSectionBox {
+    /**
+     * @type {number}
+     * @protected
+     */
+    _tdId = 0;
+
+    _getInnerBoxTag() {
+        return 'TD';
+    }
+
+    /**
+     * @return {HTMLTableCellElement}
+     * @protected
+     */
+    _getInnerBox() {
+        return super._getInnerBox().children.item(this._tdId);
+    }
 }
 
 class ArmoryBox extends Box {
