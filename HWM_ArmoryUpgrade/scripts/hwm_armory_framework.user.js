@@ -1246,31 +1246,17 @@ class TakesLeasesBodyBox extends TakesRowBox {
 
 /* <editor-fold desc="armory tabs"> */
 
-class TabsBox extends Box {
-    /**
-     * @return {HTMLTableRowElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox()
-            .children.item(0) // tbody
-            .children.item(0); // tr
-    }
-
+class TabsBox extends TableRowBox {
     /**
      * @param {HTMLTableCellElement} anchor
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
-        return anchor
-            ?.children.item(2); // table#0 armory tabs
+        return anchor.children.item(3); // table
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_TABS_BOX;
-    }
-
-    _getBoxTag() {
-        return 'TABLE';
     }
 }
 
