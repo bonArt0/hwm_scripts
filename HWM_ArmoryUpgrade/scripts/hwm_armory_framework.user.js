@@ -453,7 +453,7 @@ class Box {
             return;
         }
 
-        throw new FrameworkError(`Something happen with game layout`, {element: this, box: box});
+        throw new FrameworkError(`Something happen with game layout`, {element: this, box: box, anchor: anchor});
     }
 
     /**
@@ -499,6 +499,10 @@ class Box {
  */
 class TableBasedBox extends Box {
     _getBoxTag() {
+        return 'TABLE';
+    }
+
+    _getInnerBoxTag() {
         return 'TABLE';
     }
 }
@@ -572,6 +576,19 @@ class TableCellBox extends TableRowBox {
     }
 }
 
+/**
+ * @abstract
+ */
+class TableCellBasedBox extends Box {
+    _getBoxTag() {
+        return 'TD';
+    }
+
+    _getInnerBoxTag() {
+        return 'TD';
+    }
+}
+
 class ArmoryBox extends TableCellBox {
     /**
      * @type {OverviewBox}
@@ -632,7 +649,7 @@ class ArmoryBox extends TableCellBox {
 
         const innerBox = this.getInnerBox();
 
-        this.overviewBox = new OverviewBox();
+        this.overviewBox = new OverviewBox(innerBox);
         this.controlsBox = new ControlsBox(innerBox);
         this.takesBox = new TakesBox(innerBox);
         this.tabsBox = new TabsBox(innerBox);
@@ -683,7 +700,7 @@ class ArmoryBox extends TableCellBox {
 
 /* <editor-fold desc="armory overview"> */
 
-class OverviewBox extends Box {
+class OverviewBox extends TableSectionBox {
     /**
      * @type {OverviewInfoBox}
      * @public
@@ -722,26 +739,13 @@ class OverviewBox extends Box {
     constructor(anchor) {
         super(anchor);
 
-        this.infoBox = new OverviewInfoBox(this.getInnerBox());
-        this.accountBox = new OverviewAccountBox(this.getInnerBox());
-        this.onlineSwitchBox = new OverviewOnlineSwitchBox(this.getInnerBox());
-        this.controlSwitchBox = new OverviewControlSwitchBox(this.getInnerBox());
-        this.sectorsBox = new OverviewSectorsBox(this.getInnerBox());
-    }
+        const innerBox = this.getInnerBox();
 
-    /**
-     * @return {HTMLTableElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableSectionElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox()
-            .children.item(0); // tbody
+        this.infoBox = new OverviewInfoBox(innerBox);
+        this.accountBox = new OverviewAccountBox(innerBox);
+        this.onlineSwitchBox = new OverviewOnlineSwitchBox(innerBox);
+        this.controlSwitchBox = new OverviewControlSwitchBox(innerBox);
+        this.sectorsBox = new OverviewSectorsBox(innerBox);
     }
 
     /**
@@ -750,33 +754,15 @@ class OverviewBox extends Box {
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(0); // table#0 armory overview
+            ?.children.item(0); // table
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_OVERVIEW_BOX;
     }
-
-    _getBoxTag() {
-        return 'TABLE';
-    }
 }
 
-class OverviewInfoBox extends Box {
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox();
-    }
-
+class OverviewInfoBox extends TableCellBasedBox {
     /**
      * @returns {number}
      */
@@ -797,139 +783,65 @@ class OverviewInfoBox extends Box {
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(0) // tr#0 armory overview
-            ?.children.item(0); // td#0 armory overview
+            ?.children.item(0) // tr
+            ?.children.item(0); // td
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_INFO_BOX;
     }
-
-    _getBoxTag() {
-        return 'TD';
-    }
 }
 
-class OverviewAccountBox extends Box {
-    /**
-     * @return {HTMLTableElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableRowElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox()
-            .children.item(0) // tbody#0 armory account
-            .children.item(0); // tr#0 armory account
-    }
-
+class OverviewAccountBox extends TableRowBox {
     /**
      * @param {HTMLTableSectionElement} anchor
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(0) // tr#0 armory overview
-            ?.children.item(1) // td#1 armory overview
-            ?.children.item(0); // table#0 armory account
+            ?.children.item(0) // tr
+            ?.children.item(1) // td
+            ?.children.item(0); // table
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_ACCOUNT_BOX;
     }
-
-    _getBoxTag() {
-        return 'TABLE';
-    }
 }
 
-class OverviewOnlineSwitchBox extends Box {
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox();
-    }
-
+class OverviewOnlineSwitchBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
      * @return {HTMLTableCellElement|undefined}
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(0) // tr#0 armory overview
-            ?.children.item(2); // td#2 armory overview
+            ?.children.item(0) // tr
+            ?.children.item(2); // td
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_ONLINE_SWITCH_BOX;
     }
-
-    _getBoxTag() {
-        return 'TD';
-    }
 }
 
-class OverviewControlSwitchBox extends Box {
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox();
-    }
-
+class OverviewControlSwitchBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
      * @return {HTMLTableCellElement|undefined}
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(0) // tr#0 armory overview
-            ?.children.item(3); // td#3 armory overview
+            ?.children.item(0) // tr
+            ?.children.item(3); // td
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_CONTROL_SWITCH_BOX;
     }
-
-    _getBoxTag() {
-        return 'TD';
-    }
 }
 
-class OverviewSectorsBox extends Box {
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox();
-    }
-
+class OverviewSectorsBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
      * @return {HTMLTableCellElement|undefined}
@@ -942,10 +854,6 @@ class OverviewSectorsBox extends Box {
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_SECTORS_BOX;
-    }
-
-    _getBoxTag() {
-        return 'TD';
     }
 }
 
