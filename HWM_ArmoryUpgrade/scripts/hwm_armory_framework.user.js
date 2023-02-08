@@ -63,8 +63,21 @@ const ArmoryTab = {
  */
 let _ArmoryFrameworkInstance;
 
-class ArmoryFramework
-{
+class FrameworkError extends Error {
+    /**
+     * @type {object}
+     * @public
+     */
+    context = {};
+
+    constructor(props, context) {
+        super(props);
+
+        this.context = context;
+    }
+}
+
+class ArmoryFramework {
     /**
      * @type {boolean}
      * @private
@@ -93,7 +106,7 @@ class ArmoryFramework
             try {
                 _ArmoryFrameworkInstance = new ArmoryFramework();
             } catch (e) {
-                console.error('Something happen while framework initializing');
+                console.error('Something happen while framework initializing', e.context);
                 throw e;
             }
 
@@ -157,7 +170,7 @@ class ArmoryFramework
             return initialAnchor;
         }
 
-        throw new Error('Something happen with game layout (initial anchor not found)');
+        throw new FrameworkError('Something happen with game layout (initial anchor not found)', {anchor: initialAnchor});
     }
 
     /**
@@ -410,7 +423,7 @@ class Box {
             return this._box;
         }
 
-        throw new Error('Invalid ArmoryFramework usage, use ArmoryFramework.init() first');
+        throw new FrameworkError(`Can't get outer box`, {element: this});
     }
 
     /**
@@ -424,7 +437,7 @@ class Box {
             return box;
         }
 
-        throw new Error(`Invalid ArmoryFramework usage, use ArmoryFramework.init() first`);
+        throw new FrameworkError(`Can't get inner box`, {innerBox: box, element: this});
     }
 
     /**
@@ -434,13 +447,13 @@ class Box {
     _initBox(anchor) {
         const box = this._findBox(anchor);
 
-        if (box && box.tagName === this._getBoxTag()) {
+        if (box?.tagName === this._getBoxTag()) {
             box.classList.add(this._getBoxClassName());
             this._box = box;
             return;
         }
 
-        throw new Error(`Something happen with game layout (${typeof this})`);
+        throw new FrameworkError(`Something happen with game layout`, {element: this, box: box});
     }
 
     /**
@@ -509,7 +522,7 @@ class TableSectionBox extends TableBasedBox {
      * @protected
      */
     _getInnerBox() {
-        return this._getInnerBox().children.item(this._tbodyId);
+        return super._getInnerBox().children.item(this._tbodyId);
     }
 }
 
@@ -539,7 +552,7 @@ class TableRowBox extends TableSectionBox {
 /**
  * @abstract
  */
-class TableCellBox extends TableSectionBox {
+class TableCellBox extends TableRowBox {
     /**
      * @type {number}
      * @protected
@@ -559,7 +572,7 @@ class TableCellBox extends TableSectionBox {
     }
 }
 
-class ArmoryBox extends Box {
+class ArmoryBox extends TableCellBox {
     /**
      * @type {OverviewBox}
      * @public
@@ -617,14 +630,16 @@ class ArmoryBox extends Box {
     constructor(anchor, activeTab) {
         super(anchor);
 
-        this.overviewBox = new OverviewBox(this.getInnerBox());
-        this.controlsBox = new ControlsBox(this.getInnerBox());
-        this.takesBox = new TakesBox(this.getInnerBox());
-        this.tabsBox = new TabsBox(this.getInnerBox());
+        const innerBox = this.getInnerBox();
+
+        this.overviewBox = new OverviewBox();
+        this.controlsBox = new ControlsBox(innerBox);
+        this.takesBox = new TakesBox(innerBox);
+        this.tabsBox = new TabsBox(innerBox);
         switch (activeTab) {
             case ArmoryTab.TAB_DESCRIPTION:
-                this.descriptionBox = new DescriptionBox(this.getInnerBox());
-                this.descriptionFormBox = new DescriptionFormBox(this.getInnerBox());
+                this.descriptionBox = new DescriptionBox(innerBox);
+                this.descriptionFormBox = new DescriptionFormBox(innerBox);
                 break;
             case ArmoryTab.TAB_ON_LEASE:
             case ArmoryTab.TAB_WEAPON:
@@ -633,25 +648,8 @@ class ArmoryBox extends Box {
             case ArmoryTab.TAB_BACKPACK:
             case ArmoryTab.TAB_SETS:
             case ArmoryTab.TAB_UNAVAILABLE:
-                this.artsBox = new ArtsBox(this.getInnerBox());
+                this.artsBox = new ArtsBox(innerBox);
         }
-    }
-
-    /**
-     * @return {HTMLTableElement}
-     */
-    getOuterBox() {
-        return super.getOuterBox();
-    }
-
-    /**
-     * @return {HTMLTableCellElement}
-     */
-    getInnerBox() {
-        return this.getOuterBox()
-            .children.item(0) // tbody
-            .children.item(0) // tr
-            .children.item(0); // td
     }
 
     /**
@@ -680,10 +678,6 @@ class ArmoryBox extends Box {
 
     _getBoxClassName() {
         return FrameworkClassNames.ARMORY_BOX;
-    }
-
-    _getBoxTag() {
-        return 'TABLE';
     }
 }
 
