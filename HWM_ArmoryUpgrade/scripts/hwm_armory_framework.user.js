@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name          hwm_armory_framework
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.3.0
-// @description   Хелпер для других скриптов склада
+// @version       1.4.0
+// @description   Helper for other hwm_armory scripts
 // @author        bonArt
 // @license       GPL-3.0-only
 // @icon          https://dcdn.heroeswm.ru/i/btns/job_fl_btn_warehouse.png
