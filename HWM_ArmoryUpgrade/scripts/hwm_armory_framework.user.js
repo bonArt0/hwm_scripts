@@ -13,6 +13,9 @@
 // @supportURL    https://www.heroeswm.ru/sms-create.php?mailto_id=117282
 // ==/UserScript==
 
+/**
+ * @enum
+ */
 const FrameworkClassNames = {
     ARMORY_BOX: 'afw_armory_box',
     ARMORY_OVERVIEW_BOX: 'afw_armory_overview_box',
@@ -397,6 +400,7 @@ class ArmoryFramework {
 
 /**
  * @abstract
+ * @todo remove inner/outer from public
  */
 class Box {
     /**
