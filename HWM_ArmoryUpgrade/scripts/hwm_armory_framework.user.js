@@ -64,6 +64,22 @@ const ArmoryTab = {
  */
 let _ArmoryFrameworkInstance;
 
+class AlreadyInitializedError extends Error {
+    constructor() {
+        super();
+
+        this.message = 'Framework already initialized';
+    }
+}
+
+class UnsupportedFeatureError extends Error {
+    constructor(feature) {
+        super();
+
+        this.message = `Framework doesn't support ${feature} yet`;
+    }
+}
+
 class FrameworkError extends Error {
     /**
      * @type {object}
@@ -98,7 +114,7 @@ class ArmoryFramework {
     _armoryBox;
 
     /**
-     * @return {ArmoryFramework}
+     * @return {ArmoryFramework|null}
      */
     static init() {
         if (!_ArmoryFrameworkInstance || !_ArmoryFrameworkInstance?.initialized) {
@@ -107,6 +123,16 @@ class ArmoryFramework {
             try {
                 _ArmoryFrameworkInstance = new ArmoryFramework();
             } catch (e) {
+                if (e instanceof UnsupportedFeatureError) {
+                    console.warn(e.message);
+                    return null;
+                }
+
+                if (e instanceof AlreadyInitializedError) {
+                    console.info(e.message);
+                    return _ArmoryFrameworkInstance;
+                }
+
                 console.error('Something happen while framework initializing', e.context);
                 throw e;
             }
@@ -130,11 +156,11 @@ class ArmoryFramework {
      */
     _initFramework() {
         if (!this.isManagementMode()) {
-            throw new Error('Framework doesn\'t support non-management mode yet');
+            throw new UnsupportedFeatureError('non-management mode');
         }
 
         if (this.initialized) {
-            throw new Error('Framework already initialized')
+            throw new AlreadyInitializedError();
         }
 
         this._armoryBox = new ArmoryBox(this._findInitialAnchor(), this._findActiveTab());
