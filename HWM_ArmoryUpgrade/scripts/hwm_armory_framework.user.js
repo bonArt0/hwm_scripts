@@ -18,32 +18,30 @@
  */
 const FrameworkClassNames = {
     ARMORY_BOX: 'afw_armory_box',
-    ARMORY_OVERVIEW_BOX: 'afw_armory_overview_box',
-    ARMORY_INFO_BOX: 'afw_armory_info_box',
-    ARMORY_ACCOUNT_BOX: 'afw_armory_account_box',
-    ARMORY_ONLINE_SWITCH_BOX: 'afw_armory_online_box',
-    ARMORY_CONTROL_SWITCH_BOX: 'afw_armory_control_box',
-    ARMORY_SECTORS_BOX: 'afw_armory_sectors_box',
-    ARMORY_CONTROLS_BOX: 'afw_armory_controls_box',
-    ARMORY_CONTROLS_HEADER_BOX: 'afw_armory_controls_header_box',
-    ARMORY_CONTROLS_HEADER_PUTS_BOX: 'afw_armory_controls_header_puts_box',
-    ARMORY_CONTROLS_HEADER_BATTLES_BOX: 'afw_armory_controls_header_battles_box',
-    ARMORY_CONTROLS_HEADER_SMITHS_BOX: 'afw_armory_controls_header_smiths_box',
-    ARMORY_CONTROLS_BODY_BOX: 'afw_armory_controls_body_box',
-    ARMORY_CONTROLS_BODY_PUTS_BOX: 'afw_armory_controls_body_puts_box',
-    ARMORY_CONTROLS_BODY_BATTLES_BOX: 'afw_armory_controls_body_battles_box',
-    ARMORY_CONTROLS_BODY_SMITHS_BOX: 'afw_armory_controls_body_smiths_box',
-    ARMORY_TAKES_BOX: 'afw_armory_takes_box',
-    ARMORY_TAKES_REPAIRS_HEADER_BOX: 'afw_armory_takes_repairs_header_box',
-    ARMORY_TAKES_REPAIRS_BODY_BOX: 'afw_armory_takes_repairs_body_box',
-    ARMORY_TAKES_LEASES_HEADER_BOX: 'afw_armory_takes_leases_header_box',
-    ARMORY_TAKES_LEASES_BODY_BOX: 'afw_armory_takes_leases_body_box',
-    ARMORY_TABS_BOX: 'afw_armory_tabs_box',
-    ARMORY_DESCRIPTION_BOX: 'afw_armory_description_box',
-    ARMORY_DESCRIPTION_FORM_BOX: 'afw_armory_description_form',
-    ARMORY_ARTS_BOX: 'afw_armory_arts_box',
-    ARTS_PLACE_FORM: 'afw_arts_place_form',
-    ARTS_PLACE_HEADER: 'afw_arts_place_header',
+    OVERVIEW_BOX: 'afw_armory_overview_box',
+    INFO_BOX: 'afw_armory_info_box',
+    ACCOUNT_BOX: 'afw_armory_account_box',
+    ONLINE_SWITCH_BOX: 'afw_armory_online_box',
+    CONTROL_SWITCH_BOX: 'afw_armory_control_box',
+    SECTORS_BOX: 'afw_armory_sectors_box',
+    CONTROLS_BOX: 'afw_armory_controls_box',
+    CONTROLS_HEADER_BOX: 'afw_armory_controls_header_box',
+    CONTROLS_HEADER_PUTS_BOX: 'afw_armory_controls_header_puts_box',
+    CONTROLS_HEADER_BATTLES_BOX: 'afw_armory_controls_header_battles_box',
+    CONTROLS_HEADER_SMITHS_BOX: 'afw_armory_controls_header_smiths_box',
+    CONTROLS_BODY_BOX: 'afw_armory_controls_body_box',
+    CONTROLS_BODY_PUTS_BOX: 'afw_armory_controls_body_puts_box',
+    CONTROLS_BODY_BATTLES_BOX: 'afw_armory_controls_body_battles_box',
+    CONTROLS_BODY_SMITHS_BOX: 'afw_armory_controls_body_smiths_box',
+    TAKES_BOX: 'afw_armory_takes_box',
+    TAKES_REPAIRS_HEADER_BOX: 'afw_armory_takes_repairs_header_box',
+    TAKES_REPAIRS_BODY_BOX: 'afw_armory_takes_repairs_body_box',
+    TAKES_LEASES_HEADER_BOX: 'afw_armory_takes_leases_header_box',
+    TAKES_LEASES_BODY_BOX: 'afw_armory_takes_leases_body_box',
+    TABS_BOX: 'afw_armory_tabs_box',
+    DESCRIPTION_BOX: 'afw_armory_description_box',
+    DESCRIPTION_FORM_BOX: 'afw_armory_description_form',
+    ARTS_BOX: 'afw_armory_arts_box',
 };
 
 /**
@@ -775,7 +773,7 @@ class OverviewBox extends TableSectionBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_OVERVIEW_BOX;
+        return FrameworkClassNames.OVERVIEW_BOX;
     }
 }
 
@@ -805,7 +803,7 @@ class OverviewInfoBox extends TableCellBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_INFO_BOX;
+        return FrameworkClassNames.INFO_BOX;
     }
 }
 
@@ -822,7 +820,7 @@ class OverviewAccountBox extends TableRowBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_ACCOUNT_BOX;
+        return FrameworkClassNames.ACCOUNT_BOX;
     }
 }
 
@@ -838,7 +836,7 @@ class OverviewOnlineSwitchBox extends TableCellBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_ONLINE_SWITCH_BOX;
+        return FrameworkClassNames.ONLINE_SWITCH_BOX;
     }
 }
 
@@ -854,7 +852,7 @@ class OverviewControlSwitchBox extends TableCellBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROL_SWITCH_BOX;
+        return FrameworkClassNames.CONTROL_SWITCH_BOX;
     }
 }
 
@@ -870,7 +868,7 @@ class OverviewSectorsBox extends TableCellBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_SECTORS_BOX;
+        return FrameworkClassNames.SECTORS_BOX;
     }
 }
 
@@ -911,7 +909,7 @@ class ControlsBox extends TableSectionBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_BOX;
+        return FrameworkClassNames.CONTROLS_BOX;
     }
 }
 
@@ -955,7 +953,7 @@ class ControlsHeaderBox extends TableRowBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_BOX;
+        return FrameworkClassNames.CONTROLS_HEADER_BOX;
     }
 }
 
@@ -983,7 +981,7 @@ class ControlsHeaderPutsBox extends ControlsHeaderCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_PUTS_BOX;
+        return FrameworkClassNames.CONTROLS_HEADER_PUTS_BOX;
     }
 }
 
@@ -998,7 +996,7 @@ class ControlsHeaderBattlesBox extends ControlsHeaderCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_BATTLES_BOX;
+        return FrameworkClassNames.CONTROLS_HEADER_BATTLES_BOX;
     }
 }
 
@@ -1013,7 +1011,7 @@ class ControlsHeaderSmithsBox extends ControlsHeaderCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_HEADER_SMITHS_BOX;
+        return FrameworkClassNames.CONTROLS_HEADER_SMITHS_BOX;
     }
 }
 
@@ -1056,7 +1054,7 @@ class ControlsBodyBox extends TableRowBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_BODY_BOX;
+        return FrameworkClassNames.CONTROLS_BODY_BOX;
     }
 }
 
@@ -1083,7 +1081,7 @@ class ControlsBodyPutsBox extends ControlsBodyCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_BODY_PUTS_BOX;
+        return FrameworkClassNames.CONTROLS_BODY_PUTS_BOX;
     }
 }
 
@@ -1098,7 +1096,7 @@ class ControlsBodyBattlesBox extends ControlsBodyCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_BODY_BATTLES_BOX;
+        return FrameworkClassNames.CONTROLS_BODY_BATTLES_BOX;
     }
 }
 
@@ -1113,7 +1111,7 @@ class ControlsBodySmithsBox extends ControlsBodyCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_CONTROLS_BODY_SMITHS_BOX;
+        return FrameworkClassNames.CONTROLS_BODY_SMITHS_BOX;
     }
 }
 
@@ -1174,7 +1172,7 @@ class TakesBox extends TableSectionBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_TAKES_BOX;
+        return FrameworkClassNames.TAKES_BOX;
     }
 }
 
@@ -1208,7 +1206,7 @@ class TakesRowBox extends TableCellBasedBox {
 
 class TakesRepairsHeaderBox extends TakesRowBox {
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_TAKES_REPAIRS_HEADER_BOX;
+        return FrameworkClassNames.TAKES_REPAIRS_HEADER_BOX;
     }
 
     _getTableRowId() {
@@ -1218,7 +1216,7 @@ class TakesRepairsHeaderBox extends TakesRowBox {
 
 class TakesRepairsBodyBox extends TakesRowBox {
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_TAKES_REPAIRS_BODY_BOX;
+        return FrameworkClassNames.TAKES_REPAIRS_BODY_BOX;
     }
 
     _getTableRowId() {
@@ -1228,7 +1226,7 @@ class TakesRepairsBodyBox extends TakesRowBox {
 
 class TakesLeasesHeaderBox extends TakesRowBox {
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_TAKES_LEASES_HEADER_BOX;
+        return FrameworkClassNames.TAKES_LEASES_HEADER_BOX;
     }
 
     _getTableRowId() {
@@ -1238,7 +1236,7 @@ class TakesLeasesHeaderBox extends TakesRowBox {
 
 class TakesLeasesBodyBox extends TakesRowBox {
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_TAKES_LEASES_BODY_BOX;
+        return FrameworkClassNames.TAKES_LEASES_BODY_BOX;
     }
 
     _getTableRowId() {
@@ -1260,7 +1258,7 @@ class TabsBox extends TableRowBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_TABS_BOX;
+        return FrameworkClassNames.TABS_BOX;
     }
 }
 
@@ -1278,7 +1276,7 @@ class DescriptionBox extends TableCellBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_DESCRIPTION_BOX;
+        return FrameworkClassNames.DESCRIPTION_BOX;
     }
 }
 
@@ -1309,7 +1307,7 @@ class DescriptionFormBox extends Box {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_DESCRIPTION_FORM_BOX;
+        return FrameworkClassNames.DESCRIPTION_FORM_BOX;
     }
 
     _getBoxTag() {
@@ -1335,7 +1333,7 @@ class ArtsBox extends TableCellBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ARMORY_ARTS_BOX;
+        return FrameworkClassNames.ARTS_BOX;
     }
 }
 
