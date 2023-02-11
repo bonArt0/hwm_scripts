@@ -1147,28 +1147,28 @@ class ControlsBodySmithsBox extends ControlsBodyCell {
 
 class TakesBox extends TableSectionBox {
     /**
-     * @type {TakesRepairsHeaderBox}
+     * @type {TakesRepairsHeaderBox|null}
      * @public
      * @readonly
      */
     repairHeaderBox;
 
     /**
-     * @type {TakesRepairsBodyBox}
+     * @type {TakesRepairsBodyBox|null}
      * @public
      * @readonly
      */
     repairBodyBox;
 
     /**
-     * @type {TakesLeasesHeaderBox}
+     * @type {TakesLeasesHeaderBox|null}
      * @public
      * @readonly
      */
     leasesHeaderBox;
 
     /**
-     * @type {TakesLeasesBodyBox}
+     * @type {TakesLeasesBodyBox|null}
      * @public
      * @readonly
      */
@@ -1182,11 +1182,30 @@ class TakesBox extends TableSectionBox {
         super(anchor);
 
         const innerBox = this.getInnerBox();
-
-        this.repairHeaderBox = new TakesRepairsHeaderBox(innerBox);
-        this.repairBodyBox = new TakesRepairsBodyBox(innerBox);
-        this.leasesHeaderBox = new TakesLeasesHeaderBox(innerBox);
-        this.leasesBodyBox = new TakesLeasesBodyBox(innerBox);
+        if (innerBox === null) {
+            this.repairHeaderBox = null;
+            this.repairBodyBox = null;
+            this.leasesHeaderBox = null;
+            this.leasesBodyBox = null;
+        } else if (innerBox.children.length === 4) {
+            // box has both repairs and leases row pairs
+            this.repairHeaderBox = new TakesRepairsHeaderBox(innerBox, 0);
+            this.repairBodyBox = new TakesRepairsBodyBox(innerBox, 1);
+            this.leasesHeaderBox = new TakesLeasesHeaderBox(innerBox, 2);
+            this.leasesBodyBox = new TakesLeasesBodyBox(innerBox, 3);
+        } else if (innerBox.innerHTML.search('action=repair') > -1) {
+            // "Repair" button exists, so box has only repairs row pair
+            this.repairHeaderBox = new TakesRepairsHeaderBox(innerBox, 0);
+            this.repairBodyBox = new TakesRepairsBodyBox(innerBox, 1);
+            this.leasesHeaderBox = null;
+            this.leasesBodyBox = null;
+        } else {
+            // box has only leases row pair
+            this.repairHeaderBox = null;
+            this.repairBodyBox = null;
+            this.leasesHeaderBox = new TakesLeasesHeaderBox(innerBox, 0);
+            this.leasesBodyBox = new TakesLeasesBodyBox(innerBox, 1);
+        }
     }
 
     /**
@@ -1207,10 +1226,22 @@ class TakesBox extends TableSectionBox {
  */
 class TakesRowBox extends TableCellBasedBox {
     /**
+     * BEWARE OF MAGIC!
+     * For variadic TR id usage
+     * @todo refactor this
      * @type {number}
-     * @protected
+     * @private
      */
-    _trId = -1;
+    static _currentRowId;
+
+    /**
+     * @param {HTMLElement} anchor
+     * @param {number} trId
+     */
+    constructor(anchor, trId) {
+        TakesRowBox._currentRowId = trId;
+        super(anchor);
+    }
 
     /**
      * @param {HTMLTableSectionElement} anchor
@@ -1218,25 +1249,14 @@ class TakesRowBox extends TableCellBasedBox {
      */
     _findBox(anchor) {
         return anchor
-            .children.item(this._getTableRowId()) // tr
+            .children.item(TakesRowBox._currentRowId) // tr
             .children.item(0); // td
     }
-
-    /**
-     * @return {number}
-     * @abstract
-     * @protected
-     */
-    _getTableRowId() {}
 }
 
 class TakesRepairsHeaderBox extends TakesRowBox {
     _getBoxClassName() {
         return FrameworkClassNames.TAKES_REPAIRS_HEADER_BOX;
-    }
-
-    _getTableRowId() {
-        return 0;
     }
 }
 
@@ -1244,29 +1264,17 @@ class TakesRepairsBodyBox extends TakesRowBox {
     _getBoxClassName() {
         return FrameworkClassNames.TAKES_REPAIRS_BODY_BOX;
     }
-
-    _getTableRowId() {
-        return 1;
-    }
 }
 
 class TakesLeasesHeaderBox extends TakesRowBox {
     _getBoxClassName() {
         return FrameworkClassNames.TAKES_LEASES_HEADER_BOX;
     }
-
-    _getTableRowId() {
-        return 2;
-    }
 }
 
 class TakesLeasesBodyBox extends TakesRowBox {
     _getBoxClassName() {
         return FrameworkClassNames.TAKES_LEASES_BODY_BOX;
-    }
-
-    _getTableRowId() {
-        return 3;
     }
 }
 
