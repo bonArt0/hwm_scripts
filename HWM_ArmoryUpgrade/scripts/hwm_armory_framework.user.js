@@ -1219,6 +1219,21 @@ class TakesBox extends TableSectionBox {
     _getBoxClassName() {
         return FrameworkClassNames.TAKES_BOX;
     }
+
+    /**
+     * @return {HTMLElement|null}
+     */
+    getInnerBox() {
+        try {
+            return super.getInnerBox();
+        } catch (e) {
+            // TakesBox table is empty
+            if (e instanceof FrameworkError && e.context.box === undefined) {
+                return null;
+            }
+            throw e;
+        }
+    }
 }
 
 /**
