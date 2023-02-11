@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          hwm_armory_framework
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.4.2
+// @version       1.4.3
 // @description   Helper for other hwm_armory scripts
 // @author        bonArt
 // @license       GPL-3.0-only
