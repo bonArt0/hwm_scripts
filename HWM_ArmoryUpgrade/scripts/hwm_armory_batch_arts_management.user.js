@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          hwm_armory_batch_arts_management
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.1.3
+// @version       1.2.0
 // @description   Движение артов пачкой
 // @author        bonArt
 // @license       GPL-3.0-only
