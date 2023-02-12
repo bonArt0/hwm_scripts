@@ -87,8 +87,8 @@ class FrameworkError extends Error {
      */
     context = {};
 
-    constructor(props, context) {
-        super(props);
+    constructor(message, context) {
+        super(message);
 
         this.context = context;
     }
@@ -1109,6 +1109,46 @@ class ControlsBodyPutsBox extends ControlsBodyCell {
 
     _getBoxClassName() {
         return FrameworkClassNames.CONTROLS_BODY_PUTS_BOX;
+    }
+
+    hideForm() {
+        this.getInnerBox().style.display = 'none';
+    }
+
+    /**
+     * @return {(number|string)[][]}
+     */
+    getArtsList() {
+        const artsPutOptions= this.getInnerBox().elements[2].options;
+        const arts = Array.from(artsPutOptions).map((option) => [+option.value, option.innerHTML]);
+        arts.shift(); // remove first "0" element
+        return arts;
+    }
+
+    /**
+     * @return {number}
+     */
+    getArmoryId() {
+        const id = this.getInnerBox().children.item(0)?.value;
+
+        if (id === undefined) {
+            throw new FrameworkError('Armory id not found', this);
+        }
+
+        return +id;
+    }
+
+    /**
+     * @returns {string}
+     */
+    getArtsPutSign() {
+        const sign = this.getInnerBox().children.item(1)?.value;
+
+        if (sign === undefined) {
+            throw new FrameworkError('Armory puts sign not found', this);
+        }
+
+        return sign + '';
     }
 }
 
