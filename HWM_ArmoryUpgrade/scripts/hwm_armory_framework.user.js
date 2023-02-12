@@ -99,7 +99,7 @@ class ArmoryFramework {
      * @type {boolean}
      * @private
      */
-    initialized = false
+    _initialized = false;
 
     /**
      * @type {boolean}
@@ -118,7 +118,7 @@ class ArmoryFramework {
      * @return {ArmoryFramework|null}
      */
     static init() {
-        if (!_ArmoryFrameworkInstance || !_ArmoryFrameworkInstance?.initialized) {
+        if (!_ArmoryFrameworkInstance || !_ArmoryFrameworkInstance?._initialized) {
             console.info('Armory Framework initialization started');
 
             try {
@@ -160,12 +160,12 @@ class ArmoryFramework {
             throw new UnsupportedFeatureError('non-management mode');
         }
 
-        if (this.initialized) {
+        if (this._initialized) {
             throw new AlreadyInitializedError();
         }
 
         this.armoryBox = new ArmoryBox(this._findInitialAnchor(), this._findActiveTab());
-        this.initialized = true;
+        this._initialized = true;
     }
 
     /**
