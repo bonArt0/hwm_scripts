@@ -108,6 +108,11 @@ class ArmoryFramework {
     _isManagementMode;
 
     /**
+     * @type {ArmoryTab}
+     */
+    activeTab = ArmoryTab.TAB_DESCRIPTION;
+
+    /**
      * @type {ArmoryBox}
      * @public
      * @readonly
@@ -164,7 +169,8 @@ class ArmoryFramework {
             throw new AlreadyInitializedError();
         }
 
-        this.armoryBox = new ArmoryBox(this._findInitialAnchor(), this._findActiveTab());
+        this.activeTab = this._findActiveTab();
+        this.armoryBox = new ArmoryBox(this._findInitialAnchor(), this.activeTab);
         this._initialized = true;
     }
 
