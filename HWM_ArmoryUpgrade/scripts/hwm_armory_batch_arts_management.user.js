@@ -10,7 +10,7 @@
 // @match         https://178.248.235.15/sklad_info.php?*
 // @match         https://www.lordswm.com/sklad_info.php?*
 // @match         https://my.lordswm.com/sklad_info.php?*
-// @require       https://greasyfork.org/scripts/457946-hwm-armory-framework/code/hwm_armory_framework.js?version=1148658
+// @require       https://greasyfork.org/scripts/457946-hwm-armory-framework/code/hwm_armory_framework.js?version=1148713
 // @supportURL    https://www.heroeswm.ru/sms-create.php?mailto_id=117282
 // ==/UserScript==
 
@@ -37,16 +37,17 @@ function initControls() {
 }
 
 function initArtsPlaceBox() {
-    const artsPlaceForm = framework.getArtPlaceForm();
-    artsPlaceForm.style.display = 'none';
+    const artsPutsHeader = framework.armoryBox.controlsBox.headerBox.putsBox;
+    const artsPutsBody = framework.armoryBox.controlsBox.bodyBox.putsBox;
 
-    const artsToPlace = getArtsToPlace(artsPlaceForm.elements[2].options);
-    artsPlaceForm.parentElement.append(buildNewPlaceBox(artsToPlace));
+    artsPutsBody.hideForm();
+    const artsToPut = artsPutsBody.getArtsList();
 
-    const artsPlaceHeader = framework.getArtPlaceHeader();
-    artsPlaceHeader.innerHTML = artsPlaceHeader.innerHTML.replace('артефакт', 'артефакты');
-    artsPlaceHeader.parentElement.append(buildArtsPlaceSubmitButton());
-    artsPlaceHeader.parentElement.prepend(buildArtsPlaceCounterLabel(artsToPlace.length));
+    artsPutsBody.getOuterBox().append(buildNewPlaceBox(artsToPut));
+    artsPutsHeader.getOuterBox().innerHTML = artsPutsHeader.getOuterBox().innerHTML
+        .replace('артефакт', 'артефакты');
+    artsPutsHeader.getOuterBox().append(buildArtsPlaceSubmitButton());
+    artsPutsHeader.getOuterBox().prepend(buildArtsPlaceCounterLabel(artsToPut.length));
 }
 
 /*  <editor-fold desc="arts place box"> */
@@ -97,13 +98,15 @@ function getArtsPlaceCounterLabel() {
 }
 
 async function handleArtsPlaceSubmit() {
-    const infoBox = framework.getArmoryInfoBox();
-    const armory_id = framework.getArmoryId();
-    let sign = framework.getArtsPlaceSign();
+    const infoBox = framework.armoryBox.overviewBox.infoBox;
+    const artsPutsBox = framework.armoryBox.controlsBox.bodyBox.putsBox;
+
+    const armory_id = artsPutsBox.getArmoryId();
+    let sign = artsPutsBox.getArtsPutSign();
 
     for (const artBox of getArtsPlaceBoxes() ?? []) {
-        const currentCapacity = framework.armoryBox.overviewBox.infoBox.getCurrentCapacity();
-        const TotalCapacity = framework.armoryBox.overviewBox.infoBox.getTotalCapacity();
+        const currentCapacity = infoBox.getCurrentCapacity();
+        const TotalCapacity = infoBox.getTotalCapacity();
         if (currentCapacity === TotalCapacity) {
             break;
         }
@@ -123,7 +126,8 @@ async function handleArtsPlaceSubmit() {
         request.setRequestHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
         request.setRequestHeader('Upgrade-Insecure-Requests', '1');
         request.onload = () => {
-            infoBox.innerHTML = infoBox.innerHTML.replace(`<b>${currentCapacity}</b>`, `<b>${+currentCapacity + 1}</b>`);
+            infoBox.innerHTML = infoBox.getOuterBox().innerHTML
+                .replace(`<b>${currentCapacity}</b>`, `<b>${+currentCapacity + 1}</b>`);
             checkbox.checked = false;
             handleArtsPlaceCheckboxChange(checkbox.checked);
         };
@@ -148,16 +152,6 @@ function getArtsPlaceBoxes() {
     }
 
     return artsBoxes;
-}
-
-/**
- * @param {HTMLOptionsCollection} artsPlaceOptions
- * @returns {(number|string)[][]}
- */
-function getArtsToPlace(artsPlaceOptions) {
-    const arts = Array.from(artsPlaceOptions).map((option) => [+option.value, option.innerHTML]);
-    arts.shift(); // remove first "0" element
-    return arts;
 }
 
 /**
