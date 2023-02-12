@@ -109,9 +109,10 @@ class ArmoryFramework {
 
     /**
      * @type {ArmoryBox}
-     * @private
+     * @public
+     * @readonly
      */
-    _armoryBox;
+    armoryBox;
 
     /**
      * @return {ArmoryFramework|null}
@@ -163,7 +164,7 @@ class ArmoryFramework {
             throw new AlreadyInitializedError();
         }
 
-        this._armoryBox = new ArmoryBox(this._findInitialAnchor(), this._findActiveTab());
+        this.armoryBox = new ArmoryBox(this._findInitialAnchor(), this._findActiveTab());
         this.initialized = true;
     }
 
@@ -241,7 +242,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryBox() {
-        return this._armoryBox.getInnerBox();
+        return this.armoryBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -253,7 +254,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryOverviewBox() {
-        return this._armoryBox.overviewBox.getInnerBox();
+        return this.armoryBox.overviewBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -265,7 +266,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryInfoBox() {
-        return this._armoryBox.overviewBox.infoBox.getInnerBox();
+        return this.armoryBox.overviewBox.infoBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -277,7 +278,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryAccountBox() {
-        return this._armoryBox.overviewBox.accountBox.getInnerBox();
+        return this.armoryBox.overviewBox.accountBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -289,7 +290,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryOnlineBox() {
-        return this._armoryBox.overviewBox.onlineSwitchBox.getInnerBox();
+        return this.armoryBox.overviewBox.onlineSwitchBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -301,7 +302,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryControlSwitchBox() {
-        return this._armoryBox.overviewBox.controlSwitchBox.getInnerBox();
+        return this.armoryBox.overviewBox.controlSwitchBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -313,7 +314,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmorySectorsBox() {
-        return this._armoryBox.overviewBox.sectorsBox.getInnerBox();
+        return this.armoryBox.overviewBox.sectorsBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -325,7 +326,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryControlsBox() {
-        return this._armoryBox.controlsBox.getInnerBox();
+        return this.armoryBox.controlsBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -337,7 +338,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryRepairs() {
-        return this._armoryBox.takesBox.getInnerBox();
+        return this.armoryBox.takesBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -349,7 +350,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryTabsBox() {
-        return this._armoryBox.tabsBox.getInnerBox();
+        return this.armoryBox.tabsBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -361,7 +362,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArmoryArtsBox() {
-        return this._armoryBox.artsBox.getInnerBox();
+        return this.armoryBox.artsBox.getInnerBox();
     }
 
     /* </editor-fold> */
@@ -373,7 +374,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArtPlaceForm() {
-        return this._armoryBox.controlsBox.bodyBox.putsBox.getInnerBox();
+        return this.armoryBox.controlsBox.bodyBox.putsBox.getInnerBox();
     }
 
     /**
@@ -381,7 +382,7 @@ class ArmoryFramework {
      * @throws {Error} on invalid framework usage
      */
     getArtPlaceHeader() {
-        return this._armoryBox.controlsBox.headerBox.putsBox.getInnerBox();
+        return this.armoryBox.controlsBox.headerBox.putsBox.getInnerBox();
     }
 
     /**
