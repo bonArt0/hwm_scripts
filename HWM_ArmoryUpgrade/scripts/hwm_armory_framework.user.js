@@ -42,6 +42,10 @@ const FrameworkClassNames = {
     DESCRIPTION_BOX: 'afw_armory_description_box',
     DESCRIPTION_FORM_BOX: 'afw_armory_description_form',
     ARTS_BOX: 'afw_armory_arts_box',
+    ARTS_LIST_BOX: 'afw_armory_arts_list_box',
+    ARTS_ROW_BOX: 'afw_armory_arts_row_box',
+    ARTS_HEADER_BOX: 'afw_armory_arts_header_box',
+    ARTS_FOOTER_BOX: 'afw_armory_arts_footer_box',
 };
 
 /**
@@ -547,7 +551,7 @@ class ArmoryBox extends TableCellBox {
             case ArmoryTab.TAB_BACKPACK:
             case ArmoryTab.TAB_SETS:
             case ArmoryTab.TAB_UNAVAILABLE:
-                this.artsBox = new ArtsBox(innerBox);
+                this.artsBox = new ArtsBox(innerBox, activeTab);
         }
     }
 
@@ -1255,6 +1259,47 @@ class DescriptionFormBox extends Box {
 
 class ArtsBox extends TableCellBox {
     /**
+     * @type {ArtsListBox}
+     * @public
+     * @readonly
+     */
+    artsList;
+
+    /**
+     * @type {ArtsHeaderBox}
+     * @public
+     * @readonly
+     */
+    artsHeader;
+
+    /**
+     * @type {ArtsFooterBox|null}
+     * @public
+     * @readonly
+     */
+    artsFooter;
+
+    /**
+     * @type {ArtsRowBox[]}
+     * @public
+     * @readonly
+     */
+    artsRows;
+
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @param {ArmoryTab} activeTab
+     */
+    constructor(anchor, activeTab) {
+        super(anchor);
+
+        this.artsList = new ArtsListBox(this.getInnerBox(), activeTab);
+        this.artsHeader = this.artsList.artsHeader;
+        this.artsFooter = this.artsList.artsFooter;
+        this.artsRows = this.artsList.artsRows;
+    }
+
+    /**
      * @param {HTMLTableCellElement} anchor
      * @return {HTMLTableElement|undefined}
      */
@@ -1264,6 +1309,85 @@ class ArtsBox extends TableCellBox {
 
     _getBoxClassName() {
         return FrameworkClassNames.ARTS_BOX;
+    }
+}
+
+class ArtsListBox extends TableSectionBox {
+    /**
+     * @type {ArtsHeaderBox}
+     * @public
+     * @readonly
+     */
+    artsHeader;
+
+    /**
+     * @type {ArtsFooterBox|null}
+     * @public
+     * @readonly
+     */
+    artsFooter;
+
+    /**
+     * @type {ArtsRowBox[]}
+     * @public
+     * @readonly
+     */
+    artsRows;
+
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @param {ArmoryTab} activeTab
+     */
+    constructor(anchor, activeTab) {
+        super(anchor);
+
+        const rows = Array.from(this.getInnerBox().children)
+            .filter(ArtsListBox._filterTagsCallback.bind({tag: 'TR'}));
+
+        this.artsHeader = new ArtsHeaderBox(rows.shift());
+        this.artsFooter = activeTab === ArmoryTab.TAB_UNAVAILABLE ? new ArtsFooterBox(rows.pop()) : null;
+        this.artsRows = rows.map((row) => new ArtsRowBox(row));
+    }
+
+
+    _findBox(anchor) {
+        return Array.from(anchor.children)
+            .filter(ArtsListBox._filterTagsCallback.bind({tag: 'TABLE'}))
+            .shift();
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARTS_LIST_BOX;
+    }
+
+    static _filterTagsCallback(row) {
+        return row.tagName === this.tag; // there is a <script> here besides correct tags
+    }
+}
+
+class ArtsRowBox extends TableRowBasedBox {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableRowElement}
+     */
+    _findBox(anchor) {
+        return anchor;
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.ARTS_ROW_BOX;
+    }
+}
+
+class ArtsHeaderBox extends ArtsRowBox {
+    _getBoxClassName() {
+        return FrameworkClassNames.ARTS_HEADER_BOX;
+    }
+}
+
+class ArtsFooterBox extends ArtsRowBox {
+    _getBoxClassName() {
+        return FrameworkClassNames.ARTS_FOOTER_BOX;
     }
 }
 
