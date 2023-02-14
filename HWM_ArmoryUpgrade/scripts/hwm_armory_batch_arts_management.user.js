@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          hwm_armory_batch_arts_management
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.3.0
+// @version       1.3.1
 // @description   Движение артов пачкой
 // @author        bonArt
 // @license       GPL-3.0-only
@@ -25,7 +25,7 @@ const LocalClassNames = {
 
 const framework = ArmoryFramework.init();
 
-if (framework.isManagementMode()) {
+if (framework?.isManagementMode()) {
     if (initControls()) { // framework
         console.info('HWM Armory Batch Arts Management initiated');
     } else {
