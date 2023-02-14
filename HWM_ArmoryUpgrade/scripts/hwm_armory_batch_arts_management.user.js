@@ -229,7 +229,7 @@ function prepareLeaseTabRows() {
 
     const footer = document.createElement('tr');
     footer.append(footerButtonsCell1, footerButtonsCell2);
-    footer.classList.add('afw_armory_arts_footer_box');
+    footer.classList.add(FrameworkClassNames.ARTS_FOOTER_BOX);
     framework.armoryBox.artsBox.artsList.getInnerBox().append(footer);
 
     framework.armoryBox.artsBox.artsHeader.getInnerBox().prepend(document.createElement('td'));
@@ -244,7 +244,7 @@ function updateExistingTakesBoxControls() {
         .pop()
         .append(buildArtsTakeSubmitButton());
 
-    Array.from(document.getElementsByClassName('afw_armory_arts_footer_box').item(0)?.children)
+    Array.from(document.getElementsByClassName(FrameworkClassNames.ARTS_FOOTER_BOX).item(0)?.children)
         ?.pop()
         ?.append(buildArtsTakeSubmitButton());
 
