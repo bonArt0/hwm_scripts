@@ -34,7 +34,7 @@ if (framework.isManagementMode()) {
 }
 
 function initControls() {
-    initArtsPlaceBox();
+    initArtsPutsBox();
     if (framework.activeTab !== ArmoryTab.TAB_DESCRIPTION) {
         initArtsTakesBox();
     }
@@ -42,18 +42,18 @@ function initControls() {
     return true;
 }
 
-function initArtsPlaceBox() {
+function initArtsPutsBox() {
     const artsPutsHeader = framework.armoryBox.controlsBox.headerBox.putsBox;
     const artsPutsBody = framework.armoryBox.controlsBox.bodyBox.putsBox;
 
     artsPutsBody.hideForm();
     const artsToPut = artsPutsBody.getArtsList();
 
-    artsPutsBody.getOuterBox().append(buildNewPlaceBox(artsToPut));
+    artsPutsBody.getOuterBox().append(buildNewPutsBox(artsToPut));
     artsPutsHeader.getOuterBox().innerHTML = artsPutsHeader.getOuterBox().innerHTML
         .replace('артефакт', 'артефакты');
-    artsPutsHeader.getOuterBox().append(buildArtsPlaceSubmitButton());
-    artsPutsHeader.getOuterBox().prepend(buildArtsPlaceCounterLabel(artsToPut.length));
+    artsPutsHeader.getOuterBox().append(buildArtsPutsSubmitButton());
+    artsPutsHeader.getOuterBox().prepend(buildArtsPutsCounterLabel(artsToPut.length));
 }
 
 function initArtsTakesBox() {
@@ -71,28 +71,28 @@ function initArtsTakesBox() {
 /**
  * @returns {HTMLButtonElement}
  */
-function buildArtsPlaceSubmitButton() {
+function buildArtsPutsSubmitButton() {
     const button = document.createElement('button');
     button.style.position = 'relative';
     button.style.left = '32%';
     button.innerHTML = 'Поместить';
-    button.onclick = () => handleArtsPlaceSubmit();
+    button.onclick = () => handleArtsPutsSubmit();
 
     return button;
 }
 
 /**
- * @param {number} artsToPlaceCount
+ * @param {number} artsToPutCount
  * @returns {HTMLLabelElement}
  */
-function buildArtsPlaceCounterLabel(artsToPlaceCount) {
+function buildArtsPutsCounterLabel(artsToPutCount) {
     const label = document.createElement('label');
     label.style.position = 'relative';
     label.style.left = '-32%';
     label.style.width = '0';
     label.style.whiteSpace = 'nowrap';
     label.dataset.current = '0';
-    label.dataset.total = artsToPlaceCount + '';
+    label.dataset.total = artsToPutCount + '';
     label.classList.add(LocalClassNames.ARTS_PLACE_COUNTER);
     label.recalculate = () => {
         label.innerHTML = `Выбрано: ${label.dataset.current} из ${label.dataset.total}`;
@@ -103,24 +103,24 @@ function buildArtsPlaceCounterLabel(artsToPlaceCount) {
     return label;
 }
 
-function getArtsPlaceCounterLabel() {
+function getArtsPutsCounterLabel() {
     const counter = document.getElementsByClassName(LocalClassNames.ARTS_PLACE_COUNTER).item(0);
     if (!counter) {
-        console.error('Arts place counter not found');
+        console.error('Arts puts counter not found');
         return null;
     }
 
     return counter;
 }
 
-async function handleArtsPlaceSubmit() {
+async function handleArtsPutsSubmit() {
     const infoBox = framework.armoryBox.overviewBox.infoBox;
     const artsPutsBox = framework.armoryBox.controlsBox.bodyBox.putsBox;
 
     const armory_id = artsPutsBox.getArmoryId();
     let sign = artsPutsBox.getArtsPutSign();
 
-    for (const artBox of getArtsPlaceBoxes() ?? []) {
+    for (const artBox of getArtsPutsBoxes() ?? []) {
         const currentCapacity = infoBox.getCurrentCapacity();
         const TotalCapacity = infoBox.getTotalCapacity();
         if (currentCapacity === TotalCapacity) {
@@ -145,7 +145,7 @@ async function handleArtsPlaceSubmit() {
             infoBox.innerHTML = infoBox.getOuterBox().innerHTML
                 .replace(`<b>${currentCapacity}</b>`, `<b>${+currentCapacity + 1}</b>`);
             checkbox.checked = false;
-            handleArtsPlaceCheckboxChange(checkbox.checked);
+            handleArtsPutsCheckboxChange(checkbox.checked);
         };
         request.onerror = (ev) => console.error(ev);
 
@@ -160,7 +160,7 @@ async function handleArtsPlaceSubmit() {
 /**
  * @returns {HTMLCollection|null}
  */
-function getArtsPlaceBoxes() {
+function getArtsPutsBoxes() {
     const artsBoxes = document.getElementsByClassName(LocalClassNames.ARTS_PLACE_FORM).item(0).children;
     if (!artsBoxes) {
         console.error('Updated arts place form not found');
@@ -174,27 +174,27 @@ function getArtsPlaceBoxes() {
  * @param {(number|string)[][]} artsList
  * @returns {HTMLDivElement}
  */
-function buildNewPlaceBox(artsList) {
-    const newPlaceBox = document.createElement('div');
-    newPlaceBox.style.maxHeight = '150px';
-    newPlaceBox.style.overflowY = 'scroll';
-    newPlaceBox.style.display = 'flex';
-    newPlaceBox.style.flexDirection = 'column';
-    newPlaceBox.style.paddingLeft = '20px';
-    newPlaceBox.classList.add(LocalClassNames.ARTS_PLACE_FORM);
+function buildNewPutsBox(artsList) {
+    const newPutsBox = document.createElement('div');
+    newPutsBox.style.maxHeight = '150px';
+    newPutsBox.style.overflowY = 'scroll';
+    newPutsBox.style.display = 'flex';
+    newPutsBox.style.flexDirection = 'column';
+    newPutsBox.style.paddingLeft = '20px';
+    newPutsBox.classList.add(LocalClassNames.ARTS_PLACE_FORM);
 
     let art_id, art_name;
     for ([art_id, art_name] of artsList) {
         const box = framework.buildCheckboxLabel(art_id, art_name);
-        box.children.item(0).onchange = (ev) => handleArtsPlaceCheckboxChange(ev.target.checked);
-        newPlaceBox.append(box);
+        box.children.item(0).onchange = (ev) => handleArtsPutsCheckboxChange(ev.target.checked);
+        newPutsBox.append(box);
     }
 
-    return newPlaceBox;
+    return newPutsBox;
 }
 
-function handleArtsPlaceCheckboxChange(checked) {
-    const counter = getArtsPlaceCounterLabel();
+function handleArtsPutsCheckboxChange(checked) {
+    const counter = getArtsPutsCounterLabel();
     const mod = checked ? 1 : -1;
     counter.dataset.current = +counter.dataset.current + mod + '';
     counter.recalculate();
