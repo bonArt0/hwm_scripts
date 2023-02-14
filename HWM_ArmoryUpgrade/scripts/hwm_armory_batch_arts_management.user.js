@@ -14,12 +14,16 @@
 // @supportURL    https://www.heroeswm.ru/sms-create.php?mailto_id=117282
 // ==/UserScript==
 
+/**
+ * @todo refactor
+ */
+
 const LocalClassNames = {
     ARTS_PLACE_FORM: 'abam_arts_place_form',
     ARTS_PLACE_COUNTER: 'abam_arts_place_counter',
 };
 
-const framework = ArmoryFramework.init()
+const framework = ArmoryFramework.init();
 
 if (framework.isManagementMode()) {
     if (initControls()) { // framework
@@ -31,7 +35,9 @@ if (framework.isManagementMode()) {
 
 function initControls() {
     initArtsPlaceBox();
-    //initArtsCheckboxes();
+    if (framework.activeTab !== ArmoryTab.TAB_DESCRIPTION) {
+        initArtsTakesBox();
+    }
 
     return true;
 }
@@ -48,6 +54,16 @@ function initArtsPlaceBox() {
         .replace('артефакт', 'артефакты');
     artsPutsHeader.getOuterBox().append(buildArtsPlaceSubmitButton());
     artsPutsHeader.getOuterBox().prepend(buildArtsPlaceCounterLabel(artsToPut.length));
+}
+
+function initArtsTakesBox() {
+    if (framework.activeTab === ArmoryTab.TAB_UNAVAILABLE) {
+        prepareUnavailableTabRows();
+    } else {
+        prepareLeaseTabRows();
+    }
+
+    updateExistingTakesBoxControls();
 }
 
 /*  <editor-fold desc="arts place box"> */
@@ -186,3 +202,104 @@ function handleArtsPlaceCheckboxChange(checked) {
 }
 
 /* </editor-fold> */
+
+/**
+ * Preparing for adding Withdraw buttons
+ */
+function prepareUnavailableTabRows() {
+    const header = framework.armoryBox.artsBox.artsHeader.getOuterBox();
+    const footer = framework.armoryBox.artsBox.artsFooter?.getOuterBox();
+
+    const headerButtonsCellColspan = Array.from(header.children).pop().colSpan;
+    const footerCells = Array.from(footer?.children ?? []);
+    footerCells.pop().colSpan -= headerButtonsCellColspan - 1; // footer has one less cell
+    const footerButtonsCell = document.createElement('td');
+    footerButtonsCell.colSpan = headerButtonsCellColspan;
+
+    footer?.append(footerButtonsCell);
+}
+
+/**
+ * Preparing for adding Withdraw buttons
+ */
+function prepareLeaseTabRows() {
+    const footerButtonsCell1 = document.createElement('td');
+    footerButtonsCell1.colSpan = framework.activeTab === ArmoryTab.TAB_ON_LEASE ? 7 : 6;
+    const footerButtonsCell2 = document.createElement('td');
+
+    const footer = document.createElement('tr');
+    footer.append(footerButtonsCell1, footerButtonsCell2);
+    footer.classList.add('afw_armory_arts_footer_box');
+    framework.armoryBox.artsBox.artsList.getInnerBox().append(footer);
+
+    framework.armoryBox.artsBox.artsHeader.getInnerBox().prepend(document.createElement('td'));
+    footer.prepend(document.createElement('td'));
+    for (const row of framework.armoryBox.artsBox.artsRows) {
+        row.getInnerBox().prepend(document.createElement('td'));
+    }
+}
+
+function updateExistingTakesBoxControls() {
+    Array.from(framework.armoryBox.artsBox.artsHeader.getOuterBox().children)
+        .pop()
+        .append(buildArtsTakeSubmitButton());
+
+    Array.from(document.getElementsByClassName('afw_armory_arts_footer_box').item(0)?.children)
+        ?.pop()
+        ?.append(buildArtsTakeSubmitButton());
+
+    for (const row of framework.armoryBox.artsBox.artsRows) {
+        const checkboxCell = row.getInnerBox().children.item(0);
+        if (Array.from(checkboxCell.children).shift()?.type !== 'checkbox') {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkboxCell.append(checkbox);
+        }
+    }
+}
+
+/**
+ * @returns {HTMLButtonElement}
+ */
+function buildArtsTakeSubmitButton() {
+    const button = document.createElement('button');
+    button.innerHTML = 'Взять всё';
+    button.onclick = () => handleArtsTakeSubmit();
+
+    return button;
+}
+
+async function handleArtsTakeSubmit() {
+    for (const row of framework.armoryBox.artsBox.artsRows) {
+        const checkbox = Array.from(row.getInnerBox().children)
+            .shift()
+            .children.item(0);
+        const takeForm = Array.from(row.getInnerBox().getElementsByTagName('form'))
+            .pop();
+
+        if (!checkbox?.checked) {
+            continue;
+        }
+
+        const url = new URL(takeForm.attributes.action.value, window.location.origin);
+        for (const param of takeForm.getElementsByTagName('input')) {
+            if (param.type !== 'hidden') {
+                continue;
+            }
+
+            url.searchParams.append(param.name, param.value);
+        }
+
+        const request = new XMLHttpRequest();
+        request.open(takeForm.method, url, true);
+        request.setRequestHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
+        request.setRequestHeader('Upgrade-Insecure-Requests', '1');
+        request.onerror = (ev) => console.error(ev);
+
+        request.send();
+
+        await new Promise((executor) => setTimeout(executor, 1000));
+    }
+
+    window.location.reload();
+}
