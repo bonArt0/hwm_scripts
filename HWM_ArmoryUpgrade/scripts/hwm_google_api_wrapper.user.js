@@ -94,8 +94,16 @@ class GapiControls
 
     static buildControlsModal() {
         const modal = document.createElement('div');
-        const clientIdBox = GapiControls.buildTextboxLabel('clientId', 'Client ID');
-        const apiKeyBox = GapiControls.buildTextboxLabel('apiKey', 'API Key');
+        const clientIdBox = GapiControls.buildTextboxLabel(
+            'clientId',
+            window.localStorage.getItem(GapiControls.GAPI_CONTENT_ID_CONFIG_NAME),
+            'Client ID',
+        );
+        const apiKeyBox = GapiControls.buildTextboxLabel(
+            'apiKey',
+            window.localStorage.getItem(GapiControls.GAPI_API_KEY_CONFIG_NAME),
+            'API Key',
+        );
         const closeButton = GapiControls.buildCloseButton(
             function () {
                 window.localStorage.setItem(GapiControls.GAPI_CONTENT_ID_CONFIG_NAME, clientIdBox.lastChild.value);
@@ -121,13 +129,15 @@ class GapiControls
 
     /**
      * @param {string} name
+     * @param {string} value
      * @param {string} innerHTML
      * @returns {HTMLLabelElement}
      */
-    static buildTextboxLabel(name, innerHTML) {
+    static buildTextboxLabel(name, value, innerHTML) {
         const textbox = document.createElement('input');
         textbox.type = 'password';
         textbox.autocomplete = 'off';
+        textbox.value = value;
         textbox.name = name;
         textbox.style.display = 'block';
 
