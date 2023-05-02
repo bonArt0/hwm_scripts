@@ -73,16 +73,20 @@ class GapiWrapper
 
 class GapiControls
 {
+    static MODAL_OPEN_BUTTON_ICON = 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png';
+    static GAPI_CONTENT_ID_CONFIG_NAME = 'gapi_client_id';
+    static GAPI_API_KEY_CONFIG_NAME = 'gapi_api_key';
+
     static buildControlsModalSwitch(controlsModal) {
         const openModalButton = document.createElement('img');
-        openModalButton.src = 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png';
+        openModalButton.src = GapiControls.MODAL_OPEN_BUTTON_ICON;
         openModalButton.style.display = 'block';
         openModalButton.style.position = 'absolute';
         openModalButton.style.top = '114px';
         openModalButton.style.right = '125px';
         openModalButton.style.width = '25px';
         openModalButton.style.height = '25px';
-        openModalButton.cursor = 'pointer';
+        openModalButton.style.cursor = 'pointer';
         openModalButton.addEventListener('click', () => controlsModal.style.display = 'inline-block');
 
         return openModalButton;
@@ -94,8 +98,8 @@ class GapiControls
         const apiKeyBox = GapiControls.buildTextboxLabel('apiKey', 'API Key');
         const closeButton = GapiControls.buildCloseButton(
             function () {
-                window.localStorage.setItem('gapi_client_id', clientIdBox.lastChild.value);
-                window.localStorage.setItem('gapi_api_key', apiKeyBox.lastChild.value);
+                window.localStorage.setItem(GapiControls.GAPI_CONTENT_ID_CONFIG_NAME, clientIdBox.lastChild.value);
+                window.localStorage.setItem(GapiControls.GAPI_API_KEY_CONFIG_NAME, apiKeyBox.lastChild.value);
                 modal.style.display = 'none';
             }
         );
