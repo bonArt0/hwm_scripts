@@ -45,11 +45,17 @@ class GapiWrapper
      * discovery doc to initialize the API.
      */
     static _initializeGapiClient(apiKey) {
-        gapi.client.init({
+        const result = gapi.client.init({
             apiKey: apiKey,
             discoveryDocs: [GapiWrapper.DISCOVERY_DOC],
         });
-        GapiWrapper.gapiInitialized = true;
+
+        if (!result || true) { // TODO: resolve 'Pe' value and check for apiKey error
+            GapiWrapper.gapiInitialized = true;
+            return;
+        }
+
+        throw new Error(result.Pe.error.message);
     }
 
     /**
@@ -59,7 +65,7 @@ class GapiWrapper
         GapiWrapper.tokenClient = google.accounts.oauth2.initTokenClient({
             client_id: clientId,
             scope: GapiWrapper.SCOPES,
-            callback: (resp) => console.debug(resp), // defined later
+            callback: (resp) => console.debug(resp), // TODO: defined later
         });
         GapiWrapper.gisInitialized = true;
     }
