@@ -36,17 +36,17 @@ class GapiWrapper
     /**
      * Callback after api.js is loaded.
      */
-    static _gapiLoaded() {
-        gapi.load('client', GapiWrapper._initializeGapiClient);
+    static _gapiLoaded(apiKey) {
+        gapi.load('client', () => GapiWrapper._initializeGapiClient(apiKey));
     }
 
     /**
      * Callback after the API client is loaded. Loads the
      * discovery doc to initialize the API.
      */
-    static _initializeGapiClient() {
+    static _initializeGapiClient(apiKey) {
         gapi.client.init({
-            apiKey: GapiWrapper.API_KEY,
+            apiKey: apiKey,
             discoveryDocs: [GapiWrapper.DISCOVERY_DOC],
         });
         GapiWrapper.gapiInitialized = true;
@@ -55,9 +55,9 @@ class GapiWrapper
     /**
      * Callback after Google Identity Services are loaded.
      */
-    static _gisLoaded() {
+    static _gisLoaded(clientId) {
         GapiWrapper.tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: GapiWrapper.CLIENT_ID,
+            client_id: clientId,
             scope: GapiWrapper.SCOPES,
             callback: (resp) => console.debug(resp), // defined later
         });
@@ -76,21 +76,22 @@ openModalButton.style.height = '50px';
 openModalButton.cursor = 'pointer';
 document.body.append(openModalButton);
 
-class GapiControls
-{
-
+const gapiClientId = window.localStorage.getItem('gapi_client_id');
+const gapiApiKey = window.localStorage.getItem('gapi_api_key');
+if (!gapiClientId || !gapiApiKey) {
+    throw new Error('GAPI credentials not set');
 }
 
 let script = document.createElement('script');
 script.src = 'https://apis.google.com/js/api.js';
 script.defer = true;
 script.async = true;
-script.addEventListener('load', GapiWrapper._gapiLoaded);
+script.addEventListener('load', ()  => GapiWrapper._gapiLoaded(gapiApiKey));
 document.head.appendChild(script);
 
 script = document.createElement('script');
 script.src = 'https://accounts.google.com/gsi/client';
 script.defer = true;
 script.async = true;
-script.addEventListener('load', GapiWrapper._gisLoaded);
+script.addEventListener('load', () => GapiWrapper._gisLoaded(gapiClientId));
 document.head.appendChild(script);
