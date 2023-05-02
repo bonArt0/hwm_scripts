@@ -65,15 +65,86 @@ class GapiWrapper
     }
 }
 
-const openModalButton = document.createElement('img');
-openModalButton.src = 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png';
-openModalButton.style.display = 'block';
-openModalButton.style.position = 'absolute';
-openModalButton.style.top = '50px';
-openModalButton.style.right = '50px';
-openModalButton.style.width = '50px';
-openModalButton.style.height = '50px';
-openModalButton.cursor = 'pointer';
+class GapiControls
+{
+    static buildControlsModalSwitch(controlsModal) {
+        const openModalButton = document.createElement('img');
+        openModalButton.src = 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png';
+        openModalButton.style.display = 'block';
+        openModalButton.style.position = 'absolute';
+        openModalButton.style.top = '114px';
+        openModalButton.style.right = '125px';
+        openModalButton.style.width = '25px';
+        openModalButton.style.height = '25px';
+        openModalButton.cursor = 'pointer';
+        openModalButton.addEventListener('click', () => controlsModal.style.display = 'inline-block');
+
+        return openModalButton;
+    }
+
+    static buildControlsModal() {
+        const modal = document.createElement('div');
+        const clientIdBox = GapiControls.buildTextboxLabel('clientId', 'Client ID');
+        const apiKeyBox = GapiControls.buildTextboxLabel('apiKey', 'API Key');
+        const closeButton = GapiControls.buildCloseButton(
+            function () {
+                window.localStorage.setItem('gapi_client_id', clientIdBox.lastChild.value);
+                window.localStorage.setItem('gapi_api_key', apiKeyBox.lastChild.value);
+                modal.style.display = 'none';
+            }
+        );
+
+        modal.className = 'wbwhite';
+        modal.style.display = 'none';
+        modal.style.position = 'absolute';
+        modal.style.top = '114px';
+        modal.style.right = '50px';
+        modal.style.width = '200px';
+        modal.style.height = '105px';
+        modal.style.zIndex = '9';
+        modal.append(clientIdBox);
+        modal.append(apiKeyBox);
+        modal.append(closeButton);
+
+        return modal;
+    }
+
+    /**
+     * @param {string} name
+     * @param {string} innerHTML
+     * @returns {HTMLLabelElement}
+     */
+    static buildTextboxLabel(name, innerHTML) {
+        const textbox = document.createElement('input');
+        textbox.type = 'password';
+        textbox.autocomplete = 'off';
+        textbox.name = name;
+        textbox.style.display = 'block';
+
+        const label = document.createElement('label');
+        label.style.display = 'block';
+        label.style.margin = '10px';
+        label.append(innerHTML);
+        label.append(textbox);
+
+        return label;
+    }
+
+    static buildCloseButton(onClick) {
+        const button = document.createElement('button');
+        button.textContent = '☓';
+        button.style.position = 'absolute';
+        button.style.top = '5px';
+        button.style.right = '5px';
+        button.addEventListener('click', onClick);
+
+        return button;
+    }
+}
+
+const controlsModal = GapiControls.buildControlsModal();
+const openModalButton = GapiControls.buildControlsModalSwitch(controlsModal);
+document.body.append(controlsModal);
 document.body.append(openModalButton);
 
 const gapiClientId = window.localStorage.getItem('gapi_client_id');
