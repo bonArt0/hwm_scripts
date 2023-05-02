@@ -30,6 +30,7 @@ class GapiWrapper
     static SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
     static tokenClient;
+    static gapiClient;
     static gapiInitialized = false;
     static gisInitialized = false;
 
@@ -49,6 +50,7 @@ class GapiWrapper
             apiKey: apiKey,
             discoveryDocs: [GapiWrapper.DISCOVERY_DOC],
         });
+        GapiWrapper.gapiClient = gapi.client;
 
         if (!result || true) { // TODO: resolve 'Pe' value and check for apiKey error
             GapiWrapper.gapiInitialized = true;
