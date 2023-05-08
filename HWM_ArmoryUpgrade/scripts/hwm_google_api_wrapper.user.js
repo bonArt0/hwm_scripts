@@ -19,9 +19,6 @@
  */
 class GapiWrapper
 {
-    static CLIENT_ID = 'X-files';
-    static API_KEY = 'X-files';
-
     // Discovery doc URL for APIs used by the quickstart
     static DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
 
@@ -35,20 +32,24 @@ class GapiWrapper
     static gisInitialized = false;
 
     /**
+     * @private
+     *
      * Callback after api.js is loaded.
      */
-    static _gapiLoaded(apiKey) {
-        gapi.load('client', () => GapiWrapper._initializeGapiClient(apiKey));
+    static _gapiLoaded(apiKey, discoveryDocs) {
+        gapi.load('client', () => GapiWrapper._initializeGapiClient(apiKey, discoveryDocs));
     }
 
     /**
+     * @private
+     *
      * Callback after the API client is loaded. Loads the
      * discovery doc to initialize the API.
      */
-    static _initializeGapiClient(apiKey) {
+    static _initializeGapiClient(apiKey, discoveryDocs) {
         const result = gapi.client.init({
             apiKey: apiKey,
-            discoveryDocs: [GapiWrapper.DISCOVERY_DOC],
+            discoveryDocs: discoveryDocs,
         });
         GapiWrapper.gapiClient = gapi.client;
 
@@ -171,6 +172,7 @@ document.body.append(openModalButton);
 
 const gapiClientId = window.localStorage.getItem('gapi_client_id');
 const gapiApiKey = window.localStorage.getItem('gapi_api_key');
+const discoveryDocs = [GapiWrapper.DISCOVERY_DOC];
 if (!gapiClientId || !gapiApiKey) {
     throw new Error('GAPI credentials not set');
 }
@@ -179,7 +181,7 @@ let script = document.createElement('script');
 script.src = 'https://apis.google.com/js/api.js';
 script.defer = true;
 script.async = true;
-script.addEventListener('load', ()  => GapiWrapper._gapiLoaded(gapiApiKey));
+script.addEventListener('load', ()  => GapiWrapper._gapiLoaded(gapiApiKey, discoveryDocs));
 document.head.appendChild(script);
 
 script = document.createElement('script');
