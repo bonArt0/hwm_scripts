@@ -15,62 +15,87 @@
 // ==/UserScript==
 
 /**
+ * @type {GapiWrapper} _GapiWrapperInstance
+ * @private
+ */
+let _GapiWrapperInstance;
+
+/**
  * @see https://developers.google.com/sheets/api/quickstart/js?hl=ru
  */
 class GapiWrapper
 {
-    // Discovery doc URL for APIs used by the quickstart
+    /** Discovery doc URL for APIs used by the quickstart */
     static DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
 
-    // Authorization scopes required by the API; multiple scopes can be
-    // included, separated by spaces.
-    static SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+    /** Authorization scopes required by the API; multiple scopes can be included, separated by spaces. */
+    static SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 
-    static tokenClient;
-    static gapiClient;
-    static gapiInitialized = false;
-    static gisInitialized = false;
+    /** @var {object} tokenClient */
+    tokenClient;
+
+    /** @var {object} gapiClient */
+    gapiClient;
+
+    constructor(apiKey, clientId, scope) {
+        let script = document.createElement('script');
+        script.src = 'https://apis.google.com/js/api.js';
+        script.defer = true;
+        script.async = true;
+        script.addEventListener('load', () => {
+            this._gapiLoaded(apiKey);
+        });
+        document.head.appendChild(script);
+
+        script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.defer = true;
+        script.async = true;
+        script.addEventListener('load', () => {
+            this.tokenClient = this._gisLoaded(clientId, scope);
+        });
+        document.head.appendChild(script);
+    }
 
     /**
      * @private
+     *
+     * @param {string} apiKey
+     * @param {string[]} discoveryDocs
      *
      * Callback after api.js is loaded.
      */
-    static _gapiLoaded(apiKey, discoveryDocs) {
-        gapi.load('client', () => GapiWrapper._initializeGapiClient(apiKey, discoveryDocs));
-    }
+    _gapiLoaded(apiKey, discoveryDocs = [GapiWrapper.DISCOVERY_DOC]) {
+        gapi.load('client', () => {
+            const result = gapi.client.init({
+                apiKey: apiKey,
+                discoveryDocs: discoveryDocs,
+            });
 
-    /**
-     * @private
-     *
-     * Callback after the API client is loaded. Loads the
-     * discovery doc to initialize the API.
-     */
-    static _initializeGapiClient(apiKey, discoveryDocs) {
-        const result = gapi.client.init({
-            apiKey: apiKey,
-            discoveryDocs: discoveryDocs,
+            if (!result || true) { // TODO: resolve 'Pe' value and check for apiKey error
+                this.gapiClient = gapi.client;
+                return;
+            }
+
+            throw new Error(result.Pe.error.message);
         });
-        GapiWrapper.gapiClient = gapi.client;
-
-        if (!result || true) { // TODO: resolve 'Pe' value and check for apiKey error
-            GapiWrapper.gapiInitialized = true;
-            return;
-        }
-
-        throw new Error(result.Pe.error.message);
     }
 
     /**
+     @private
+
+     @param {string} clientId
+     @param {string} scope
+     @return {object}
+
      * Callback after Google Identity Services are loaded.
      */
-    static _gisLoaded(clientId) {
-        GapiWrapper.tokenClient = google.accounts.oauth2.initTokenClient({
+    _gisLoaded(clientId, scope = GapiWrapper.SCOPE) {
+        return  google.accounts.oauth2.initTokenClient({
             client_id: clientId,
-            scope: GapiWrapper.SCOPES,
+            scope: scope,
             callback: (resp) => console.debug(resp), // TODO: defined later
         });
-        GapiWrapper.gisInitialized = true;
     }
 }
 
@@ -170,23 +195,10 @@ const openModalButton = GapiControls.buildControlsModalSwitch(controlsModal);
 document.body.append(controlsModal);
 document.body.append(openModalButton);
 
-const gapiClientId = window.localStorage.getItem('gapi_client_id');
 const gapiApiKey = window.localStorage.getItem('gapi_api_key');
-const discoveryDocs = [GapiWrapper.DISCOVERY_DOC];
-if (!gapiClientId || !gapiApiKey) {
+const gapiClientId = window.localStorage.getItem('gapi_client_id');
+if (!gapiApiKey || !gapiClientId) {
     throw new Error('GAPI credentials not set');
 }
 
-let script = document.createElement('script');
-script.src = 'https://apis.google.com/js/api.js';
-script.defer = true;
-script.async = true;
-script.addEventListener('load', ()  => GapiWrapper._gapiLoaded(gapiApiKey, discoveryDocs));
-document.head.appendChild(script);
-
-script = document.createElement('script');
-script.src = 'https://accounts.google.com/gsi/client';
-script.defer = true;
-script.async = true;
-script.addEventListener('load', () => GapiWrapper._gisLoaded(gapiClientId));
-document.head.appendChild(script);
+_GapiWrapperInstance = new GapiWrapper(gapiApiKey, gapiClientId);
