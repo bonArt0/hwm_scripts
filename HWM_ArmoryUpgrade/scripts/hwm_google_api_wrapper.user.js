@@ -160,15 +160,24 @@ class GapiControls
     static GAPI_CONTENT_ID_CONFIG_NAME = 'gapi_client_id';
     static GAPI_API_KEY_CONFIG_NAME = 'gapi_api_key';
 
+    /**
+     * @type {boolean}
+     * @private
+     */
+    static _initialized = false;
+
     static init() {
-        const controlsModal = GapiControls.buildControlsModal();
-        const openModalButton = GapiControls.buildControlsModalSwitch(controlsModal);
-        document.body.append(controlsModal);
-        document.body.append(openModalButton);
+        if (!GapiControls._initialized) {
+            const controlsModal = GapiControls.buildControlsModal();
+            const openModalButton = GapiControls.buildControlsModalSwitch(controlsModal);
+            document.body.append(controlsModal);
+            document.body.append(openModalButton);
+        }
     }
 
     static buildControlsModalSwitch(controlsModal) {
         const openModalButton = document.createElement('img');
+        openModalButton.className = 'gapi_controls_button';
         openModalButton.src = GapiControls.MODAL_OPEN_BUTTON_ICON;
         openModalButton.style.display = 'block';
         openModalButton.style.position = 'absolute';
@@ -202,7 +211,7 @@ class GapiControls
             }
         );
 
-        modal.className = 'wbwhite';
+        modal.className = 'gapi_controls_modal wbwhite';
         modal.style.display = 'none';
         modal.style.position = 'absolute';
         modal.style.top = '114px';
