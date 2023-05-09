@@ -20,6 +20,22 @@
  */
 let _GapiWrapperInstance;
 
+class GapiCredentialsNotSetError extends Error {
+    constructor() {
+        super();
+
+        this.message = 'GoogleAPI credentials not set';
+    }
+}
+
+class AlreadyInitializedError extends Error {
+    constructor() {
+        super();
+
+        this.message = 'GoogleAPI Wrapper already initialized';
+    }
+}
+
 /**
  * @see https://developers.google.com/sheets/api/quickstart/js?hl=ru
  */
@@ -31,11 +47,50 @@ class GapiWrapper
     /** Authorization scopes required by the API; multiple scopes can be included, separated by spaces. */
     static SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 
+    /**
+     * @type {boolean}
+     * @private
+     */
+    _initialized = false;
+
     /** @var {object} tokenClient */
     tokenClient;
 
     /** @var {object} gapiClient */
     gapiClient;
+
+    /**
+     * @return {GapiWrapper}
+     */
+    static init() {
+        if (!_GapiWrapperInstance || !_GapiWrapperInstance?._initialized) {
+            console.info('GoogleAPI Wrapper initialization started');
+
+            GapiControls.init();
+
+            const gapiApiKey = window.localStorage.getItem('gapi_api_key');
+            const gapiClientId = window.localStorage.getItem('gapi_client_id');
+            if (!gapiApiKey || !gapiClientId) {
+                throw new GapiCredentialsNotSetError();
+            }
+
+            try {
+                _GapiWrapperInstance = new GapiWrapper(gapiApiKey, gapiClientId);
+            } catch (e) {
+                if (e instanceof AlreadyInitializedError) {
+                    console.info(e.message);
+                    return _GapiWrapperInstance;
+                }
+
+                console.error('Something happen while GoogleAPI Wrapper initializing', e.context);
+                throw e;
+            }
+
+            console.info('GoogleAPI Wrapper initialized');
+        }
+
+        return _GapiWrapperInstance;
+    }
 
     constructor(apiKey, clientId, scope) {
         let script = document.createElement('script');
@@ -104,6 +159,13 @@ class GapiControls
     static MODAL_OPEN_BUTTON_ICON = 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png';
     static GAPI_CONTENT_ID_CONFIG_NAME = 'gapi_client_id';
     static GAPI_API_KEY_CONFIG_NAME = 'gapi_api_key';
+
+    static init() {
+        const controlsModal = GapiControls.buildControlsModal();
+        const openModalButton = GapiControls.buildControlsModalSwitch(controlsModal);
+        document.body.append(controlsModal);
+        document.body.append(openModalButton);
+    }
 
     static buildControlsModalSwitch(controlsModal) {
         const openModalButton = document.createElement('img');
@@ -190,15 +252,4 @@ class GapiControls
     }
 }
 
-const controlsModal = GapiControls.buildControlsModal();
-const openModalButton = GapiControls.buildControlsModalSwitch(controlsModal);
-document.body.append(controlsModal);
-document.body.append(openModalButton);
-
-const gapiApiKey = window.localStorage.getItem('gapi_api_key');
-const gapiClientId = window.localStorage.getItem('gapi_client_id');
-if (!gapiApiKey || !gapiClientId) {
-    throw new Error('GAPI credentials not set');
-}
-
-_GapiWrapperInstance = new GapiWrapper(gapiApiKey, gapiClientId);
+GapiWrapper.init();
