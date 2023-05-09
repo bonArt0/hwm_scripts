@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          hwm_google_api_wrapper
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       0.0.1
+// @version       0.1.0
 // @description   Обёртка gapi с интерфейсом для HWM
 // @author        bonArt
 // @license       GPL-3.0-only
@@ -66,13 +66,13 @@ class GapiWrapper
         if (!_GapiWrapperInstance || !_GapiWrapperInstance?._initialized) {
             console.info('GoogleAPI Wrapper initialization started');
 
-            GapiControls.init();
-
-            const gapiApiKey = window.localStorage.getItem('gapi_api_key');
-            const gapiClientId = window.localStorage.getItem('gapi_client_id');
+            const gapiApiKey = window.localStorage.getItem(GapiControls.GAPI_API_KEY_CONFIG_NAME);
+            const gapiClientId = window.localStorage.getItem(GapiControls.GAPI_CLIENT_ID_CONFIG_NAME);
             if (!gapiApiKey || !gapiClientId) {
                 throw new GapiCredentialsNotSetError();
             }
+
+            GapiControls.init();
 
             try {
                 _GapiWrapperInstance = new GapiWrapper(gapiApiKey, gapiClientId);
@@ -93,22 +93,22 @@ class GapiWrapper
     }
 
     constructor(apiKey, clientId, scope) {
-        let script = document.createElement('script');
-        script.src = 'https://apis.google.com/js/api.js';
-        script.defer = true;
-        script.async = true;
-        script.addEventListener('load', () => {
-            this._gapiLoaded(apiKey);
-        });
-        document.head.appendChild(script);
+        this._loadScript(
+            'https://apis.google.com/js/api.js',
+            () => this._gapiLoaded(apiKey),
+        );
+        this._loadScript(
+            'https://accounts.google.com/gsi/client',
+            () => this.tokenClient = this._gisLoaded(clientId, scope),
+        );
+    }
 
-        script = document.createElement('script');
-        script.src = 'https://accounts.google.com/gsi/client';
+    _loadScript(src, onLoad) {
+        let script = document.createElement('script');
+        script.src = src;
         script.defer = true;
         script.async = true;
-        script.addEventListener('load', () => {
-            this.tokenClient = this._gisLoaded(clientId, scope);
-        });
+        script.addEventListener('load', onLoad);
         document.head.appendChild(script);
     }
 
@@ -156,9 +156,11 @@ class GapiWrapper
 
 class GapiControls
 {
-    static MODAL_OPEN_BUTTON_ICON = 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png';
-    static GAPI_CONTENT_ID_CONFIG_NAME = 'gapi_client_id';
     static GAPI_API_KEY_CONFIG_NAME = 'gapi_api_key';
+    static GAPI_CLIENT_ID_CONFIG_NAME = 'gapi_client_id';
+    static MODAL_CLASSNAME = 'gapi_controls_modal';
+    static MODAL_OPEN_BUTTON_ICON = 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png';
+    static MODAL_OPEN_BUTTON_CLASSNAME = 'gapi_controls_button';
 
     /**
      * @type {boolean}
@@ -175,27 +177,14 @@ class GapiControls
         }
     }
 
-    static buildControlsModalSwitch(controlsModal) {
-        const openModalButton = document.createElement('img');
-        openModalButton.className = 'gapi_controls_button';
-        openModalButton.src = GapiControls.MODAL_OPEN_BUTTON_ICON;
-        openModalButton.style.display = 'block';
-        openModalButton.style.position = 'absolute';
-        openModalButton.style.top = '114px';
-        openModalButton.style.right = '125px';
-        openModalButton.style.width = '25px';
-        openModalButton.style.height = '25px';
-        openModalButton.style.cursor = 'pointer';
-        openModalButton.addEventListener('click', () => controlsModal.style.display = 'inline-block');
-
-        return openModalButton;
-    }
-
+    /**
+     * @return {HTMLDivElement}
+     */
     static buildControlsModal() {
         const modal = document.createElement('div');
         const clientIdBox = GapiControls.buildTextboxLabel(
             'clientId',
-            window.localStorage.getItem(GapiControls.GAPI_CONTENT_ID_CONFIG_NAME),
+            window.localStorage.getItem(GapiControls.GAPI_CLIENT_ID_CONFIG_NAME),
             'Client ID',
         );
         const apiKeyBox = GapiControls.buildTextboxLabel(
@@ -205,13 +194,16 @@ class GapiControls
         );
         const closeButton = GapiControls.buildCloseButton(
             function () {
-                window.localStorage.setItem(GapiControls.GAPI_CONTENT_ID_CONFIG_NAME, clientIdBox.lastChild.value);
+                window.localStorage.setItem(GapiControls.GAPI_CLIENT_ID_CONFIG_NAME, clientIdBox.lastChild.value);
                 window.localStorage.setItem(GapiControls.GAPI_API_KEY_CONFIG_NAME, apiKeyBox.lastChild.value);
+                // TODO: display to classname
                 modal.style.display = 'none';
             }
         );
 
-        modal.className = 'gapi_controls_modal wbwhite';
+        modal.className = `${GapiControls.MODAL_CLASSNAME} wbwhite`;
+        // TODO: style to css
+        // TODO: display to classname
         modal.style.display = 'none';
         modal.style.position = 'absolute';
         modal.style.top = '114px';
@@ -249,6 +241,10 @@ class GapiControls
         return label;
     }
 
+    /**
+     * @param {function} onClick
+     * @return {HTMLButtonElement}
+     */
     static buildCloseButton(onClick) {
         const button = document.createElement('button');
         button.textContent = '☓';
@@ -258,6 +254,29 @@ class GapiControls
         button.addEventListener('click', onClick);
 
         return button;
+    }
+
+    /**
+     * @param {HTMLDivElement} controlsModal
+     * @return {HTMLImageElement}
+     */
+    static buildControlsModalSwitch(controlsModal) {
+        const openModalButton = document.createElement('img');
+        openModalButton.className = GapiControls.MODAL_OPEN_BUTTON_CLASSNAME;
+        openModalButton.src = GapiControls.MODAL_OPEN_BUTTON_ICON;
+        // TODO: style to css
+        // TODO: display to classname
+        openModalButton.style.display = 'block';
+        openModalButton.style.position = 'absolute';
+        openModalButton.style.top = '114px';
+        openModalButton.style.right = '125px';
+        openModalButton.style.width = '25px';
+        openModalButton.style.height = '25px';
+        openModalButton.style.cursor = 'pointer';
+        // TODO: display to classname
+        openModalButton.addEventListener('click', () => controlsModal.style.display = 'inline-block');
+
+        return openModalButton;
     }
 }
 
