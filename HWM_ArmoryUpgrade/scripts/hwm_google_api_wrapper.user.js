@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          hwm_google_api_wrapper
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       0.1.0
+// @version       0.1.1
 // @description   Обёртка gapi с интерфейсом для HWM
 // @author        bonArt
 // @license       GPL-3.0-only
@@ -20,7 +20,7 @@
  */
 let _GapiWrapperInstance;
 
-class GapiCredentialsNotSetError extends Error {
+class GAWCredentialsNotSetError extends Error {
     constructor() {
         super();
 
@@ -28,7 +28,7 @@ class GapiCredentialsNotSetError extends Error {
     }
 }
 
-class AlreadyInitializedError extends Error {
+class GAWAlreadyInitializedError extends Error {
     constructor() {
         super();
 
@@ -69,7 +69,7 @@ class GapiWrapper
             const gapiApiKey = window.localStorage.getItem(GapiControls.GAPI_API_KEY_CONFIG_NAME);
             const gapiClientId = window.localStorage.getItem(GapiControls.GAPI_CLIENT_ID_CONFIG_NAME);
             if (!gapiApiKey || !gapiClientId) {
-                throw new GapiCredentialsNotSetError();
+                throw new GAWCredentialsNotSetError();
             }
 
             GapiControls.init();
@@ -77,7 +77,7 @@ class GapiWrapper
             try {
                 _GapiWrapperInstance = new GapiWrapper(gapiApiKey, gapiClientId);
             } catch (e) {
-                if (e instanceof AlreadyInitializedError) {
+                if (e instanceof GAWAlreadyInitializedError) {
                     console.info(e.message);
                     return _GapiWrapperInstance;
                 }
