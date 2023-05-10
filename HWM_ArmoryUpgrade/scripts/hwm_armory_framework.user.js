@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          hwm_armory_framework
 // @namespace     https://github.com/bonArt0/hwm_scripts
-// @version       1.4.6
+// @version       1.4.7
 // @description   Helper for other hwm_armory scripts
 // @author        bonArt
 // @license       GPL-3.0-only
@@ -953,6 +953,10 @@ class ControlsBodyPutsBox extends ControlsBodyCell {
 
     _getBoxClassName() {
         return FrameworkClassNames.CONTROLS_BODY_PUTS_BOX;
+    }
+
+    isDisabled() {
+        return this.getInnerBox().innerHTML.search('нет доступа') > -1;
     }
 
     hideForm() {
