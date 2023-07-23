@@ -180,14 +180,6 @@ class ArmoryFramework {
 
     /**
      * @returns {boolean}
-     * @deprecated
-     */
-    isControlOn() {
-        return this.isManagementMode();
-    }
-
-    /**
-     * @returns {boolean}
      */
     isManagementMode() {
         if (this._isManagementMode === undefined) {
@@ -245,7 +237,7 @@ class ArmoryFramework {
         }
     }
 
-    /*  <editor-fold desc="common"> */
+    /* <editor-fold desc="common"> */
 
     /**
      * @param {string} name
