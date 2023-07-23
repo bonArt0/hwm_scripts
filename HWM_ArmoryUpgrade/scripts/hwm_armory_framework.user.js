@@ -68,6 +68,8 @@ const ArmoryTab = {
  */
 let _ArmoryFrameworkInstance;
 
+/* <editor-fold desc="errors"> */
+
 class AlreadyInitializedError extends Error {
     constructor() {
         super();
@@ -97,6 +99,26 @@ class FrameworkError extends Error {
         this.context = context;
     }
 }
+
+class OuterBoxError extends FrameworkError {
+    constructor(context) {
+        super(`Can't get outer box`, context);
+    }
+}
+
+class InnerBoxError extends FrameworkError {
+    constructor(context) {
+        super(`Can't get inner box`, context);
+    }
+}
+
+class LayoutError extends FrameworkError {
+    constructor(context) {
+        super(`Something happen with game layout`, context);
+    }
+}
+
+/* </editor-fold> */
 
 class ArmoryFramework {
     /**
@@ -191,7 +213,7 @@ class ArmoryFramework {
 
     /**
      * @returns {HTMLImageElement}
-     * @throws {Error} on init failure
+     * @throws {LayoutError} on init failure
      * @private
      */
     _findInitialAnchor() {
@@ -200,7 +222,7 @@ class ArmoryFramework {
             return initialAnchor;
         }
 
-        throw new FrameworkError('Something happen with game layout (initial anchor not found)', {anchor: initialAnchor});
+        throw new LayoutError({element: this, anchor: initialAnchor});
     }
 
     /**
@@ -272,7 +294,7 @@ class Box {
 
     /**
      * @param {HTMLElement} anchor
-     * @throws {Error} on init failure
+     * @throws {LayoutError} on init failure
      */
     constructor(anchor) {
         this._initBox(anchor);
@@ -280,7 +302,7 @@ class Box {
 
     /**
      * @returns {HTMLElement}
-     * @throws {Error} on invalid framework usage
+     * @throws {OuterBoxError} on invalid framework usage
      * @public
      */
     getOuterBox() {
@@ -288,12 +310,12 @@ class Box {
             return this._box;
         }
 
-        throw new FrameworkError(`Can't get outer box`, {element: this});
+        throw new OuterBoxError( {element: this});
     }
 
     /**
      * @return {HTMLElement}
-     * @throws {Error} on invalid framework usage
+     * @throws {InnerBoxError} on invalid framework usage
      * @public
      */
     getInnerBox() {
@@ -302,11 +324,11 @@ class Box {
             return box;
         }
 
-        throw new FrameworkError(`Can't get inner box`, {innerBox: box, element: this});
+        throw new InnerBoxError({innerBox: box, element: this});
     }
 
     /**
-     * @throws {Error} on init failure
+     * @throws {LayoutError} on init failure
      * @protected
      */
     _initBox(anchor) {
@@ -318,7 +340,7 @@ class Box {
             return;
         }
 
-        throw new FrameworkError(`Something happen with game layout`, {element: this, box: box, anchor: anchor});
+        throw new LayoutError({element: this, box: box, anchor: anchor});
     }
 
     /**
