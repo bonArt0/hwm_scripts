@@ -21,8 +21,8 @@ const FrameworkClassNames = {
     OVERVIEW_BOX: 'afw_armory_overview_box',
     INFO_BOX: 'afw_armory_info_box',
     ACCOUNT_BOX: 'afw_armory_account_box',
-    ONLINE_SWITCH_BOX: 'afw_armory_online_switch_box',
-    MANAGEMENT_SWITCH_BOX: 'afw_armory_management_switch_box',
+    ONLINE_TOGGLE_BOX: 'afw_armory_online_toggle_box',
+    MANAGEMENT_TOGGLE_BOX: 'afw_armory_management_toggle_box',
     SECTORS_BOX: 'afw_armory_sectors_box',
     MANAGEMENT_BOX: 'afw_armory_management_box',
     MANAGEMENT_HEADER_BOX: 'afw_armory_management_header_box',
@@ -618,18 +618,18 @@ class OverviewBox extends TableSectionBox {
     accountBox;
 
     /**
-     * @type {OverviewOnlineSwitchBox}
+     * @type {OverviewOnlineToggleBox}
      * @public
      * @readonly
      */
-    onlineSwitchBox;
+    onlineToggleBox;
 
     /**
-     * @type {OverviewManagementSwitchBox}
+     * @type {OverviewManagementToggleBox}
      * @public
      * @readonly
      */
-    managementSwitchBox;
+    managementToggleBox;
 
     /**
      * @type {OverviewSectorsBox}
@@ -645,8 +645,8 @@ class OverviewBox extends TableSectionBox {
 
         this.infoBox = new OverviewInfoBox(innerBox);
         this.accountBox = new OverviewAccountBox(innerBox);
-        this.onlineSwitchBox = new OverviewOnlineSwitchBox(innerBox);
-        this.managementSwitchBox = new OverviewManagementSwitchBox(innerBox);
+        this.onlineToggleBox = new OverviewOnlineToggleBox(innerBox);
+        this.managementToggleBox = new OverviewManagementToggleBox(innerBox);
         this.sectorsBox = new OverviewSectorsBox(innerBox);
     }
 
@@ -711,7 +711,7 @@ class OverviewAccountBox extends TableRowBox {
     }
 }
 
-class OverviewOnlineSwitchBox extends TableCellBasedBox {
+class OverviewOnlineToggleBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
      * @return {HTMLTableCellElement|undefined}
@@ -723,11 +723,11 @@ class OverviewOnlineSwitchBox extends TableCellBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.ONLINE_SWITCH_BOX;
+        return FrameworkClassNames.ONLINE_TOGGLE_BOX;
     }
 }
 
-class OverviewManagementSwitchBox extends TableCellBasedBox {
+class OverviewManagementToggleBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
      * @return {HTMLTableCellElement|undefined}
@@ -739,7 +739,7 @@ class OverviewManagementSwitchBox extends TableCellBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.MANAGEMENT_SWITCH_BOX;
+        return FrameworkClassNames.MANAGEMENT_TOGGLE_BOX;
     }
 }
 
