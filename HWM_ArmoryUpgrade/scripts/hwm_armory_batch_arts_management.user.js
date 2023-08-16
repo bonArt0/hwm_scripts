@@ -53,11 +53,11 @@ function initArtsPutsBox() {
     artsPutsBody.hideForm();
     const artsToPut = artsPutsBody.getArtsList();
 
-    artsPutsBody.getOuterBox().append(buildNewPutsBox(artsToPut));
-    artsPutsHeader.getOuterBox().innerHTML = artsPutsHeader.getOuterBox().innerHTML
+    artsPutsBody.box.append(buildNewPutsBox(artsToPut));
+    artsPutsHeader.box.innerHTML = artsPutsHeader.box.innerHTML
         .replace('артефакт', 'артефакты');
-    artsPutsHeader.getOuterBox().append(buildArtsPutsSubmitButton());
-    artsPutsHeader.getOuterBox().prepend(buildArtsPutsCounterLabel(artsToPut.length));
+    artsPutsHeader.box.append(buildArtsPutsSubmitButton());
+    artsPutsHeader.box.prepend(buildArtsPutsCounterLabel(artsToPut.length));
 }
 
 function initArtsTakesBox() {
@@ -146,7 +146,7 @@ async function handleArtsPutsSubmit() {
         request.setRequestHeader('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8');
         request.setRequestHeader('Upgrade-Insecure-Requests', '1');
         request.onload = () => {
-            infoBox.innerHTML = infoBox.getOuterBox().innerHTML
+            infoBox.innerHTML = infoBox.box.innerHTML
                 .replace(`<b>${currentCapacity}</b>`, `<b>${+currentCapacity + 1}</b>`);
             checkbox.checked = false;
             handleArtsPutsCheckboxChange(checkbox.checked);
@@ -211,8 +211,8 @@ function handleArtsPutsCheckboxChange(checked) {
  * Preparing for adding Withdraw buttons
  */
 function prepareUnavailableTabRows() {
-    const header = framework.armoryBox.artsBox.artsHeader.getOuterBox();
-    const footer = framework.armoryBox.artsBox.artsFooter?.getOuterBox();
+    const header = framework.armoryBox.artsBox.artsHeader.box;
+    const footer = framework.armoryBox.artsBox.artsFooter?.box;
 
     const headerButtonsCellColspan = Array.from(header.children).pop().colSpan;
     const footerCells = Array.from(footer?.children ?? []);
@@ -244,7 +244,7 @@ function prepareLeaseTabRows() {
 }
 
 function updateExistingTakesBoxControls() {
-    Array.from(framework.armoryBox.artsBox.artsHeader.getOuterBox().children)
+    Array.from(framework.armoryBox.artsBox.artsHeader.box.children)
         .pop()
         .append(buildArtsTakeSubmitButton());
 
