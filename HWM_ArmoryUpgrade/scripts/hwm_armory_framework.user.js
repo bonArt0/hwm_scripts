@@ -379,7 +379,7 @@ class Box {
      * @private
      */
     _getInnerBox() {
-        return this.getOuterBox();
+        return this.box;
     }
 }
 
@@ -1246,7 +1246,7 @@ class DescriptionFormBox extends Box {
      * @return {HTMLTableSectionElement}
      */
     getInnerBox() {
-        return this.getOuterBox()
+        return this.box
             .children.item(0) // table
             .children.item(0); // tbody
     }
