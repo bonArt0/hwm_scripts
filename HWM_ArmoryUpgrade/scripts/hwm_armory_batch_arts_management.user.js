@@ -78,7 +78,7 @@ function initArtsTakesBox() {
 function buildArtsPutsSubmitButton() {
     const button = document.createElement('button');
     button.style.position = 'relative';
-    button.style.left = '32%';
+    button.style.left = '22%';
     button.innerHTML = 'Поместить';
     button.onclick = () => handleArtsPutsSubmit();
 
