@@ -10,7 +10,7 @@
 // @match         https://178.248.235.15/sklad_info.php?*
 // @match         https://www.lordswm.com/sklad_info.php?*
 // @match         https://my.lordswm.com/sklad_info.php?*
-// @require       https://greasyfork.org/scripts/457946-hwm-armory-framework/code/hwm_armory_framework.js?version=1188165
+// @require       https://greasyfork.org/scripts/457946-hwm-armory-framework/code/hwm_armory_framework.js?version=1235836
 // @supportURL    https://www.heroeswm.ru/sms-create.php?mailto_id=117282
 // ==/UserScript==
 
