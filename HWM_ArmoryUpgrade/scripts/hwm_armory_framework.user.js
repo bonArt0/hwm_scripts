@@ -288,9 +288,10 @@ class ArmoryFramework {
 class Box {
     /**
      * @type {HTMLElement}
-     * @private
+     * @public
+     * @readonly
      */
-    _box;
+    box;
 
     /**
      * @param {HTMLElement} anchor
@@ -301,13 +302,14 @@ class Box {
     }
 
     /**
+     * @deprecated use this.box
      * @returns {HTMLElement}
      * @throws {OuterBoxError} on invalid framework usage
      * @public
      */
     getOuterBox() {
-        if (this._box?.tagName === this._getBoxTag()) {
-            return this._box;
+        if (this.box?.tagName === this._getBoxTag()) {
+            return this.box;
         }
 
         throw new OuterBoxError( {element: this});
@@ -336,7 +338,7 @@ class Box {
 
         if (box?.tagName === this._getBoxTag()) {
             box.classList.add(this._getBoxClassName());
-            this._box = box;
+            this.box = box;
             return;
         }
 
