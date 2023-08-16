@@ -21,18 +21,18 @@ const FrameworkClassNames = {
     OVERVIEW_BOX: 'afw_armory_overview_box',
     INFO_BOX: 'afw_armory_info_box',
     ACCOUNT_BOX: 'afw_armory_account_box',
-    ONLINE_SWITCH_BOX: 'afw_armory_online_box',
-    CONTROL_SWITCH_BOX: 'afw_armory_control_box',
+    ONLINE_SWITCH_BOX: 'afw_armory_online_switch_box',
+    MANAGEMENT_SWITCH_BOX: 'afw_armory_management_switch_box',
     SECTORS_BOX: 'afw_armory_sectors_box',
-    CONTROLS_BOX: 'afw_armory_controls_box',
-    CONTROLS_HEADER_BOX: 'afw_armory_controls_header_box',
-    CONTROLS_HEADER_PUTS_BOX: 'afw_armory_controls_header_puts_box',
-    CONTROLS_HEADER_BATTLES_BOX: 'afw_armory_controls_header_battles_box',
-    CONTROLS_HEADER_SMITHS_BOX: 'afw_armory_controls_header_smiths_box',
-    CONTROLS_BODY_BOX: 'afw_armory_controls_body_box',
-    CONTROLS_BODY_PUTS_BOX: 'afw_armory_controls_body_puts_box',
-    CONTROLS_BODY_BATTLES_BOX: 'afw_armory_controls_body_battles_box',
-    CONTROLS_BODY_SMITHS_BOX: 'afw_armory_controls_body_smiths_box',
+    MANAGEMENT_BOX: 'afw_armory_management_box',
+    MANAGEMENT_HEADER_BOX: 'afw_armory_management_header_box',
+    MANAGEMENT_HEADER_PUTS_BOX: 'afw_armory_management_header_puts_box',
+    MANAGEMENT_HEADER_BATTLES_BOX: 'afw_armory_management_header_battles_box',
+    MANAGEMENT_HEADER_SMITHS_BOX: 'afw_armory_management_header_smiths_box',
+    MANAGEMENT_BODY_BOX: 'afw_armory_management_body_box',
+    MANAGEMENT_BODY_PUTS_BOX: 'afw_armory_management_body_puts_box',
+    MANAGEMENT_BODY_BATTLES_BOX: 'afw_armory_management_body_battles_box',
+    MANAGEMENT_BODY_SMITHS_BOX: 'afw_armory_management_body_smiths_box',
     TAKES_BOX: 'afw_armory_takes_box',
     TAKES_REPAIRS_HEADER_BOX: 'afw_armory_takes_repairs_header_box',
     TAKES_REPAIRS_BODY_BOX: 'afw_armory_takes_repairs_body_box',
@@ -500,11 +500,11 @@ class ArmoryBox extends TableCellBox {
     overviewBox;
 
     /**
-     * @type {ControlsBox}
+     * @type {ManagementBox}
      * @public
      * @readonly
      */
-    controlsBox;
+    managementBox;
 
     /**
      * @type {TakesBox}
@@ -552,7 +552,7 @@ class ArmoryBox extends TableCellBox {
         const innerBox = this.getInnerBox();
 
         this.overviewBox = new OverviewBox(innerBox);
-        this.controlsBox = new ControlsBox(innerBox);
+        this.managementBox = new ManagementBox(innerBox);
         this.takesBox = new TakesBox(innerBox);
         this.tabsBox = new TabsBox(innerBox);
         switch (activeTab) {
@@ -625,11 +625,11 @@ class OverviewBox extends TableSectionBox {
     onlineSwitchBox;
 
     /**
-     * @type {OverviewControlSwitchBox}
+     * @type {OverviewManagementSwitchBox}
      * @public
      * @readonly
      */
-    controlSwitchBox;
+    managementSwitchBox;
 
     /**
      * @type {OverviewSectorsBox}
@@ -646,7 +646,7 @@ class OverviewBox extends TableSectionBox {
         this.infoBox = new OverviewInfoBox(innerBox);
         this.accountBox = new OverviewAccountBox(innerBox);
         this.onlineSwitchBox = new OverviewOnlineSwitchBox(innerBox);
-        this.controlSwitchBox = new OverviewControlSwitchBox(innerBox);
+        this.managementSwitchBox = new OverviewManagementSwitchBox(innerBox);
         this.sectorsBox = new OverviewSectorsBox(innerBox);
     }
 
@@ -727,7 +727,7 @@ class OverviewOnlineSwitchBox extends TableCellBasedBox {
     }
 }
 
-class OverviewControlSwitchBox extends TableCellBasedBox {
+class OverviewManagementSwitchBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
      * @return {HTMLTableCellElement|undefined}
@@ -739,7 +739,7 @@ class OverviewControlSwitchBox extends TableCellBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROL_SWITCH_BOX;
+        return FrameworkClassNames.MANAGEMENT_SWITCH_BOX;
     }
 }
 
@@ -761,18 +761,18 @@ class OverviewSectorsBox extends TableCellBasedBox {
 
 /* </editor-fold> */
 
-/* <editor-fold desc="armory controls"> */
+/* <editor-fold desc="armory management"> */
 
-class ControlsBox extends TableSectionBox {
+class ManagementBox extends TableSectionBox {
     /**
-     * @type {ControlsHeaderBox}
+     * @type {ManagementHeaderBox}
      * @public
      * @readonly
      */
     headerBox;
 
     /**
-     * @type {ControlsBodyBox}
+     * @type {ManagementBodyBox}
      * @public
      * @readonly
      */
@@ -783,8 +783,8 @@ class ControlsBox extends TableSectionBox {
 
         const innerBox = this.getInnerBox();
 
-        this.headerBox = new ControlsHeaderBox(innerBox);
-        this.bodyBox = new ControlsBodyBox(innerBox);
+        this.headerBox = new ManagementHeaderBox(innerBox);
+        this.bodyBox = new ManagementBodyBox(innerBox);
     }
 
     /**
@@ -796,27 +796,27 @@ class ControlsBox extends TableSectionBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROLS_BOX;
+        return FrameworkClassNames.MANAGEMENT_BOX;
     }
 }
 
-class ControlsHeaderBox extends TableRowBasedBox {
+class ManagementHeaderBox extends TableRowBasedBox {
     /**
-     * @type {ControlsHeaderPutsBox}
+     * @type {ManagementHeaderPutsBox}
      * @public
      * @readonly
      */
     putsBox;
 
     /**
-     * @type {ControlsHeaderBattlesBox}
+     * @type {ManagementHeaderBattlesBox}
      * @public
      * @readonly
      */
     battlesBox;
 
     /**
-     * @type {ControlsHeaderSmithsBox}
+     * @type {ManagementHeaderSmithsBox}
      * @public
      * @readonly
      */
@@ -825,9 +825,9 @@ class ControlsHeaderBox extends TableRowBasedBox {
     constructor(anchor) {
         super(anchor);
 
-        this.putsBox = new ControlsHeaderPutsBox(this.getInnerBox());
-        this.battlesBox = new ControlsHeaderBattlesBox(this.getInnerBox());
-        this.smithsBox = new ControlsHeaderSmithsBox(this.getInnerBox());
+        this.putsBox = new ManagementHeaderPutsBox(this.getInnerBox());
+        this.battlesBox = new ManagementHeaderBattlesBox(this.getInnerBox());
+        this.smithsBox = new ManagementHeaderSmithsBox(this.getInnerBox());
     }
 
     /**
@@ -840,14 +840,14 @@ class ControlsHeaderBox extends TableRowBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROLS_HEADER_BOX;
+        return FrameworkClassNames.MANAGEMENT_HEADER_BOX;
     }
 }
 
 /**
  * @abstract
  */
-class ControlsHeaderCell extends TableCellBasedBox {
+class ManagementHeaderCell extends TableCellBasedBox {
     /**
      * @return {HTMLElement}
      */
@@ -857,7 +857,7 @@ class ControlsHeaderCell extends TableCellBasedBox {
     }
 }
 
-class ControlsHeaderPutsBox extends ControlsHeaderCell {
+class ManagementHeaderPutsBox extends ManagementHeaderCell {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -868,11 +868,11 @@ class ControlsHeaderPutsBox extends ControlsHeaderCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROLS_HEADER_PUTS_BOX;
+        return FrameworkClassNames.MANAGEMENT_HEADER_PUTS_BOX;
     }
 }
 
-class ControlsHeaderBattlesBox extends ControlsHeaderCell {
+class ManagementHeaderBattlesBox extends ManagementHeaderCell {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -883,11 +883,11 @@ class ControlsHeaderBattlesBox extends ControlsHeaderCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROLS_HEADER_BATTLES_BOX;
+        return FrameworkClassNames.MANAGEMENT_HEADER_BATTLES_BOX;
     }
 }
 
-class ControlsHeaderSmithsBox extends ControlsHeaderCell {
+class ManagementHeaderSmithsBox extends ManagementHeaderCell {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -898,27 +898,27 @@ class ControlsHeaderSmithsBox extends ControlsHeaderCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROLS_HEADER_SMITHS_BOX;
+        return FrameworkClassNames.MANAGEMENT_HEADER_SMITHS_BOX;
     }
 }
 
-class ControlsBodyBox extends TableRowBasedBox {
+class ManagementBodyBox extends TableRowBasedBox {
     /**
-     * @type {ControlsBodyPutsBox}
+     * @type {ManagementBodyPutsBox}
      * @public
      * @readonly
      */
     putsBox;
 
     /**
-     * @type {ControlsBodyBattlesBox}
+     * @type {ManagementBodyBattlesBox}
      * @public
      * @readonly
      */
     battlesBox;
 
     /**
-     * @type {ControlsBodySmithsBox}
+     * @type {ManagementBodySmithsBox}
      * @public
      * @readonly
      */
@@ -927,9 +927,9 @@ class ControlsBodyBox extends TableRowBasedBox {
     constructor(anchor) {
         super(anchor);
 
-        this.putsBox = new ControlsBodyPutsBox(this.getInnerBox());
-        this.battlesBox = new ControlsBodyBattlesBox(this.getInnerBox());
-        this.smithsBox = new ControlsBodySmithsBox(this.getInnerBox());
+        this.putsBox = new ManagementBodyPutsBox(this.getInnerBox());
+        this.battlesBox = new ManagementBodyBattlesBox(this.getInnerBox());
+        this.smithsBox = new ManagementBodySmithsBox(this.getInnerBox());
     }
 
     /**
@@ -941,14 +941,14 @@ class ControlsBodyBox extends TableRowBasedBox {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROLS_BODY_BOX;
+        return FrameworkClassNames.MANAGEMENT_BODY_BOX;
     }
 }
 
 /**
  * @abstract
  */
-class ControlsBodyCell extends TableCellBasedBox {
+class ManagementBodyCell extends TableCellBasedBox {
     /**
      * @return {HTMLFormElement}
      */
@@ -957,7 +957,7 @@ class ControlsBodyCell extends TableCellBasedBox {
     }
 }
 
-class ControlsBodyPutsBox extends ControlsBodyCell {
+class ManagementBodyPutsBox extends ManagementBodyCell {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -968,7 +968,7 @@ class ControlsBodyPutsBox extends ControlsBodyCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROLS_BODY_PUTS_BOX;
+        return FrameworkClassNames.MANAGEMENT_BODY_PUTS_BOX;
     }
 
     isDisabled() {
@@ -1016,7 +1016,7 @@ class ControlsBodyPutsBox extends ControlsBodyCell {
     }
 }
 
-class ControlsBodyBattlesBox extends ControlsBodyCell {
+class ManagementBodyBattlesBox extends ManagementBodyCell {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -1027,11 +1027,11 @@ class ControlsBodyBattlesBox extends ControlsBodyCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROLS_BODY_BATTLES_BOX;
+        return FrameworkClassNames.MANAGEMENT_BODY_BATTLES_BOX;
     }
 }
 
-class ControlsBodySmithsBox extends ControlsBodyCell {
+class ManagementBodySmithsBox extends ManagementBodyCell {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -1042,7 +1042,7 @@ class ControlsBodySmithsBox extends ControlsBodyCell {
     }
 
     _getBoxClassName() {
-        return FrameworkClassNames.CONTROLS_BODY_SMITHS_BOX;
+        return FrameworkClassNames.MANAGEMENT_BODY_SMITHS_BOX;
     }
 }
 
