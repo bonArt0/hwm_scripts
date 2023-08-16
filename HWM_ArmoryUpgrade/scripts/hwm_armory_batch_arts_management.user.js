@@ -35,7 +35,7 @@ if (framework?.isManagementMode()) {
 }
 
 function initControls() {
-    if (!framework.armoryBox.controlsBox.bodyBox.putsBox.isDisabled()) {
+    if (!framework.armoryBox.managementBox.bodyBox.putsBox.isDisabled()) {
         initArtsPutsBox();
     }
 
@@ -47,8 +47,8 @@ function initControls() {
 }
 
 function initArtsPutsBox() {
-    const artsPutsHeader = framework.armoryBox.controlsBox.headerBox.putsBox;
-    const artsPutsBody = framework.armoryBox.controlsBox.bodyBox.putsBox;
+    const artsPutsHeader = framework.armoryBox.managementBox.headerBox.putsBox;
+    const artsPutsBody = framework.armoryBox.managementBox.bodyBox.putsBox;
 
     artsPutsBody.hideForm();
     const artsToPut = artsPutsBody.getArtsList();
@@ -119,7 +119,7 @@ function getArtsPutsCounterLabel() {
 
 async function handleArtsPutsSubmit() {
     const infoBox = framework.armoryBox.overviewBox.infoBox;
-    const artsPutsBox = framework.armoryBox.controlsBox.bodyBox.putsBox;
+    const artsPutsBox = framework.armoryBox.managementBox.bodyBox.putsBox;
 
     const armory_id = artsPutsBox.getArmoryId();
     let sign = artsPutsBox.getArtsPutSign();
