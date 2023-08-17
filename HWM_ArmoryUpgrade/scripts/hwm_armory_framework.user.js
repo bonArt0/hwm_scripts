@@ -856,27 +856,15 @@ class ManagementHeaderBox extends TableRowBasedBox {
     }
 }
 
-/**
- * @abstract
- */
-class ManagementHeaderCell extends TableCellBasedBox {
-    /**
-     * @return {HTMLElement}
-     */
-    getInnerBox() {
-        return super.getInnerBox()
-            .children.item(0); // b
-    }
-}
-
-class ManagementHeaderPutsBox extends ManagementHeaderCell {
+class ManagementHeaderPutsBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
      * @private
      */
     _findBox(anchor) {
-        return anchor.children.item(0); // td
+        return anchor
+            .children.item(0); // td
     }
 
     _getBoxClassName() {
@@ -884,14 +872,15 @@ class ManagementHeaderPutsBox extends ManagementHeaderCell {
     }
 }
 
-class ManagementHeaderBattlesBox extends ManagementHeaderCell {
+class ManagementHeaderBattlesBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
      * @private
      */
     _findBox(anchor) {
-        return anchor.children.item(1); // td
+        return anchor
+            .children.item(1); // td
     }
 
     _getBoxClassName() {
@@ -899,14 +888,15 @@ class ManagementHeaderBattlesBox extends ManagementHeaderCell {
     }
 }
 
-class ManagementHeaderSmithsBox extends ManagementHeaderCell {
+class ManagementHeaderSmithsBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
      * @private
      */
     _findBox(anchor) {
-        return anchor.children.item(2); // td
+        return anchor
+            .children.item(2); // td
     }
 
     _getBoxClassName() {
