@@ -491,7 +491,7 @@ class TableCellBasedBox extends Box {
     }
 }
 
-class ArmoryBox extends TableCellBox {
+class ArmoryBox extends TableCellBasedBox {
     /**
      * @type {OverviewBox}
      * @public
@@ -549,16 +549,16 @@ class ArmoryBox extends TableCellBox {
     constructor(anchor, activeTab) {
         super(anchor);
 
-        const innerBox = this.getInnerBox();
+        const box = this.box;
 
-        this.overviewBox = new OverviewBox(innerBox);
-        this.managementBox = new ManagementBox(innerBox);
-        this.takesBox = new TakesBox(innerBox);
-        this.tabsBox = new TabsBox(innerBox);
+        this.overviewBox = new OverviewBox(box);
+        this.managementBox = new ManagementBox(box);
+        this.takesBox = new TakesBox(box);
+        this.tabsBox = new TabsBox(box);
         switch (activeTab) {
             case ArmoryTab.TAB_DESCRIPTION:
-                this.descriptionBox = new DescriptionBox(innerBox);
-                this.descriptionFormBox = new DescriptionFormBox(innerBox);
+                this.descriptionBox = new DescriptionBox(box);
+                this.descriptionFormBox = new DescriptionFormBox(box);
                 break;
             case ArmoryTab.TAB_ON_LEASE:
             case ArmoryTab.TAB_WEAPON:
@@ -567,7 +567,7 @@ class ArmoryBox extends TableCellBox {
             case ArmoryTab.TAB_BACKPACK:
             case ArmoryTab.TAB_SETS:
             case ArmoryTab.TAB_UNAVAILABLE:
-                this.artsBox = new ArtsBox(innerBox, activeTab);
+                this.artsBox = new ArtsBox(box, activeTab);
         }
     }
 
@@ -578,21 +578,18 @@ class ArmoryBox extends TableCellBox {
     _findBox(anchor) {
         return anchor
             ?.parentElement // td#0, armory account clear part
-            ?.parentElement // tr#0, armory account clear part
-            ?.parentElement // tbody, armory account clear part
-            ?.parentElement // table, armory account clear part
+            ?.parentElement // tr#0
+            ?.parentElement // tbody#0
+            ?.parentElement // table#0
             ?.parentElement // td#0, armory account
-            ?.parentElement // tr#0, armory account
-            ?.parentElement // tbody, armory account
-            ?.parentElement // table, armory account
-            ?.parentElement // td#1, armory overview
-            ?.parentElement // tr#0, armory overview
+            ?.parentElement // tr#0
+            ?.parentElement // tbody#0
+            ?.parentElement // table#0
+            ?.parentElement // td#1
+            ?.parentElement // tr#0
             ?.parentElement // tbody#0, armory overview
-            ?.parentElement // table#0, armory overview
-            ?.parentElement // td#0, armory box
-            ?.parentElement // tr#0, armory box
-            ?.parentElement // tbody#0, armory box
-            ?.parentElement // table, page content
+            ?.parentElement // table#0
+            ?.parentElement; // td#0, armory box
     }
 
     _getBoxClassName() {
