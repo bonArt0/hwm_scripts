@@ -705,7 +705,7 @@ class OverviewInfoBox extends TableCellBasedBox {
     }
 }
 
-class OverviewAccountBox extends TableRowBox {
+class OverviewAccountBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
      * @return {HTMLTableElement|undefined}
@@ -713,8 +713,7 @@ class OverviewAccountBox extends TableRowBox {
     _findBox(anchor) {
         return anchor
             ?.children.item(0) // tr
-            ?.children.item(1) // td
-            ?.children.item(0); // table
+            ?.children.item(1); // td
     }
 
     _getBoxClassName() {
