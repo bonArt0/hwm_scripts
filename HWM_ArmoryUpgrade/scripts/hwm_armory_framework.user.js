@@ -773,7 +773,7 @@ class OverviewSectorsBox extends TableCellBasedBox {
 
 /* <editor-fold desc="armory management"> */
 
-class ManagementBox extends TableSectionBox {
+class ManagementBox extends TableSectionBasedBox {
     /**
      * @type {ManagementHeaderBox}
      * @public
@@ -791,10 +791,10 @@ class ManagementBox extends TableSectionBox {
     constructor(anchor) {
         super(anchor);
 
-        const innerBox = this.getInnerBox();
+        const box = this.box;
 
-        this.headerBox = new ManagementHeaderBox(innerBox);
-        this.bodyBox = new ManagementBodyBox(innerBox);
+        this.headerBox = new ManagementHeaderBox(box);
+        this.bodyBox = new ManagementBodyBox(box);
     }
 
     /**
@@ -802,7 +802,9 @@ class ManagementBox extends TableSectionBox {
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
-        return anchor.children.item(1); // table
+        return anchor
+            .children.item(1) // table
+            .children.item(0); // tbody
     }
 
     _getBoxClassName() {
