@@ -1209,13 +1209,16 @@ class TakesLeasesBodyBox extends TakesRowBox {
 
 /* <editor-fold desc="armory tabs"> */
 
-class TabsBox extends TableRowBox {
+class TabsBox extends TableRowBasedBox {
     /**
      * @param {HTMLTableCellElement} anchor
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
-        return anchor.children.item(3); // table
+        return anchor
+            .children.item(3) // table
+            .children.item(0) // tbody
+            .children.item(0); // tr
     }
 
     _getBoxClassName() {
