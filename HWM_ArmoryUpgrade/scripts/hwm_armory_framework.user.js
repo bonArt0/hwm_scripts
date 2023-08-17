@@ -939,7 +939,8 @@ class ManagementBodyBox extends TableRowBasedBox {
      * @return {HTMLTableRowElement|undefined}
      */
     _findBox(anchor) {
-        return anchor.children.item(1); // tr
+        return anchor
+            .children.item(1); // tr
     }
 
     _getBoxClassName() {
