@@ -956,7 +956,8 @@ class ManagementBodyCell extends TableCellBasedBox {
      * @return {HTMLFormElement}
      */
     getInnerBox() {
-        return super.getInnerBox().children.item(0); // form
+        return super.getInnerBox()
+            .children.item(0); // form
     }
 }
 
@@ -967,7 +968,8 @@ class ManagementBodyPutsBox extends ManagementBodyCell {
      * @private
      */
     _findBox(anchor) {
-        return anchor.children.item(0);
+        return anchor
+            .children.item(0);
     }
 
     _getBoxClassName() {
@@ -1026,7 +1028,8 @@ class ManagementBodyBattlesBox extends ManagementBodyCell {
      * @private
      */
     _findBox(anchor) {
-        return anchor.children.item(1);
+        return anchor
+            .children.item(1);
     }
 
     _getBoxClassName() {
@@ -1041,7 +1044,8 @@ class ManagementBodySmithsBox extends ManagementBodyCell {
      * @private
      */
     _findBox(anchor) {
-        return anchor.children.item(2);
+        return anchor
+            .children.item(2);
     }
 
     _getBoxClassName() {
