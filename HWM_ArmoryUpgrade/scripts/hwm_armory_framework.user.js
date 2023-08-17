@@ -468,6 +468,19 @@ class TableCellBox extends TableRowBox {
 /**
  * @abstract
  */
+class TableSectionBasedBox extends Box {
+    _getBoxTag() {
+        return 'TBODY';
+    }
+
+    _getInnerBoxTag() {
+        return 'TBODY';
+    }
+}
+
+/**
+ * @abstract
+ */
 class TableRowBasedBox extends Box {
     _getBoxTag() {
         return 'TR';
@@ -599,7 +612,7 @@ class ArmoryBox extends TableCellBasedBox {
 
 /* <editor-fold desc="armory overview"> */
 
-class OverviewBox extends TableSectionBox {
+class OverviewBox extends TableSectionBasedBox {
     /**
      * @type {OverviewInfoBox}
      * @public
@@ -638,13 +651,13 @@ class OverviewBox extends TableSectionBox {
     constructor(anchor) {
         super(anchor);
 
-        const innerBox = this.getInnerBox();
+        const box = this.box;
 
-        this.infoBox = new OverviewInfoBox(innerBox);
-        this.accountBox = new OverviewAccountBox(innerBox);
-        this.onlineToggleBox = new OverviewOnlineToggleBox(innerBox);
-        this.managementToggleBox = new OverviewManagementToggleBox(innerBox);
-        this.sectorsBox = new OverviewSectorsBox(innerBox);
+        this.infoBox = new OverviewInfoBox(box);
+        this.accountBox = new OverviewAccountBox(box);
+        this.onlineToggleBox = new OverviewOnlineToggleBox(box);
+        this.managementToggleBox = new OverviewManagementToggleBox(box);
+        this.sectorsBox = new OverviewSectorsBox(box);
     }
 
     /**
@@ -653,7 +666,8 @@ class OverviewBox extends TableSectionBox {
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(0); // table
+            ?.children.item(0) // table
+            ?.children.item(0); // tbody, armory overview
     }
 
     _getBoxClassName() {
