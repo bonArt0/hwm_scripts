@@ -760,8 +760,8 @@ class OverviewSectorsBox extends TableCellBasedBox {
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(1) // tr#1 armory overview
-            ?.children.item(0); // td#0 armory overview
+            ?.children.item(1) // tr
+            ?.children.item(0); // td
     }
 
     _getBoxClassName() {
