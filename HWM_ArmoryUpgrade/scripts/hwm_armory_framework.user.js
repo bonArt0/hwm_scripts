@@ -1292,7 +1292,7 @@ class DescriptionFormBox extends Box {
 
 /* <editor-fold desc="armory arts"> */
 
-class ArtsBox extends TableCellBox {
+class ArtsBox extends TableCellBasedBox {
     /**
      * @type {ArtsListBox}
      * @public
@@ -1339,7 +1339,11 @@ class ArtsBox extends TableCellBox {
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
-        return anchor.children.item(4); // table
+        return anchor
+            .children.item(4) // table
+            .children.item(0) // tbody
+            .children.item(0) // tr
+            .children.item(0); // td
     }
 
     _getBoxClassName() {
