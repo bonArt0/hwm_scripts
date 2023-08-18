@@ -1351,7 +1351,7 @@ class ArtsBox extends TableCellBasedBox {
     }
 }
 
-class ArtsListBox extends TableSectionBox {
+class ArtsListBox extends TableSectionBasedBox {
     /**
      * @type {ArtsHeaderBox}
      * @public
@@ -1392,7 +1392,8 @@ class ArtsListBox extends TableSectionBox {
     _findBox(anchor) {
         return Array.from(anchor.children)
             .filter(ArtsListBox._filterTagsCallback.bind({tag: 'TABLE'}))
-            .shift();
+            .shift() // table
+            .children.item(0); // tbody
     }
 
     _getBoxClassName() {
