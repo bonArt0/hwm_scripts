@@ -1202,6 +1202,9 @@ class TabsBox extends TableRowBasedBox {
 
 /* <editor-fold desc="armory description"> */
 
+/**
+ * @todo group descriptions
+ */
 class DescriptionBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableCellElement} anchor
@@ -1224,27 +1227,14 @@ class DescriptionBox extends TableCellBasedBox {
 
 /* <editor-fold desc="armory description form"> */
 
-/**
- * @todo move to DescriptionBox?
- * @todo FormBasedBox?
- */
-class DescriptionFormBox extends Box {
-    /**
-     * @return {HTMLTableSectionElement}
-     */
-    getInnerBox() {
-        return this.box
-            .children.item(0) // table
-            .children.item(0); // tbody
-    }
-
+class DescriptionFormBox extends FormBasedBox {
     /**
      * @param {HTMLTableCellElement} anchor
      * @return {HTMLFormElement}
      */
     _findBox(anchor) {
         return anchor
-            ?.children.item(5); // form
+            .children.item(5); // form
     }
 
     _getBoxClassName() {
@@ -1253,10 +1243,6 @@ class DescriptionFormBox extends Box {
 
     _getBoxTag() {
         return 'FORM';
-    }
-
-    _getInnerBoxTag() {
-        return 'TBODY';
     }
 }
 
