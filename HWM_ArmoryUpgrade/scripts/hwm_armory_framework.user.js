@@ -1019,32 +1019,18 @@ class ManagementBodyCapacityBox extends FormBasedBox {
  */
 class TakesBox extends TableSectionBasedBox {
     /**
-     * @type {TakesRepairsHeaderBox|null}
+     * @type {TakesRepairs|null}
      * @public
      * @readonly
      */
-    repairHeader;
+    repairs;
 
     /**
-     * @type {TakesRepairsBodyBox|null}
+     * @type {TakesLeases|null}
      * @public
      * @readonly
      */
-    repairBody;
-
-    /**
-     * @type {TakesLeasesHeaderBox|null}
-     * @public
-     * @readonly
-     */
-    leasesHeader;
-
-    /**
-     * @type {TakesLeasesBodyBox|null}
-     * @public
-     * @readonly
-     */
-    leasesBody;
+    leases;
 
     /**
      * @param {HTMLElement} anchor
@@ -1058,22 +1044,16 @@ class TakesBox extends TableSectionBasedBox {
         const box = this.box;
         if (box.children.length === 4) {
             // box has both repairs and leases row pairs
-            this.repairHeader = new TakesRepairsHeaderBox(box, 0);
-            this.repairBody = new TakesRepairsBodyBox(box, 1);
-            this.leasesHeader = new TakesLeasesHeaderBox(box, 2);
-            this.leasesBody = new TakesLeasesBodyBox(box, 3);
+            this.repairs = new TakesRepairs(box);
+            this.leases = new TakesLeases(box, false);
         } else if (box.innerHTML.search('action=repair') > -1) {
             // "Repair" button exists, so box has only repairs row pair
-            this.repairHeader = new TakesRepairsHeaderBox(box, 0);
-            this.repairBody = new TakesRepairsBodyBox(box, 1);
-            this.leasesHeader = null;
-            this.leasesBody = null;
+            this.repairs = new TakesRepairs(box);
+            this.leases = null;
         } else {
             // box has only leases row pair
-            this.repairHeader = null;
-            this.repairBody = null;
-            this.leasesHeader = new TakesLeasesHeaderBox(box, 0);
-            this.leasesBody = new TakesLeasesBodyBox(box, 1);
+            this.repairs = null;
+            this.leases = new TakesLeases(box, true);
         }
     }
 
@@ -1095,6 +1075,57 @@ class TakesBox extends TableSectionBasedBox {
 
     _getBoxClassName() {
         return FrameworkClassNames.TAKES_BOX;
+    }
+}
+
+class TakesRepairs {
+    /**
+     * @type {TakesRepairsHeaderBox}
+     * @public
+     * @readonly
+     */
+    header;
+
+    /**
+     * @type {TakesRepairsBodyBox}
+     * @public
+     * @readonly
+     */
+    body;
+
+    /**
+     * @param {HTMLElement} anchor
+     * @throws {Error} on init failure
+     */
+    constructor(anchor) {
+        this.header = new TakesRepairsHeaderBox(anchor, 0);
+        this.body = new TakesRepairsBodyBox(anchor, 1);
+    }
+}
+
+class TakesLeases {
+    /**
+     * @type {TakesLeasesHeaderBox}
+     * @public
+     * @readonly
+     */
+    header;
+
+    /**
+     * @type {TakesLeasesBodyBox}
+     * @public
+     * @readonly
+     */
+    body;
+
+    /**
+     * @param {HTMLElement} anchor
+     * @param {boolean} only
+     * @throws {Error} on init failure
+     */
+    constructor(anchor, only) {
+        this.header = new TakesLeasesHeaderBox(anchor, only ? 0 : 2);
+        this.body = new TakesLeasesBodyBox(anchor, only ? 1 : 3);
     }
 }
 
