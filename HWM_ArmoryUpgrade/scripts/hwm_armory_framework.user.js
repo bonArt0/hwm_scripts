@@ -302,31 +302,12 @@ class Box {
     }
 
     /**
-     * @deprecated use this.box
-     * @returns {HTMLElement}
-     * @throws {OuterBoxError} on invalid framework usage
-     * @public
-     */
-    getOuterBox() {
-        if (this.box?.tagName === this._getBoxTag()) {
-            return this.box;
-        }
-
-        throw new OuterBoxError( {element: this});
-    }
-
-    /**
      * @return {HTMLElement}
      * @throws {InnerBoxError} on invalid framework usage
      * @public
      */
     getInnerBox() {
-        const box = this._getInnerBox();
-        if (box?.tagName === this._getInnerBoxTag()) {
-            return box;
-        }
-
-        throw new InnerBoxError({innerBox: box, element: this});
+        return this.box;
     }
 
     /**
@@ -373,14 +354,6 @@ class Box {
      * @protected
      */
     _getBoxClassName() {}
-
-    /**
-     * @return {HTMLElement}
-     * @private
-     */
-    _getInnerBox() {
-        return this.box;
-    }
 }
 
 /**
@@ -598,14 +571,14 @@ class OverviewInfoBox extends TableCellBasedBox {
      * @returns {number}
      */
     getCurrentCapacity() {
-        return +this.getInnerBox().innerHTML.match(/<b>(\d+)<\/b> из \d+/)?.at(1);
+        return +this.box.innerHTML.match(/<b>(\d+)<\/b> из \d+/)?.at(1);
     }
 
     /**
      * @returns {number}
      */
     getTotalCapacity() {
-        return +this.getInnerBox().innerHTML.match(/<b>\d+<\/b> из (\d+)/).at(1);
+        return +this.box.innerHTML.match(/<b>\d+<\/b> из (\d+)/).at(1);
     }
 
     /**
@@ -755,9 +728,9 @@ class ManagementHeaderBox extends TableRowBasedBox {
     constructor(anchor) {
         super(anchor);
 
-        this.putsBox = new ManagementHeaderPutsBox(this.getInnerBox());
-        this.battlesBox = new ManagementHeaderBattlesBox(this.getInnerBox());
-        this.smithsBox = new ManagementHeaderSmithsBox(this.getInnerBox());
+        this.putsBox = new ManagementHeaderPutsBox(this.box);
+        this.battlesBox = new ManagementHeaderBattlesBox(this.box);
+        this.smithsBox = new ManagementHeaderSmithsBox(this.box);
     }
 
     /**
@@ -847,9 +820,9 @@ class ManagementBodyBox extends TableRowBasedBox {
     constructor(anchor) {
         super(anchor);
 
-        this.putsBox = new ManagementBodyPutsBox(this.getInnerBox());
-        this.battlesBox = new ManagementBodyBattlesBox(this.getInnerBox());
-        this.smithsBox = new ManagementBodySmithsBox(this.getInnerBox());
+        this.putsBox = new ManagementBodyPutsBox(this.box);
+        this.battlesBox = new ManagementBodyBattlesBox(this.box);
+        this.smithsBox = new ManagementBodySmithsBox(this.box);
     }
 
     /**
@@ -1248,7 +1221,7 @@ class ArtsBox extends TableCellBasedBox {
     constructor(anchor, activeTab) {
         super(anchor);
 
-        this.artsList = new ArtsListBox(this.getInnerBox(), activeTab);
+        this.artsList = new ArtsListBox(this.box, activeTab);
         this.artsHeader = this.artsList.artsHeader;
         this.artsFooter = this.artsList.artsFooter;
         this.artsRows = this.artsList.artsRows;
@@ -1300,7 +1273,7 @@ class ArtsListBox extends TableSectionBasedBox {
     constructor(anchor, activeTab) {
         super(anchor);
 
-        const rows = Array.from(this.getInnerBox().children)
+        const rows = Array.from(this.box.children)
             .filter(ArtsListBox._filterTagsCallback.bind({tag: 'TR'}));
 
         this.artsHeader = new ArtsHeaderBox(rows.shift());
