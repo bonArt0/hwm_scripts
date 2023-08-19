@@ -376,6 +376,15 @@ class TableCellBasedBox extends Box {
     }
 }
 
+/**
+ * @abstract
+ */
+class FormBasedBox extends Box {
+    _getBoxTag() {
+        return 'FORM';
+    }
+}
+
 class ArmoryBox extends TableCellBasedBox {
     /**
      * @type {OverviewBox}
@@ -894,20 +903,7 @@ class ManagementBodyBox extends TableRowBasedBox {
     }
 }
 
-/**
- * @abstract
- */
-class ManagementBodyCell extends TableCellBasedBox {
-    /**
-     * @return {HTMLFormElement}
-     */
-    getInnerBox() {
-        return super.getInnerBox()
-            .children.item(0); // form
-    }
-}
-
-class ManagementBodyPutsBox extends ManagementBodyCell {
+class ManagementBodyPutsBox extends FormBasedBox {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -915,7 +911,8 @@ class ManagementBodyPutsBox extends ManagementBodyCell {
      */
     _findBox(anchor) {
         return anchor
-            .children.item(0);
+            .children.item(0) // td
+            .children.item(0); // form
     }
 
     _getBoxClassName() {
@@ -923,18 +920,18 @@ class ManagementBodyPutsBox extends ManagementBodyCell {
     }
 
     isDisabled() {
-        return this.getInnerBox().innerHTML.search('нет доступа') > -1;
+        return this.box.innerHTML.search('нет доступа') > -1;
     }
 
     hideForm() {
-        this.getInnerBox().style.display = 'none';
+        this.box.style.display = 'none';
     }
 
     /**
      * @return {(number|string)[][]}
      */
     getArtsList() {
-        const artsPutOptions= this.getInnerBox().elements[2].options;
+        const artsPutOptions= this.box.elements[2].options;
         const arts = Array.from(artsPutOptions).map((option) => [+option.value, option.innerHTML]);
         arts.shift(); // remove first "0" element
         return arts;
@@ -944,7 +941,7 @@ class ManagementBodyPutsBox extends ManagementBodyCell {
      * @return {number}
      */
     getArmoryId() {
-        const id = this.getInnerBox().children.item(0)?.value;
+        const id = this.box.children.item(0)?.value;
 
         if (id === undefined) {
             throw new FrameworkError('Armory id not found', this);
@@ -957,7 +954,7 @@ class ManagementBodyPutsBox extends ManagementBodyCell {
      * @returns {string}
      */
     getArtsPutSign() {
-        const sign = this.getInnerBox().children.item(1)?.value;
+        const sign = this.box.children.item(1)?.value;
 
         if (sign === undefined) {
             throw new FrameworkError('Armory puts sign not found', this);
@@ -967,7 +964,7 @@ class ManagementBodyPutsBox extends ManagementBodyCell {
     }
 }
 
-class ManagementBodyBalanceBox extends ManagementBodyCell {
+class ManagementBodyBalanceBox extends FormBasedBox {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -975,7 +972,8 @@ class ManagementBodyBalanceBox extends ManagementBodyCell {
      */
     _findBox(anchor) {
         return anchor
-            .children.item(1);
+            .children.item(1) // td
+            .children.item(0); // form
     }
 
     _getBoxClassName() {
@@ -983,7 +981,7 @@ class ManagementBodyBalanceBox extends ManagementBodyCell {
     }
 }
 
-class ManagementBodyBattlesBox extends ManagementBodyCell {
+class ManagementBodyBattlesBox extends FormBasedBox {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -991,7 +989,8 @@ class ManagementBodyBattlesBox extends ManagementBodyCell {
      */
     _findBox(anchor) {
         return anchor
-            .children.item(2);
+            .children.item(2) // td
+            .children.item(0); // form
     }
 
     _getBoxClassName() {
@@ -999,7 +998,7 @@ class ManagementBodyBattlesBox extends ManagementBodyCell {
     }
 }
 
-class ManagementBodySmithsBox extends ManagementBodyCell {
+class ManagementBodySmithsBox extends FormBasedBox {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -1007,7 +1006,8 @@ class ManagementBodySmithsBox extends ManagementBodyCell {
      */
     _findBox(anchor) {
         return anchor
-            .children.item(3);
+            .children.item(3) // td
+            .children.item(0); // form
     }
 
     _getBoxClassName() {
@@ -1015,7 +1015,7 @@ class ManagementBodySmithsBox extends ManagementBodyCell {
     }
 }
 
-class ManagementBodyCapacityBox extends ManagementBodyCell {
+class ManagementBodyCapacityBox extends FormBasedBox {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -1023,7 +1023,8 @@ class ManagementBodyCapacityBox extends ManagementBodyCell {
      */
     _findBox(anchor) {
         return anchor
-            .children.item(4);
+            .children.item(4) // td
+            .children.item(0); // form
     }
 
     _getBoxClassName() {
