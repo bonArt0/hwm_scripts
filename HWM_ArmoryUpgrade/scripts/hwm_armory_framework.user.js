@@ -30,11 +30,13 @@ const FrameworkClassNames = {
     MANAGEMENT_HEADER_BALANCE_BOX: 'afw_armory_management_header_balance_box',
     MANAGEMENT_HEADER_BATTLES_BOX: 'afw_armory_management_header_battles_box',
     MANAGEMENT_HEADER_SMITHS_BOX: 'afw_armory_management_header_smiths_box',
+    MANAGEMENT_HEADER_CAPACITY_BOX: 'afw_armory_management_header_capacity_box',
     MANAGEMENT_BODY_BOX: 'afw_armory_management_body_box',
     MANAGEMENT_BODY_PUTS_BOX: 'afw_armory_management_body_puts_box',
     MANAGEMENT_BODY_BALANCE_BOX: 'afw_armory_management_body_balance_box',
     MANAGEMENT_BODY_BATTLES_BOX: 'afw_armory_management_body_battles_box',
     MANAGEMENT_BODY_SMITHS_BOX: 'afw_armory_management_body_smiths_box',
+    MANAGEMENT_BODY_CAPACITY_BOX: 'afw_armory_management_body_capacity_box',
     TAKES_BOX: 'afw_armory_takes_box',
     TAKES_REPAIRS_HEADER_BOX: 'afw_armory_takes_repairs_header_box',
     TAKES_REPAIRS_BODY_BOX: 'afw_armory_takes_repairs_body_box',
@@ -721,6 +723,13 @@ class ManagementHeaderBox extends TableRowBasedBox {
      */
     smithsBox;
 
+    /**
+     * @type {ManagementHeaderCapacityBox}
+     * @public
+     * @readonly
+     */
+    capacityBox;
+
     constructor(anchor) {
         super(anchor);
 
@@ -728,6 +737,7 @@ class ManagementHeaderBox extends TableRowBasedBox {
         this.balanceBox = new ManagementHeaderBalanceBox(this.box);
         this.battlesBox = new ManagementHeaderBattlesBox(this.box);
         this.smithsBox = new ManagementHeaderSmithsBox(this.box);
+        this.capacityBox = new ManagementHeaderCapacityBox(this.box)
     }
 
     /**
@@ -808,6 +818,22 @@ class ManagementHeaderSmithsBox extends TableCellBasedBox {
     }
 }
 
+class ManagementHeaderCapacityBox extends TableCellBasedBox {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor
+            .children.item(4); // td
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.MANAGEMENT_HEADER_CAPACITY_BOX;
+    }
+}
+
 class ManagementBodyBox extends TableRowBasedBox {
     /**
      * @type {ManagementBodyPutsBox}
@@ -837,6 +863,13 @@ class ManagementBodyBox extends TableRowBasedBox {
      */
     smithsBox;
 
+    /**
+     * @type {ManagementBodyCapacityBox}
+     * @public
+     * @readonly
+     */
+    capacityBox;
+
     constructor(anchor) {
         super(anchor);
 
@@ -844,6 +877,7 @@ class ManagementBodyBox extends TableRowBasedBox {
         this.balanceBox = new ManagementBodyBalanceBox(this.box);
         this.battlesBox = new ManagementBodyBattlesBox(this.box);
         this.smithsBox = new ManagementBodySmithsBox(this.box);
+        this.capacityBox = new ManagementBodyCapacityBox(this.box);
     }
 
     /**
@@ -978,6 +1012,22 @@ class ManagementBodySmithsBox extends ManagementBodyCell {
 
     _getBoxClassName() {
         return FrameworkClassNames.MANAGEMENT_BODY_SMITHS_BOX;
+    }
+}
+
+class ManagementBodyCapacityBox extends ManagementBodyCell {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor
+            .children.item(4);
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.MANAGEMENT_BODY_CAPACITY_BOX;
     }
 }
 
