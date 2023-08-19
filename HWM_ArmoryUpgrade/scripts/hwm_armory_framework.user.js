@@ -137,7 +137,7 @@ class ArmoryFramework {
      * @public
      * @readonly
      */
-    armoryBox;
+    armory;
 
     /**
      * @return {ArmoryFramework|null}
@@ -190,7 +190,7 @@ class ArmoryFramework {
         }
 
         this.activeTab = this._findActiveTab();
-        this.armoryBox = new ArmoryBox(this._findInitialAnchor(), this.activeTab);
+        this.armory = new ArmoryBox(this._findInitialAnchor(), this.activeTab);
         this._initialized = true;
     }
 
@@ -375,49 +375,49 @@ class ArmoryBox extends TableCellBasedBox {
      * @public
      * @readonly
      */
-    overviewBox;
+    overview;
 
     /**
      * @type {ManagementBox}
      * @public
      * @readonly
      */
-    managementBox;
+    management;
 
     /**
      * @type {TakesBox|null}
      * @public
      * @readonly
      */
-    takesBox;
+    takes;
 
     /**
      * @type {TabsBox}
      * @public
      * @readonly
      */
-    tabsBox;
+    tabs;
 
     /**
      * @type {DescriptionBox}
      * @public
      * @readonly
      */
-    descriptionBox;
+    description;
 
     /**
      * @type {DescriptionFormBox}
      * @public
      * @readonly
      */
-    descriptionFormBox;
+    descriptionForm;
 
     /**
      * @type {ArtsBox}
      * @public
      * @readonly
      */
-    artsBox;
+    arts;
 
     /**
      * @param {HTMLElement} anchor
@@ -429,24 +429,24 @@ class ArmoryBox extends TableCellBasedBox {
 
         const box = this.box;
 
-        this.overviewBox = new OverviewBox(box);
-        this.managementBox = new ManagementBox(box);
+        this.overview = new OverviewBox(box);
+        this.management = new ManagementBox(box);
 
         try {
-            this.takesBox = new TakesBox(box);
+            this.takes = new TakesBox(box);
         } catch (e) {
             if (!(e instanceof BoxMissedException)) {
                 throw e;
             }
-            this.takesBox = null;
+            this.takes = null;
         }
 
-        this.tabsBox = new TabsBox(box);
+        this.tabs = new TabsBox(box);
 
         switch (activeTab) {
             case ArmoryTab.TAB_DESCRIPTION:
-                this.descriptionBox = new DescriptionBox(box);
-                this.descriptionFormBox = new DescriptionFormBox(box);
+                this.description = new DescriptionBox(box);
+                this.descriptionForm = new DescriptionFormBox(box);
                 break;
             case ArmoryTab.TAB_ON_LEASE:
             case ArmoryTab.TAB_WEAPON:
@@ -455,7 +455,7 @@ class ArmoryBox extends TableCellBasedBox {
             case ArmoryTab.TAB_BACKPACK:
             case ArmoryTab.TAB_SETS:
             case ArmoryTab.TAB_UNAVAILABLE:
-                this.artsBox = new ArtsBox(box, activeTab);
+                this.arts = new ArtsBox(box, activeTab);
         }
     }
 
@@ -493,46 +493,46 @@ class OverviewBox extends TableSectionBasedBox {
      * @public
      * @readonly
      */
-    infoBox;
+    info;
 
     /**
      * @type {OverviewAccountBox}
      * @public
      * @readonly
      */
-    accountBox;
+    account;
 
     /**
      * @type {OverviewOnlineToggleBox}
      * @public
      * @readonly
      */
-    onlineToggleBox;
+    onlineToggle;
 
     /**
      * @type {OverviewManagementToggleBox}
      * @public
      * @readonly
      */
-    managementToggleBox;
+    managementToggle;
 
     /**
      * @type {OverviewSectorsBox}
      * @public
      * @readonly
      */
-    sectorsBox;
+    sectors;
 
     constructor(anchor) {
         super(anchor);
 
         const box = this.box;
 
-        this.infoBox = new OverviewInfoBox(box);
-        this.accountBox = new OverviewAccountBox(box);
-        this.onlineToggleBox = new OverviewOnlineToggleBox(box);
-        this.managementToggleBox = new OverviewManagementToggleBox(box);
-        this.sectorsBox = new OverviewSectorsBox(box);
+        this.info = new OverviewInfoBox(box);
+        this.account = new OverviewAccountBox(box);
+        this.onlineToggle = new OverviewOnlineToggleBox(box);
+        this.managementToggle = new OverviewManagementToggleBox(box);
+        this.sectors = new OverviewSectorsBox(box);
     }
 
     /**
@@ -654,22 +654,22 @@ class ManagementBox extends TableSectionBasedBox {
      * @public
      * @readonly
      */
-    headerBox;
+    header;
 
     /**
      * @type {ManagementBodyBox}
      * @public
      * @readonly
      */
-    bodyBox;
+    body;
 
     constructor(anchor) {
         super(anchor);
 
         const box = this.box;
 
-        this.headerBox = new ManagementHeaderBox(box);
-        this.bodyBox = new ManagementBodyBox(box);
+        this.header = new ManagementHeaderBox(box);
+        this.body = new ManagementBodyBox(box);
     }
 
     /**
@@ -693,44 +693,44 @@ class ManagementHeaderBox extends TableRowBasedBox {
      * @public
      * @readonly
      */
-    putsBox;
+    puts;
 
     /**
      * @type {ManagementHeaderBalanceBox}
      * @public
      * @readonly
      */
-    balanceBox;
+    balance;
 
     /**
      * @type {ManagementHeaderBattlesBox}
      * @public
      * @readonly
      */
-    battlesBox;
+    battles;
 
     /**
      * @type {ManagementHeaderSmithsBox}
      * @public
      * @readonly
      */
-    smithsBox;
+    smiths;
 
     /**
      * @type {ManagementHeaderCapacityBox}
      * @public
      * @readonly
      */
-    capacityBox;
+    capacity;
 
     constructor(anchor) {
         super(anchor);
 
-        this.putsBox = new ManagementHeaderPutsBox(this.box);
-        this.balanceBox = new ManagementHeaderBalanceBox(this.box);
-        this.battlesBox = new ManagementHeaderBattlesBox(this.box);
-        this.smithsBox = new ManagementHeaderSmithsBox(this.box);
-        this.capacityBox = new ManagementHeaderCapacityBox(this.box)
+        this.puts = new ManagementHeaderPutsBox(this.box);
+        this.balance = new ManagementHeaderBalanceBox(this.box);
+        this.battles = new ManagementHeaderBattlesBox(this.box);
+        this.smiths = new ManagementHeaderSmithsBox(this.box);
+        this.capacity = new ManagementHeaderCapacityBox(this.box)
     }
 
     /**
@@ -833,44 +833,44 @@ class ManagementBodyBox extends TableRowBasedBox {
      * @public
      * @readonly
      */
-    putsBox;
+    puts;
 
     /**
      * @type {ManagementBodyBalanceBox}
      * @public
      * @readonly
      */
-    balanceBox;
+    balance;
 
     /**
      * @type {ManagementBodyBattlesBox}
      * @public
      * @readonly
      */
-    battlesBox;
+    battles;
 
     /**
      * @type {ManagementBodySmithsBox}
      * @public
      * @readonly
      */
-    smithsBox;
+    smiths;
 
     /**
      * @type {ManagementBodyCapacityBox}
      * @public
      * @readonly
      */
-    capacityBox;
+    capacity;
 
     constructor(anchor) {
         super(anchor);
 
-        this.putsBox = new ManagementBodyPutsBox(this.box);
-        this.balanceBox = new ManagementBodyBalanceBox(this.box);
-        this.battlesBox = new ManagementBodyBattlesBox(this.box);
-        this.smithsBox = new ManagementBodySmithsBox(this.box);
-        this.capacityBox = new ManagementBodyCapacityBox(this.box);
+        this.puts = new ManagementBodyPutsBox(this.box);
+        this.balance = new ManagementBodyBalanceBox(this.box);
+        this.battles = new ManagementBodyBattlesBox(this.box);
+        this.smiths = new ManagementBodySmithsBox(this.box);
+        this.capacity = new ManagementBodyCapacityBox(this.box);
     }
 
     /**
@@ -1029,28 +1029,28 @@ class TakesBox extends TableSectionBasedBox {
      * @public
      * @readonly
      */
-    repairHeaderBox;
+    repairHeader;
 
     /**
      * @type {TakesRepairsBodyBox|null}
      * @public
      * @readonly
      */
-    repairBodyBox;
+    repairBody;
 
     /**
      * @type {TakesLeasesHeaderBox|null}
      * @public
      * @readonly
      */
-    leasesHeaderBox;
+    leasesHeader;
 
     /**
      * @type {TakesLeasesBodyBox|null}
      * @public
      * @readonly
      */
-    leasesBodyBox;
+    leasesBody;
 
     /**
      * @param {HTMLElement} anchor
@@ -1064,22 +1064,22 @@ class TakesBox extends TableSectionBasedBox {
         const box = this.box;
         if (box.children.length === 4) {
             // box has both repairs and leases row pairs
-            this.repairHeaderBox = new TakesRepairsHeaderBox(box, 0);
-            this.repairBodyBox = new TakesRepairsBodyBox(box, 1);
-            this.leasesHeaderBox = new TakesLeasesHeaderBox(box, 2);
-            this.leasesBodyBox = new TakesLeasesBodyBox(box, 3);
+            this.repairHeader = new TakesRepairsHeaderBox(box, 0);
+            this.repairBody = new TakesRepairsBodyBox(box, 1);
+            this.leasesHeader = new TakesLeasesHeaderBox(box, 2);
+            this.leasesBody = new TakesLeasesBodyBox(box, 3);
         } else if (box.innerHTML.search('action=repair') > -1) {
             // "Repair" button exists, so box has only repairs row pair
-            this.repairHeaderBox = new TakesRepairsHeaderBox(box, 0);
-            this.repairBodyBox = new TakesRepairsBodyBox(box, 1);
-            this.leasesHeaderBox = null;
-            this.leasesBodyBox = null;
+            this.repairHeader = new TakesRepairsHeaderBox(box, 0);
+            this.repairBody = new TakesRepairsBodyBox(box, 1);
+            this.leasesHeader = null;
+            this.leasesBody = null;
         } else {
             // box has only leases row pair
-            this.repairHeaderBox = null;
-            this.repairBodyBox = null;
-            this.leasesHeaderBox = new TakesLeasesHeaderBox(box, 0);
-            this.leasesBodyBox = new TakesLeasesBodyBox(box, 1);
+            this.repairHeader = null;
+            this.repairBody = null;
+            this.leasesHeader = new TakesLeasesHeaderBox(box, 0);
+            this.leasesBody = new TakesLeasesBodyBox(box, 1);
         }
     }
 
@@ -1240,28 +1240,28 @@ class ArtsBox extends TableCellBasedBox {
      * @public
      * @readonly
      */
-    artsList;
+    list;
 
     /**
      * @type {ArtsHeaderBox}
      * @public
      * @readonly
      */
-    artsHeader;
+    header;
 
     /**
      * @type {ArtsFooterBox|null}
      * @public
      * @readonly
      */
-    artsFooter;
+    footer;
 
     /**
      * @type {ArtsRowBox[]}
      * @public
      * @readonly
      */
-    artsRows;
+    rows;
 
     /**
      * @param {HTMLTableCellElement} anchor
@@ -1270,10 +1270,10 @@ class ArtsBox extends TableCellBasedBox {
     constructor(anchor, activeTab) {
         super(anchor);
 
-        this.artsList = new ArtsListBox(this.box, activeTab);
-        this.artsHeader = this.artsList.artsHeader;
-        this.artsFooter = this.artsList.artsFooter;
-        this.artsRows = this.artsList.artsRows;
+        this.list = new ArtsListBox(this.box, activeTab);
+        this.header = this.list.header;
+        this.footer = this.list.footer;
+        this.rows = this.list.rows;
     }
 
     /**
@@ -1299,21 +1299,21 @@ class ArtsListBox extends TableSectionBasedBox {
      * @public
      * @readonly
      */
-    artsHeader;
+    header;
 
     /**
      * @type {ArtsFooterBox|null}
      * @public
      * @readonly
      */
-    artsFooter;
+    footer;
 
     /**
      * @type {ArtsRowBox[]}
      * @public
      * @readonly
      */
-    artsRows;
+    rows;
 
     /**
      * @param {HTMLTableCellElement} anchor
@@ -1325,9 +1325,9 @@ class ArtsListBox extends TableSectionBasedBox {
         const rows = Array.from(this.box.children)
             .filter(ArtsListBox._filterTagsCallback.bind({tag: 'TR'}));
 
-        this.artsHeader = new ArtsHeaderBox(rows.shift());
-        this.artsFooter = activeTab === ArmoryTab.TAB_UNAVAILABLE ? new ArtsFooterBox(rows.pop()) : null;
-        this.artsRows = rows.map((row) => new ArtsRowBox(row));
+        this.header = new ArtsHeaderBox(rows.shift());
+        this.footer = activeTab === ArmoryTab.TAB_UNAVAILABLE ? new ArtsFooterBox(rows.pop()) : null;
+        this.rows = rows.map((row) => new ArtsRowBox(row));
     }
 
 
