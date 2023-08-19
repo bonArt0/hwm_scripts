@@ -104,12 +104,6 @@ class FrameworkError extends Error {
     }
 }
 
-class InnerBoxError extends FrameworkError {
-    constructor(context) {
-        super(`Can't get inner box`, context);
-    }
-}
-
 class LayoutError extends FrameworkError {
     constructor(context) {
         super(`Something happen with game layout`, context);
@@ -283,7 +277,6 @@ class ArmoryFramework {
 
 /**
  * @abstract
- * @todo remove inner/outer from public
  */
 class Box {
     /**
@@ -299,15 +292,6 @@ class Box {
      */
     constructor(anchor) {
         this._initBox(anchor);
-    }
-
-    /**
-     * @return {HTMLElement}
-     * @throws {InnerBoxError} on invalid framework usage
-     * @public
-     */
-    getInnerBox() {
-        return this.box;
     }
 
     /**
@@ -1105,11 +1089,11 @@ class TakesBox extends TableSectionBasedBox {
      * @throws {BoxMissedException}
      */
     _findBox(anchor) {
-        const outerBox = anchor
+        const box = anchor
             .children.item(2); // table
 
-        if (outerBox.children.length > 0) {
-            return outerBox.children.item(0); // tbody
+        if (box.children.length > 0) {
+            return box.children.item(0); // tbody
         }
 
         throw new BoxMissedException;
