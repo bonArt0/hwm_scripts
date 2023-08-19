@@ -399,21 +399,14 @@ class ArmoryBox extends TableCellBasedBox {
     tabs;
 
     /**
-     * @type {DescriptionBox}
+     * @type {Description|null}
      * @public
      * @readonly
      */
     description;
 
     /**
-     * @type {DescriptionFormBox}
-     * @public
-     * @readonly
-     */
-    descriptionForm;
-
-    /**
-     * @type {ArtsBox}
+     * @type {ArtsBox|null}
      * @public
      * @readonly
      */
@@ -445,8 +438,8 @@ class ArmoryBox extends TableCellBasedBox {
 
         switch (activeTab) {
             case ArmoryTab.TAB_DESCRIPTION:
-                this.description = new DescriptionBox(box);
-                this.descriptionForm = new DescriptionFormBox(box);
+                this.description = new Description(box);
+                this.arts = null;
                 break;
             case ArmoryTab.TAB_ON_LEASE:
             case ArmoryTab.TAB_WEAPON:
@@ -455,6 +448,7 @@ class ArmoryBox extends TableCellBasedBox {
             case ArmoryTab.TAB_BACKPACK:
             case ArmoryTab.TAB_SETS:
             case ArmoryTab.TAB_UNAVAILABLE:
+                this.description = null;
                 this.arts = new ArtsBox(box, activeTab);
         }
     }
@@ -1186,9 +1180,31 @@ class TabsBox extends TableRowBasedBox {
 
 /* <editor-fold desc="armory description"> */
 
-/**
- * @todo group descriptions
- */
+class Description {
+    /**
+     * @type {DescriptionBox}
+     * @public
+     * @readonly
+     */
+    text;
+
+    /**
+     * @type {DescriptionFormBox}
+     * @public
+     * @readonly
+     */
+    form;
+
+    /**
+     * @param {HTMLElement} anchor
+     * @throws {Error} on init failure
+     */
+    constructor(anchor) {
+        this.text = new DescriptionBox(anchor);
+        this.form = new DescriptionFormBox(anchor);
+    }
+}
+
 class DescriptionBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableCellElement} anchor
@@ -1207,10 +1223,6 @@ class DescriptionBox extends TableCellBasedBox {
     }
 }
 
-/* </editor-fold> */
-
-/* <editor-fold desc="armory description form"> */
-
 class DescriptionFormBox extends FormBasedBox {
     /**
      * @param {HTMLTableCellElement} anchor
@@ -1223,10 +1235,6 @@ class DescriptionFormBox extends FormBasedBox {
 
     _getBoxClassName() {
         return FrameworkClassNames.DESCRIPTION_FORM_BOX;
-    }
-
-    _getBoxTag() {
-        return 'FORM';
     }
 }
 
