@@ -1057,7 +1057,7 @@ class ManagementBodySmithsBox extends ManagementBodyCell {
 
 /* <editor-fold desc="armory takes"> */
 
-class TakesBox extends TableSectionBox {
+class TakesBox extends TableSectionBasedBox {
     /**
      * @type {TakesRepairsHeaderBox|null}
      * @public
@@ -1125,7 +1125,9 @@ class TakesBox extends TableSectionBox {
      * @return {HTMLTableElement|undefined}
      */
     _findBox(anchor) {
-        return anchor.children.item(2); // table
+        return anchor
+            .children.item(2) // table
+            .children.item(0); // tbody
     }
 
     _getBoxClassName() {
