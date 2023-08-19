@@ -468,7 +468,7 @@ class ArmoryBox extends TableCellBasedBox {
 
     /**
      * @param {HTMLTableCellElement} anchor
-     * @return {HTMLTableElement|undefined}
+     * @return {HTMLTableElement}
      */
     _findBox(anchor) {
         return anchor
@@ -544,7 +544,7 @@ class OverviewBox extends TableSectionBasedBox {
 
     /**
      * @param {HTMLTableCellElement} anchor
-     * @return {HTMLTableElement|undefined}
+     * @return {HTMLTableElement}
      */
     _findBox(anchor) {
         return anchor
@@ -574,7 +574,7 @@ class OverviewInfoBox extends TableCellBasedBox {
 
     /**
      * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableCellElement|undefined}
+     * @return {HTMLTableCellElement}
      */
     _findBox(anchor) {
         return anchor
@@ -590,7 +590,7 @@ class OverviewInfoBox extends TableCellBasedBox {
 class OverviewAccountBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableElement|undefined}
+     * @return {HTMLTableElement}
      */
     _findBox(anchor) {
         return anchor
@@ -606,7 +606,7 @@ class OverviewAccountBox extends TableCellBasedBox {
 class OverviewOnlineToggleBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableCellElement|undefined}
+     * @return {HTMLTableCellElement}
      */
     _findBox(anchor) {
         return anchor
@@ -622,7 +622,7 @@ class OverviewOnlineToggleBox extends TableCellBasedBox {
 class OverviewManagementToggleBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableCellElement|undefined}
+     * @return {HTMLTableCellElement}
      */
     _findBox(anchor) {
         return anchor
@@ -638,7 +638,7 @@ class OverviewManagementToggleBox extends TableCellBasedBox {
 class OverviewSectorsBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableCellElement|undefined}
+     * @return {HTMLTableCellElement}
      */
     _findBox(anchor) {
         return anchor
@@ -681,7 +681,7 @@ class ManagementBox extends TableSectionBasedBox {
 
     /**
      * @param {HTMLTableCellElement} anchor
-     * @return {HTMLTableElement|undefined}
+     * @return {HTMLTableElement}
      */
     _findBox(anchor) {
         return anchor
@@ -742,7 +742,7 @@ class ManagementHeaderBox extends TableRowBasedBox {
 
     /**
      * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableRowElement|undefined}
+     * @return {HTMLTableRowElement}
      */
     _findBox(anchor) {
         return anchor
@@ -882,7 +882,7 @@ class ManagementBodyBox extends TableRowBasedBox {
 
     /**
      * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableRowElement|undefined}
+     * @return {HTMLTableRowElement}
      */
     _findBox(anchor) {
         return anchor
@@ -1035,6 +1035,9 @@ class ManagementBodyCapacityBox extends ManagementBodyCell {
 
 /* <editor-fold desc="armory takes"> */
 
+/**
+ * @todo group repairs and leases
+ */
 class TakesBox extends TableSectionBasedBox {
     /**
      * @type {TakesRepairsHeaderBox|null}
@@ -1180,7 +1183,7 @@ class TakesLeasesBodyBox extends TakesRowBox {
 class TabsBox extends TableRowBasedBox {
     /**
      * @param {HTMLTableCellElement} anchor
-     * @return {HTMLTableElement|undefined}
+     * @return {HTMLTableElement}
      */
     _findBox(anchor) {
         return anchor
@@ -1201,7 +1204,7 @@ class TabsBox extends TableRowBasedBox {
 class DescriptionBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableCellElement} anchor
-     * @return {HTMLTableElement|undefined}
+     * @return {HTMLTableElement}
      */
     _findBox(anchor) {
         return anchor
@@ -1236,7 +1239,7 @@ class DescriptionFormBox extends Box {
 
     /**
      * @param {HTMLTableCellElement} anchor
-     * @return {HTMLFormElement|undefined}
+     * @return {HTMLFormElement}
      */
     _findBox(anchor) {
         return anchor
@@ -1304,7 +1307,7 @@ class ArtsBox extends TableCellBasedBox {
 
     /**
      * @param {HTMLTableCellElement} anchor
-     * @return {HTMLTableElement|undefined}
+     * @return {HTMLTableElement}
      */
     _findBox(anchor) {
         return anchor
