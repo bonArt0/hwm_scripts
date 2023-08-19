@@ -27,10 +27,12 @@ const FrameworkClassNames = {
     MANAGEMENT_BOX: 'afw_armory_management_box',
     MANAGEMENT_HEADER_BOX: 'afw_armory_management_header_box',
     MANAGEMENT_HEADER_PUTS_BOX: 'afw_armory_management_header_puts_box',
+    MANAGEMENT_HEADER_BALANCE_BOX: 'afw_armory_management_header_balance_box',
     MANAGEMENT_HEADER_BATTLES_BOX: 'afw_armory_management_header_battles_box',
     MANAGEMENT_HEADER_SMITHS_BOX: 'afw_armory_management_header_smiths_box',
     MANAGEMENT_BODY_BOX: 'afw_armory_management_body_box',
     MANAGEMENT_BODY_PUTS_BOX: 'afw_armory_management_body_puts_box',
+    MANAGEMENT_BODY_BALANCE_BOX: 'afw_armory_management_body_balance_box',
     MANAGEMENT_BODY_BATTLES_BOX: 'afw_armory_management_body_battles_box',
     MANAGEMENT_BODY_SMITHS_BOX: 'afw_armory_management_body_smiths_box',
     TAKES_BOX: 'afw_armory_takes_box',
@@ -699,6 +701,13 @@ class ManagementHeaderBox extends TableRowBasedBox {
     putsBox;
 
     /**
+     * @type {ManagementHeaderBalanceBox}
+     * @public
+     * @readonly
+     */
+    balanceBox;
+
+    /**
      * @type {ManagementHeaderBattlesBox}
      * @public
      * @readonly
@@ -716,6 +725,7 @@ class ManagementHeaderBox extends TableRowBasedBox {
         super(anchor);
 
         this.putsBox = new ManagementHeaderPutsBox(this.box);
+        this.balanceBox = new ManagementHeaderBalanceBox(this.box);
         this.battlesBox = new ManagementHeaderBattlesBox(this.box);
         this.smithsBox = new ManagementHeaderSmithsBox(this.box);
     }
@@ -750,7 +760,7 @@ class ManagementHeaderPutsBox extends TableCellBasedBox {
     }
 }
 
-class ManagementHeaderBattlesBox extends TableCellBasedBox {
+class ManagementHeaderBalanceBox extends TableCellBasedBox {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -759,6 +769,22 @@ class ManagementHeaderBattlesBox extends TableCellBasedBox {
     _findBox(anchor) {
         return anchor
             .children.item(1); // td
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.MANAGEMENT_HEADER_BALANCE_BOX;
+    }
+}
+
+class ManagementHeaderBattlesBox extends TableCellBasedBox {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor
+            .children.item(2); // td
     }
 
     _getBoxClassName() {
@@ -774,7 +800,7 @@ class ManagementHeaderSmithsBox extends TableCellBasedBox {
      */
     _findBox(anchor) {
         return anchor
-            .children.item(2); // td
+            .children.item(3); // td
     }
 
     _getBoxClassName() {
@@ -789,6 +815,13 @@ class ManagementBodyBox extends TableRowBasedBox {
      * @readonly
      */
     putsBox;
+
+    /**
+     * @type {ManagementBodyBalanceBox}
+     * @public
+     * @readonly
+     */
+    balanceBox;
 
     /**
      * @type {ManagementBodyBattlesBox}
@@ -808,6 +841,7 @@ class ManagementBodyBox extends TableRowBasedBox {
         super(anchor);
 
         this.putsBox = new ManagementBodyPutsBox(this.box);
+        this.balanceBox = new ManagementBodyBalanceBox(this.box);
         this.battlesBox = new ManagementBodyBattlesBox(this.box);
         this.smithsBox = new ManagementBodySmithsBox(this.box);
     }
@@ -899,7 +933,7 @@ class ManagementBodyPutsBox extends ManagementBodyCell {
     }
 }
 
-class ManagementBodyBattlesBox extends ManagementBodyCell {
+class ManagementBodyBalanceBox extends ManagementBodyCell {
     /**
      * @param {HTMLTableRowElement} anchor
      * @return {HTMLTableCellElement}
@@ -908,6 +942,22 @@ class ManagementBodyBattlesBox extends ManagementBodyCell {
     _findBox(anchor) {
         return anchor
             .children.item(1);
+    }
+
+    _getBoxClassName() {
+        return FrameworkClassNames.MANAGEMENT_BODY_BALANCE_BOX;
+    }
+}
+
+class ManagementBodyBattlesBox extends ManagementBodyCell {
+    /**
+     * @param {HTMLTableRowElement} anchor
+     * @return {HTMLTableCellElement}
+     * @private
+     */
+    _findBox(anchor) {
+        return anchor
+            .children.item(2);
     }
 
     _getBoxClassName() {
@@ -923,7 +973,7 @@ class ManagementBodySmithsBox extends ManagementBodyCell {
      */
     _findBox(anchor) {
         return anchor
-            .children.item(2);
+            .children.item(3);
     }
 
     _getBoxClassName() {
@@ -997,7 +1047,7 @@ class TakesBox extends TableSectionBasedBox {
 
     /**
      * @param {HTMLTableCellElement} anchor
-     * @return {HTMLTableElement|undefined}
+     * @return {HTMLTableElement}
      * @throws {BoxMissedException}
      */
     _findBox(anchor) {
@@ -1040,7 +1090,7 @@ class TakesRowBox extends TableCellBasedBox {
 
     /**
      * @param {HTMLTableSectionElement} anchor
-     * @return {HTMLTableRowElement|undefined}
+     * @return {HTMLTableRowElement}
      */
     _findBox(anchor) {
         return anchor
