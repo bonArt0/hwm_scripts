@@ -100,12 +100,6 @@ class FrameworkError extends Error {
     }
 }
 
-class OuterBoxError extends FrameworkError {
-    constructor(context) {
-        super(`Can't get outer box`, context);
-    }
-}
-
 class InnerBoxError extends FrameworkError {
     constructor(context) {
         super(`Can't get inner box`, context);
@@ -117,6 +111,8 @@ class LayoutError extends FrameworkError {
         super(`Something happen with game layout`, context);
     }
 }
+
+class BoxMissedException extends Error {}
 
 /* </editor-fold> */
 
@@ -346,13 +342,6 @@ class Box {
      * @abstract
      * @protected
      */
-    _getInnerBoxTag() {}
-
-    /**
-     * @return {string}
-     * @abstract
-     * @protected
-     */
     _getBoxClassName() {}
 }
 
@@ -361,10 +350,6 @@ class Box {
  */
 class TableSectionBasedBox extends Box {
     _getBoxTag() {
-        return 'TBODY';
-    }
-
-    _getInnerBoxTag() {
         return 'TBODY';
     }
 }
@@ -376,10 +361,6 @@ class TableRowBasedBox extends Box {
     _getBoxTag() {
         return 'TR';
     }
-
-    _getInnerBoxTag() {
-        return 'TR';
-    }
 }
 
 /**
@@ -387,10 +368,6 @@ class TableRowBasedBox extends Box {
  */
 class TableCellBasedBox extends Box {
     _getBoxTag() {
-        return 'TD';
-    }
-
-    _getInnerBoxTag() {
         return 'TD';
     }
 }
@@ -411,7 +388,7 @@ class ArmoryBox extends TableCellBasedBox {
     managementBox;
 
     /**
-     * @type {TakesBox}
+     * @type {TakesBox|null}
      * @public
      * @readonly
      */
@@ -457,8 +434,18 @@ class ArmoryBox extends TableCellBasedBox {
 
         this.overviewBox = new OverviewBox(box);
         this.managementBox = new ManagementBox(box);
-        this.takesBox = new TakesBox(box);
+
+        try {
+            this.takesBox = new TakesBox(box);
+        } catch (e) {
+            if (!(e instanceof BoxMissedException)) {
+                throw e;
+            }
+            this.takesBox = null;
+        }
+
         this.tabsBox = new TabsBox(box);
+
         switch (activeTab) {
             case ArmoryTab.TAB_DESCRIPTION:
                 this.descriptionBox = new DescriptionBox(box);
@@ -980,64 +967,52 @@ class TakesBox extends TableSectionBasedBox {
     /**
      * @param {HTMLElement} anchor
      * @throws {Error} on init failure
+     * @throws {BoxMissedException} on empty box
      */
     constructor(anchor) {
+        // BoxMissedException
         super(anchor);
 
-        const innerBox = this.getInnerBox();
-        if (innerBox === null) {
-            this.repairHeaderBox = null;
-            this.repairBodyBox = null;
-            this.leasesHeaderBox = null;
-            this.leasesBodyBox = null;
-        } else if (innerBox.children.length === 4) {
+        const box = this.box;
+        if (box.children.length === 4) {
             // box has both repairs and leases row pairs
-            this.repairHeaderBox = new TakesRepairsHeaderBox(innerBox, 0);
-            this.repairBodyBox = new TakesRepairsBodyBox(innerBox, 1);
-            this.leasesHeaderBox = new TakesLeasesHeaderBox(innerBox, 2);
-            this.leasesBodyBox = new TakesLeasesBodyBox(innerBox, 3);
-        } else if (innerBox.innerHTML.search('action=repair') > -1) {
+            this.repairHeaderBox = new TakesRepairsHeaderBox(box, 0);
+            this.repairBodyBox = new TakesRepairsBodyBox(box, 1);
+            this.leasesHeaderBox = new TakesLeasesHeaderBox(box, 2);
+            this.leasesBodyBox = new TakesLeasesBodyBox(box, 3);
+        } else if (box.innerHTML.search('action=repair') > -1) {
             // "Repair" button exists, so box has only repairs row pair
-            this.repairHeaderBox = new TakesRepairsHeaderBox(innerBox, 0);
-            this.repairBodyBox = new TakesRepairsBodyBox(innerBox, 1);
+            this.repairHeaderBox = new TakesRepairsHeaderBox(box, 0);
+            this.repairBodyBox = new TakesRepairsBodyBox(box, 1);
             this.leasesHeaderBox = null;
             this.leasesBodyBox = null;
         } else {
             // box has only leases row pair
             this.repairHeaderBox = null;
             this.repairBodyBox = null;
-            this.leasesHeaderBox = new TakesLeasesHeaderBox(innerBox, 0);
-            this.leasesBodyBox = new TakesLeasesBodyBox(innerBox, 1);
+            this.leasesHeaderBox = new TakesLeasesHeaderBox(box, 0);
+            this.leasesBodyBox = new TakesLeasesBodyBox(box, 1);
         }
     }
 
     /**
      * @param {HTMLTableCellElement} anchor
      * @return {HTMLTableElement|undefined}
+     * @throws {BoxMissedException}
      */
     _findBox(anchor) {
-        return anchor
-            .children.item(2) // table
-            .children.item(0); // tbody
+        const outerBox = anchor
+            .children.item(2); // table
+
+        if (outerBox.children.length > 0) {
+            return outerBox.children.item(0); // tbody
+        }
+
+        throw new BoxMissedException;
     }
 
     _getBoxClassName() {
         return FrameworkClassNames.TAKES_BOX;
-    }
-
-    /**
-     * @return {HTMLElement|null}
-     */
-    getInnerBox() {
-        try {
-            return super.getInnerBox();
-        } catch (e) {
-            // TakesBox table is empty
-            if (e instanceof FrameworkError && e.context.box === undefined) {
-                return null;
-            }
-            throw e;
-        }
     }
 }
 
