@@ -1070,6 +1070,7 @@ class TakesBox extends TableSectionBasedBox {
             return box.children.item(0); // tbody
         }
 
+        // no arts in lease or smith
         throw new BoxMissedException;
     }
 
@@ -1275,32 +1276,11 @@ class DescriptionFormBox extends FormBasedBox {
 
 class ArtsBox extends TableCellBasedBox {
     /**
-     * @type {ArtsListBox}
+     * @type {ArtsListBox|null}
      * @public
      * @readonly
      */
     list;
-
-    /**
-     * @type {ArtsHeaderBox}
-     * @public
-     * @readonly
-     */
-    header;
-
-    /**
-     * @type {ArtsFooterBox|null}
-     * @public
-     * @readonly
-     */
-    footer;
-
-    /**
-     * @type {ArtsRowBox[]}
-     * @public
-     * @readonly
-     */
-    rows;
 
     /**
      * @param {HTMLTableCellElement} anchor
@@ -1309,10 +1289,14 @@ class ArtsBox extends TableCellBasedBox {
     constructor(anchor, activeTab) {
         super(anchor);
 
-        this.list = new ArtsListBox(this.box, activeTab);
-        this.header = this.list.header;
-        this.footer = this.list.footer;
-        this.rows = this.list.rows;
+        try {
+            this.list = new ArtsListBox(this.box, activeTab);
+        } catch (e) {
+            if (!(e instanceof BoxMissedException)) {
+                throw e;
+            }
+            this.list = null;
+        }
     }
 
     /**
@@ -1357,8 +1341,10 @@ class ArtsListBox extends TableSectionBasedBox {
     /**
      * @param {HTMLTableCellElement} anchor
      * @param {ArmoryTab} activeTab
+     * @throws {BoxMissedException}
      */
     constructor(anchor, activeTab) {
+        // BoxMissedException
         super(anchor);
 
         const rows = Array.from(this.box.children)
@@ -1369,12 +1355,22 @@ class ArtsListBox extends TableSectionBasedBox {
         this.rows = rows.map((row) => new ArtsRowBox(row));
     }
 
-
+    /**
+     * @param {HTMLTableCellElement} anchor
+     * @return {HTMLTableElement}
+     * @throws {BoxMissedException}
+     */
     _findBox(anchor) {
-        return Array.from(anchor.children)
+        const listContents = Array.from(anchor.children)
             .filter(ArtsListBox._filterTagsCallback.bind({tag: 'TABLE'}))
-            .shift() // table
-            .children.item(0); // tbody
+        if (listContents.length > 0) {
+            return listContents
+                .shift() // table
+                .children.item(0); // tbody
+        }
+
+        // no arts in list
+        throw new BoxMissedException;
     }
 
     _getBoxClassName() {
