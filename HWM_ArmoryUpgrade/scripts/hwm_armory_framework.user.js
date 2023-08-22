@@ -399,7 +399,7 @@ class ArmoryBox extends TableCellBasedBox {
     tabs;
 
     /**
-     * @type {Description|null}
+     * @type {DescriptionContainer|null}
      * @public
      * @readonly
      */
@@ -438,7 +438,7 @@ class ArmoryBox extends TableCellBasedBox {
 
         switch (activeTab) {
             case ArmoryTab.TAB_DESCRIPTION:
-                this.description = new Description(box);
+                this.description = new DescriptionContainer(box);
                 this.arts = null;
                 break;
             case ArmoryTab.TAB_ON_LEASE:
@@ -536,7 +536,7 @@ class OverviewBox extends TableSectionBasedBox {
     _findBox(anchor) {
         return anchor
             ?.children.item(0) // table
-            ?.children.item(0); // tbody, armory overview
+            ?.children.item(0); // tbody
     }
 
     _getBoxClassName() {
@@ -1019,14 +1019,14 @@ class ManagementBodyCapacityBox extends FormBasedBox {
  */
 class TakesBox extends TableSectionBasedBox {
     /**
-     * @type {TakesRepairs|null}
+     * @type {TakesRepairsContainer|null}
      * @public
      * @readonly
      */
     repairs;
 
     /**
-     * @type {TakesLeases|null}
+     * @type {TakesLeasesContainer|null}
      * @public
      * @readonly
      */
@@ -1044,16 +1044,16 @@ class TakesBox extends TableSectionBasedBox {
         const box = this.box;
         if (box.children.length === 4) {
             // box has both repairs and leases row pairs
-            this.repairs = new TakesRepairs(box);
-            this.leases = new TakesLeases(box, false);
+            this.repairs = new TakesRepairsContainer(box);
+            this.leases = new TakesLeasesContainer(box, false);
         } else if (box.innerHTML.search('action=repair') > -1) {
             // "Repair" button exists, so box has only repairs row pair
-            this.repairs = new TakesRepairs(box);
+            this.repairs = new TakesRepairsContainer(box);
             this.leases = null;
         } else {
             // box has only leases row pair
             this.repairs = null;
-            this.leases = new TakesLeases(box, true);
+            this.leases = new TakesLeasesContainer(box, true);
         }
     }
 
@@ -1078,7 +1078,7 @@ class TakesBox extends TableSectionBasedBox {
     }
 }
 
-class TakesRepairs {
+class TakesRepairsContainer {
     /**
      * @type {TakesRepairsHeaderBox}
      * @public
@@ -1103,7 +1103,7 @@ class TakesRepairs {
     }
 }
 
-class TakesLeases {
+class TakesLeasesContainer {
     /**
      * @type {TakesLeasesHeaderBox}
      * @public
@@ -1211,7 +1211,7 @@ class TabsBox extends TableRowBasedBox {
 
 /* <editor-fold desc="armory description"> */
 
-class Description {
+class DescriptionContainer {
     /**
      * @type {DescriptionBox}
      * @public
