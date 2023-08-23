@@ -35,7 +35,7 @@ if (framework?.isManagementMode()) {
 }
 
 function initControls() {
-    if (!framework.armoryBox.managementBox.bodyBox.putsBox.isDisabled()) {
+    if (!framework.armory.management.body.puts.isDisabled()) {
         initArtsPutsBox();
     }
 
@@ -47,13 +47,13 @@ function initControls() {
 }
 
 function initArtsPutsBox() {
-    const artsPutsHeader = framework.armoryBox.managementBox.headerBox.putsBox;
-    const artsPutsBody = framework.armoryBox.managementBox.bodyBox.putsBox;
+    const artsPutsHeader = framework.armory.management.header.puts;
+    const artsPutsBody = framework.armory.management.body.puts;
 
     artsPutsBody.hideForm();
     const artsToPut = artsPutsBody.getArtsList();
 
-    artsPutsBody.box.append(buildNewPutsBox(artsToPut));
+    artsPutsBody.box.parentNode.append(buildNewPutsBox(artsToPut));
     artsPutsHeader.box.innerHTML = artsPutsHeader.box.innerHTML
         .replace('артефакт', 'артефакты');
     artsPutsHeader.box.append(buildArtsPutsSubmitButton());
@@ -118,8 +118,8 @@ function getArtsPutsCounterLabel() {
 }
 
 async function handleArtsPutsSubmit() {
-    const infoBox = framework.armoryBox.overviewBox.infoBox;
-    const artsPutsBox = framework.armoryBox.managementBox.bodyBox.putsBox;
+    const infoBox = framework.armory.overview.info;
+    const artsPutsBox = framework.armory.management.body.puts;
 
     const armory_id = artsPutsBox.getArmoryId();
     let sign = artsPutsBox.getArtsPutSign();
@@ -211,8 +211,8 @@ function handleArtsPutsCheckboxChange(checked) {
  * Preparing for adding Withdraw buttons
  */
 function prepareUnavailableTabRows() {
-    const header = framework.armoryBox.artsBox.artsHeader.box;
-    const footer = framework.armoryBox.artsBox.artsFooter?.box;
+    const header = framework.armory.arts.list.header.box;
+    const footer = framework.armory.arts.list.footer?.box;
 
     const headerButtonsCellColspan = Array.from(header.children).pop().colSpan;
     const footerCells = Array.from(footer?.children ?? []);
@@ -234,17 +234,17 @@ function prepareLeaseTabRows() {
     const footer = document.createElement('tr');
     footer.append(footerButtonsCell1, footerButtonsCell2);
     footer.classList.add(FrameworkClassNames.ARTS_FOOTER_BOX);
-    framework.armoryBox.artsBox.artsList.getInnerBox().append(footer);
+    framework.armory.arts.list.box.append(footer);
 
-    framework.armoryBox.artsBox.artsHeader.getInnerBox().prepend(document.createElement('td'));
+    framework.armory.arts.list.header.box.prepend(document.createElement('td'));
     footer.prepend(document.createElement('td'));
-    for (const row of framework.armoryBox.artsBox.artsRows) {
-        row.getInnerBox().prepend(document.createElement('td'));
+    for (const row of framework.armory.arts.list.rows) {
+        row.box.prepend(document.createElement('td'));
     }
 }
 
 function updateExistingTakesBoxControls() {
-    Array.from(framework.armoryBox.artsBox.artsHeader.box.children)
+    Array.from(framework.armory.arts.list.header.box.children)
         .pop()
         .append(buildArtsTakeSubmitButton());
 
@@ -252,8 +252,8 @@ function updateExistingTakesBoxControls() {
         ?.pop()
         ?.append(buildArtsTakeSubmitButton());
 
-    for (const row of framework.armoryBox.artsBox.artsRows) {
-        const checkboxCell = row.getInnerBox().children.item(0);
+    for (const row of framework.armory.arts.list.rows) {
+        const checkboxCell = row.box.children.item(0);
         if (Array.from(checkboxCell.children).shift()?.type !== 'checkbox') {
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
@@ -267,18 +267,18 @@ function updateExistingTakesBoxControls() {
  */
 function buildArtsTakeSubmitButton() {
     const button = document.createElement('button');
-    button.innerHTML = 'Взять всё';
+    button.innerHTML = 'Взять выбранное';
     button.onclick = () => handleArtsTakeSubmit();
 
     return button;
 }
 
 async function handleArtsTakeSubmit() {
-    for (const row of framework.armoryBox.artsBox.artsRows) {
-        const checkbox = Array.from(row.getInnerBox().children)
+    for (const row of framework.armory.arts.list.rows) {
+        const checkbox = Array.from(row.box.children)
             .shift()
             .children.item(0);
-        const takeForm = Array.from(row.getInnerBox().getElementsByTagName('form'))
+        const takeForm = Array.from(row.box.getElementsByTagName('form'))
             .pop();
 
         if (!checkbox?.checked) {
